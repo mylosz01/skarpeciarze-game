@@ -14,7 +14,7 @@ public class Map {
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                Field field = new Field(point,TILE_SIZE,tileColors[(x+y)%2]);
+                Field field = new Field(point,TILE_SIZE,tileColors[point.isEven()]);
                 board[x][y] = field;
             }
         }
