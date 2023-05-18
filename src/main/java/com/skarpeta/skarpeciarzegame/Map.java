@@ -1,7 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
-import static com.skarpeta.skarpeciarzegame.Catana.TILE_SIZE;
-import static com.skarpeta.skarpeciarzegame.Catana.tileColors;
+import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
+import static com.skarpeta.skarpeciarzegame.Catana.fieldColors;
 
 public class Map {
     public Field[][] board;
@@ -14,7 +14,7 @@ public class Map {
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                Field field = new Field(point,TILE_SIZE,tileColors[point.isEven()]);
+                Field field = new Field(point, FIELD_WIDTH, fieldColors[point.isEven()]);
                 board[x][y] = field;
             }
         }
