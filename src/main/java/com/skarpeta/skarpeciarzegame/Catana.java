@@ -43,14 +43,7 @@ public class Catana extends Application {
 
     }
     private void renderFields() {
-        for(int y=0;y<BOARD_SIZE;y++)
-        {
-            for(int x=0;x<BOARD_SIZE;x++)
-            {
-                Field field = map.getField(new Point(x,y));
-                fieldGroup.getChildren().add(field);
-            }
-        }
+        map.forEach((e)-> fieldGroup.getChildren().add(e));
     }
 
     public static void main(String[] args) throws InterruptedException {
