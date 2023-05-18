@@ -4,7 +4,7 @@ import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 import static com.skarpeta.skarpeciarzegame.Catana.fieldColors;
 
 public class Map {
-    public Field[][] board;
+    private Field[][] board;
     private final int BOARD_SIZE;
     Map(int size) {
         board = new Field[size][size];
