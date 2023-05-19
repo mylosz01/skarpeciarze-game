@@ -34,13 +34,31 @@ public class Field extends Group {
     }
 
     public void addBuilding(Building building) {
-        this.building = building;
-        getChildren().add(building);
+        if(!hasBuilding()){
+            this.building = building;
+            getChildren().add(building);
+        }
+        else {
+            System.out.println("budynek juz istnieje!");
+        }
     }
+
     public void addResource(Resource resource) {
-        this.resource = resource;
-        getChildren().add(resource);
+        if(!hasResource()){
+            this.resource = resource;
+            getChildren().add(resource);
+        }
+        else {
+            System.out.println("zloze juz istnieje!");
+        }
     }
+    private boolean hasBuilding() {
+        return !(building ==null);
+    }
+    private boolean hasResource() {
+        return !(resource ==null);
+    }
+
 
     public void move(Point p) {
         double x = p.x * hexagon.width * 0.75;
