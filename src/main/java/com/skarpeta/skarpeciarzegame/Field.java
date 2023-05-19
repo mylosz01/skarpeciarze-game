@@ -18,9 +18,10 @@ public class Field extends Hexagon {
         setStrokeWidth(2);
     }
     public void move(Point p) {
-        if(p.x%2==0)
-            relocate(p.x * width*(2.25/3), p.y * height);
-        else
-            relocate(p.x * width*(2.25/3), p.y * height+height/2);
+        double x = p.x * width * 0.75;
+        double y = p.y * height;
+        if(p.x%2 == 1)
+            y += height * 0.5;
+        relocate(x, y);
     }
 }
