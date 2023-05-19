@@ -10,6 +10,7 @@ public class Field extends Group {
     public Point position;
     public Hexagon hexagon;
     public Building building;
+    public Resource resource;
 
     public Field(Point position,double fieldSize,Color color) {
         hexagon = new Hexagon(fieldSize);
@@ -27,13 +28,18 @@ public class Field extends Group {
         System.out.println("clicked "+position);
         System.out.println(getLayoutX()+", "+getLayoutY());
 
-        //przykladowe uzycie addBuilding
+        //przykladowe uzycie addBuilding i addResource
         addBuilding(new Sawmill());
+        addResource(new Resource());
     }
 
     public void addBuilding(Building building) {
         this.building = building;
-        getChildren().add(building.rectangle);
+        getChildren().add(building);
+    }
+    public void addResource(Resource resource) {
+        this.resource = resource;
+        getChildren().add(resource);
     }
 
     public void move(Point p) {
