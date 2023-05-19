@@ -11,10 +11,12 @@ public class Field extends Group {
     public Hexagon hexagon;
     public Building building;
     public Resource resource;
+    public TerrainType terrain;
 
     public Field(Point position,double fieldSize,Color color) {
         hexagon = new Hexagon(fieldSize);
         this.position = position;
+        setTerrain(TerrainType.GRASS_LAND);
         move(position);
         hexagon.setFill(color);
         hexagon.setStrokeType(StrokeType.INSIDE);
@@ -24,7 +26,11 @@ public class Field extends Group {
         getChildren().add(hexagon);
     }
 
-    private void click() {
+    public void setTerrain(TerrainType terrain) {
+        this.terrain=terrain;
+    }
+
+    public void click() {
         System.out.println("clicked "+position);
         System.out.println(getLayoutX()+", "+getLayoutY());
 
