@@ -16,7 +16,13 @@ public class Field extends Hexagon {
         setStrokeType(StrokeType.INSIDE);
         setStroke(color.darker());
         setStrokeWidth(2);
+        setOnMouseClicked((e)->click());
     }
+
+    private void click() {
+        System.out.println("clicked "+position);
+    }
+
     public void move(Point p) {
         double x = p.x * width * 0.75;
         double y = p.y * height;
