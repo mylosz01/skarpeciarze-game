@@ -28,7 +28,7 @@ public class Catana extends Application {
 
         game.getChildren().addAll(fieldGroup);
         root.getChildren().addAll(game);
-        game.setLayoutX(0);
+        game.setLayoutX(FIELD_WIDTH/2);
         game.setLayoutY(0);
 
         renderFields();
