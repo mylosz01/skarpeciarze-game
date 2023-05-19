@@ -73,4 +73,8 @@ public class Point {
     public String toString() {
         return "[" + this.x.toString() + ", " + this.y.toString() + "]";
     }
+
+    public int isEven() {
+        return (x+y)%2;
+    }
 }

@@ -10,31 +10,28 @@ import javafx.stage.Stage;
 public class Catana extends Application {
     public static final double WINDOW_SIZE = 600;
     public static final int BOARD_SIZE = 6;
-    public static final double TILE_SIZE = WINDOW_SIZE/BOARD_SIZE;
+    public static final double FIELD_WIDTH = WINDOW_SIZE/BOARD_SIZE;
 
     static Color paletteDefiningColor = Color.DARKOLIVEGREEN;
 
     static final ColorPalette palette= new ColorPalette(paletteDefiningColor);
-    static final Color[] tileColors = {palette.light,palette.primary};
+    static final Color[] fieldColors = {palette.light,palette.primary};
 
-    private final Group tileGroup = new Group();
-    private final Group pieceGroup = new Group();
+    private final Group fieldGroup = new Group();
 
     static Map map = new Map(BOARD_SIZE);
-
-
     @Override
     public void start(Stage stage) {
 
         Pane root = new Pane();
         Pane game = new Pane();
 
-        game.getChildren().addAll(tileGroup, pieceGroup);
+        game.getChildren().addAll(fieldGroup);
         root.getChildren().addAll(game);
         game.setLayoutX(0);
         game.setLayoutY(0);
 
-        renderTiles();
+        renderFields();
 
         Scene scene = new Scene(root);
 
@@ -45,17 +42,8 @@ public class Catana extends Application {
         stage.setMaxWidth(stage.getWidth());
 
     }
-
-
-    private void renderTiles() {
-        for(int y=0;y<BOARD_SIZE;y++)
-        {
-            for(int x=0;x<BOARD_SIZE;x++)
-            {
-                Field field = map.getField(new Point(x,y));
-                tileGroup.getChildren().add(field);
-            }
-        }
+    private void renderFields() {
+        map.forEach((e)-> fieldGroup.getChildren().add(e));
     }
 
     public static void main(String[] args) throws InterruptedException {
