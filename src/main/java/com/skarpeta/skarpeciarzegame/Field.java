@@ -13,21 +13,28 @@ public class Field extends Group {
     public Resource resource;
     public TerrainType terrain;
 
-    public Field(Point position,double fieldSize,Color color) {
+    public Field(Point position,double fieldSize) {
         hexagon = new Hexagon(fieldSize);
         this.position = position;
         setTerrain(TerrainType.GRASS_LAND);
         move(position);
-        hexagon.setFill(color);
         hexagon.setStrokeType(StrokeType.INSIDE);
-        hexagon.setStroke(color.darker());
-        hexagon.setStrokeWidth(2);
+        hexagon.setStrokeWidth(fieldSize * 0.05);
         setOnMouseClicked((e)->click());
         getChildren().add(hexagon);
     }
 
     public void setTerrain(TerrainType terrain) {
         this.terrain=terrain;
+        Color color;
+        color=switch (terrain){
+            case MOUNTAINS -> Color.GRAY;
+            case WATER -> Color.BLUE;
+            case DESERT -> Color.YELLOW;
+            case GRASS_LAND -> Color.LIME;
+        };
+        hexagon.setFill(color);
+        hexagon.setStroke(color.darker());
     }
 
     public void click() {
