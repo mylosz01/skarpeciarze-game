@@ -1,33 +1,46 @@
 package com.skarpeta.skarpeciarzegame;
 
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
 
-public class Field extends Hexagon {
+public class Field extends Group {
 
     public Point position;
+    public Hexagon hexagon;
+    public Building building;
 
     public Field(Point position,double fieldSize,Color color) {
-        super(fieldSize);
+        hexagon = new Hexagon(fieldSize);
         this.position = position;
         move(position);
-        setFill(color);
-        setStrokeType(StrokeType.INSIDE);
-        setStroke(color.darker());
-        setStrokeWidth(2);
+        hexagon.setFill(color);
+        hexagon.setStrokeType(StrokeType.INSIDE);
+        hexagon.setStroke(color.darker());
+        hexagon.setStrokeWidth(2);
         setOnMouseClicked((e)->click());
+        getChildren().add(hexagon);
     }
 
     private void click() {
         System.out.println("clicked "+position);
+        System.out.println(getLayoutX()+", "+getLayoutY());
+
+        //przykladowe uzycie addBuilding
+        addBuilding(new Sawmill());
+    }
+
+    public void addBuilding(Building building) {
+        this.building = building;
+        getChildren().add(building.rectangle);
     }
 
     public void move(Point p) {
-        double x = p.x * width * 0.75;
-        double y = p.y * height;
+        double x = p.x * hexagon.width * 0.75;
+        double y = p.y * hexagon.height;
         if(p.x%2 == 1)
-            y += height * 0.5;
+            y += hexagon.height * 0.5;
         relocate(x, y);
     }
 }
