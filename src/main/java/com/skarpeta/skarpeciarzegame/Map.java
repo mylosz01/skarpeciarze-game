@@ -1,7 +1,6 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 
 import java.util.function.Consumer;
@@ -18,8 +17,6 @@ public class Map extends Group {
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
-
-
                 Point point = new Point(x,y);
                 TerrainType terrain = perlinThreshold(point);
                 Field field = new Field(this,point, FIELD_WIDTH,terrain);
@@ -35,7 +32,7 @@ public class Map extends Group {
         double pixel = px.getColor(p.x,p.y).grayscale().getBlue();
         TerrainType terrain;
 
-        Double[] threshold = new Double[]{0.5, 0.55, 0.7};
+        Double[] threshold = new Double[]{0.5, 0.55, 0.65};
 
         if(pixel < threshold[0])
             terrain = TerrainType.WATER;

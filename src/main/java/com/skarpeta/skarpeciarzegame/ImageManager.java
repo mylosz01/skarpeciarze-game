@@ -2,6 +2,8 @@ package com.skarpeta.skarpeciarzegame;
 
 import javafx.scene.image.Image;
 
+import java.util.Random;
+
 public class ImageManager {
     private static final String path = "file:src/main/resources/images/";
     private static Image house;
@@ -18,8 +20,9 @@ public class ImageManager {
         return tree;
     }
     public static Image getNoise() {
-        if(getNoise == null)
-            getNoise = new Image(path + "noiseTexture2.png");
+        if(getNoise == null) {
+            getNoise = new Image(path + "noise/noiseTexture" + new Random().nextInt(10) + ".png");
+        }
         return getNoise;
     }
 }
