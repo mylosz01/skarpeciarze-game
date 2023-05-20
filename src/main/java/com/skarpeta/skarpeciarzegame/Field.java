@@ -57,6 +57,8 @@ public class Field extends Group {
     public void addResource(Resource resource) {
         if(!hasResource()){
             this.resource = resource;
+            resource.setLayoutX(-hexagon.width * 0.3);
+            resource.setLayoutY(hexagon.width * 0.3);
             getChildren().add(resource);
         }
         else {

@@ -33,6 +33,6 @@ public class Map {
     public void selectField(Field field) {
         //przykladowe uzycie addBuilding i addResource
         field.addBuilding(new Sawmill());
-        //field.addResource(new Resource());
+        field.addResource(new Resource());
     }
 }
