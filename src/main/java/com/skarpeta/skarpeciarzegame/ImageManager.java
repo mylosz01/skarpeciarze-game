@@ -1,19 +1,15 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class ImageManager {
-    private static final String path = "src/main/resources/images";
-    Image domekpng;
-    Image test;
-    public Image getDomekPng() {
+    private static final String path = "file:src/main/resources/images/";
+    static Image domekpng;
+    static Image test;
+    public static Image getDomekPng() {
         if(domekpng == null)
             domekpng = new Image(path+"domek.png");
         return domekpng;
-    }
-    public Image getTest() {
-        if(test == null)
-            test = new Image(path+"test.png");
-        return test;
     }
 }

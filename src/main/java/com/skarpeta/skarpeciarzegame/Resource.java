@@ -1,12 +1,13 @@
 package com.skarpeta.skarpeciarzegame;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 public class Resource extends Pane {
-    Rectangle rectangle;
+    ImageView texture;
     public Resource() {
-        this.rectangle = new Rectangle(50,50);
-        getChildren().add(rectangle);
+        this.texture = new ImageView(ImageManager.getDomekPng());
+        getChildren().add(texture);
     }
 }
