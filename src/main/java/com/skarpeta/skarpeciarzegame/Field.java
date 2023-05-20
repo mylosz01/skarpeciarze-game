@@ -7,14 +7,16 @@ import javafx.scene.shape.StrokeType;
 
 public class Field extends Group {
 
+    private Map map;
     public Point position;
     public Hexagon hexagon;
     public Building building;
     public Resource resource;
     public TerrainType terrain;
 
-    public Field(Point position,double fieldSize) {
+    public Field(Map map,Point position,double fieldSize) {
         hexagon = new Hexagon(fieldSize);
+        this.map = map;
         this.position = position;
         setTerrain(TerrainType.GRASS_LAND);
         move(position);
@@ -40,10 +42,7 @@ public class Field extends Group {
     public void click() {
         System.out.println("clicked "+position);
         System.out.println(getLayoutX()+", "+getLayoutY());
-
-        //przykladowe uzycie addBuilding i addResource
-        addBuilding(new Sawmill());
-        addResource(new Resource());
+        map.selectField(this);
     }
 
     public void addBuilding(Building building) {
