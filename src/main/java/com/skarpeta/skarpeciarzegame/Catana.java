@@ -12,10 +12,7 @@ public class Catana extends Application {
     public static final int BOARD_SIZE = 6;
     public static final double FIELD_WIDTH = WINDOW_SIZE/BOARD_SIZE;
 
-    static Color paletteDefiningColor = Color.DARKOLIVEGREEN;
-
-    static final ColorPalette palette= new ColorPalette(paletteDefiningColor);
-    static final Color[] fieldColors = {palette.light,palette.primary};
+    static final ColorPalette palette= new ColorPalette(Color.OLIVEDRAB,Color.DARKCYAN);
 
     private final Group fieldGroup = new Group();
 

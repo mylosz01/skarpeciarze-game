@@ -4,7 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
-
+import static com.skarpeta.skarpeciarzegame.Catana.palette;
 public class Field extends Group {
 
     private Map map;
@@ -31,9 +31,9 @@ public class Field extends Group {
         Color color;
         color=switch (terrain){
             case MOUNTAINS -> Color.GRAY;
-            case WATER -> Color.BLUE;
+            case WATER -> palette.blue;
             case DESERT -> Color.YELLOW;
-            case GRASS_LAND -> Color.LIME;
+            case GRASS_LAND -> palette.green;
         };
         hexagon.setFill(color);
         hexagon.setStroke(color.darker());
