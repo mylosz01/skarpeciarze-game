@@ -32,15 +32,20 @@ public class Map extends Group {
     private TerrainType perlinThreshold(Point p) {
         PixelReader px = ImageManager.getNoise().getPixelReader();
 
-        double threshold = px.getColor(p.x,p.y).grayscale().getBlue()*4;
-        int t = (int) Math.floor(threshold);
+        double pixel = px.getColor(p.x,p.y).grayscale().getBlue();
+        TerrainType terrain;
 
-        return switch(t){
-            case 0 -> TerrainType.WATER;
-            case 1 -> TerrainType.DESERT;
-            case 2 -> TerrainType.GRASS_LAND;
-            default -> TerrainType.MOUNTAINS;
-        };
+        Double[] threshold = new Double[]{0.5, 0.55, 0.7};
+
+        if(pixel < threshold[0])
+            terrain = TerrainType.WATER;
+        else if(pixel < threshold[1])
+            terrain = TerrainType.DESERT;
+        else if(pixel < threshold[2])
+            terrain = TerrainType.GRASS_LAND;
+        else
+            terrain = TerrainType.MOUNTAINS;
+        return terrain;
     }
 
     public void forEach(Consumer<Field> action) {
