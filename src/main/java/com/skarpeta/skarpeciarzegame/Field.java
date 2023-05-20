@@ -28,8 +28,7 @@ public class Field extends Group {
 
     public void setTerrain(TerrainType terrain) {
         this.terrain=terrain;
-        Color color;
-        color=switch (terrain){
+        Color color = switch (terrain){
             case MOUNTAINS -> Color.GRAY;
             case WATER -> palette.blue;
             case DESERT -> Color.YELLOW;
