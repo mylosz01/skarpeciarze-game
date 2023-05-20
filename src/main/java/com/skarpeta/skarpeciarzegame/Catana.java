@@ -7,8 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Catana extends Application {
-    public static final int BOARD_SIZE = 60;
-    public static final double FIELD_WIDTH = 1000.0/60;
+    public static final int BOARD_SIZE = 30;
+    public static final double FIELD_WIDTH = 1000.0/BOARD_SIZE;
 
     static final ColorPalette palette= new ColorPalette(Color.valueOf("4BC87F"),Color.valueOf("6EAFF7"));
 
