@@ -1,10 +1,12 @@
 package com.skarpeta.skarpeciarzegame;
 
+import javafx.scene.Group;
+
 import java.util.function.Consumer;
 
 import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 
-public class Map {
+public class Map extends Group {
     private Field[][] board;
     private final int BOARD_SIZE;
     Map(int size) {
@@ -14,6 +16,7 @@ public class Map {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
                 Field field = new Field(this,point, FIELD_WIDTH);
+                getChildren().add(field);
                 board[x][y] = field;
             }
         }
