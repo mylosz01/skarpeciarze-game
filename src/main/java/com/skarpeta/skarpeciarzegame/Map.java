@@ -58,8 +58,7 @@ public class Map extends Group {
     }
 
     public void selectField(Field field) {
-        //przykladowe uzycie addBuilding i addResource
-        field.addBuilding(new Sawmill());
-        //field.addResource(new Resource());
+        //przykladowe uzycie addAsset()
+        field.addAsset(new Sawmill());
     }
 }

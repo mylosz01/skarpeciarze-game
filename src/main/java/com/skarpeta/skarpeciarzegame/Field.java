@@ -13,7 +13,6 @@ public class Field extends Group {
     public Hexagon hexagon;
     public Building building;
     public Resource resource;
-    public Group fieldContent;
     public TerrainType terrain;
 
     public Field(Map map, Point position, double fieldSize, TerrainType terrain) {
@@ -48,48 +47,15 @@ public class Field extends Group {
             map.selectField(this);
         }
     }
+    public void addAsset(Asset content) {
 
-    public void addBuilding(Building building) {
-        if(!hasBuilding()){
-            building.texture.setFitWidth(hexagon.width/3);
-            building.texture.setFitHeight(hexagon.width/3);
-            this.building = building;
-            if(fieldContent == null) {
-                fieldContent = new Group(building);
-                getChildren().addAll(fieldContent);
-            }
-            else {
-                fieldContent.getChildren().add(building);
-                getChildren().addAll(fieldContent);
-            }
-        }
-        else {
-            System.out.println("budynek juz istnieje!");
-        }
-    }
+        content.check(this);
 
-    public void addResource(Resource resource) {
-        if(!hasResource()){
-            resource.texture.setFitWidth(hexagon.width/3);
-            resource.texture.setFitHeight(hexagon.width/3);
-            this.resource = resource;
-            if(fieldContent == null) {
-                fieldContent = new Group(resource);
-                getChildren().addAll(fieldContent);
-            }
-            else {
-                fieldContent.getChildren().add(resource);
-                getChildren().addAll(fieldContent);
-            }
-        }
-        else {
-            System.out.println("zloze juz istnieje!");
-        }
     }
-    private boolean hasBuilding() {
+    public boolean hasBuilding() {
         return !(building ==null);
     }
-    private boolean hasResource() {
+    public boolean hasResource() {
         return !(resource ==null);
     }
 
