@@ -14,11 +14,11 @@ public class Field extends Group {
     public Resource resource;
     public TerrainType terrain;
 
-    public Field(Map map,Point position,double fieldSize) {
+    public Field(Map map, Point position, double fieldSize, TerrainType terrain) {
         hexagon = new Hexagon(fieldSize);
         this.map = map;
         this.position = position;
-        setTerrain(TerrainType.GRASS_LAND);
+        setTerrain(terrain);
         move(position);
         hexagon.setStrokeType(StrokeType.INSIDE);
         hexagon.setStrokeWidth(fieldSize * 0.05);

@@ -7,11 +7,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Catana extends Application {
-    public static final double WINDOW_SIZE = 600;
-    public static final int BOARD_SIZE = 6;
-    public static final double FIELD_WIDTH = WINDOW_SIZE/BOARD_SIZE;
+    public static final int BOARD_SIZE = 60;
+    public static final double FIELD_WIDTH = 1000.0/60;
 
-    static final ColorPalette palette= new ColorPalette(Color.OLIVEDRAB,Color.DARKCYAN);
+    static final ColorPalette palette= new ColorPalette(Color.valueOf("4BC87F"),Color.valueOf("6EAFF7"));
 
     static Map map = new Map(BOARD_SIZE);
     @Override
@@ -19,6 +18,7 @@ public class Catana extends Application {
 
         StackPane root = new StackPane(map);
         Scene scene = new Scene(root);
+        scene.setFill(palette.blue);
         stage.setTitle("catana");
         stage.setScene(scene);
         stage.show();
