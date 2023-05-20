@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Catana extends Application {
@@ -17,30 +16,11 @@ public class Catana extends Application {
     double initialPositionY=0;
     private static final double ZOOM_FACTOR = 1.1;
 
-    static final ColorPalette palette =
-        new ColorPalette(
-            new ColorShades(
-                Color.valueOf("#28c074"),
-                Color.valueOf("#10908E"),
-                Color.valueOf("#48e094")
-            ),
-            new ColorShades(
-                Color.valueOf("#488BD4"),
-                Color.valueOf("#3C67D3"),
-                Color.valueOf("#68ABF4")
-            ),
-            new ColorShades(
-                Color.valueOf("#928FB8"),
-                Color.valueOf("#5B537D"),
-                Color.valueOf("#B2AFD8")
-            ),
-            new ColorShades(
-                Color.valueOf("#FFCF8E"),
-                Color.valueOf("#E7B36F"),
-                Color.valueOf("#FFE2A3")
-            ));
-
-
+    static final ColorPalette palette = new ColorPalette(
+            new ColorShades("#28c074", "#10908E", "#48e094"), //green
+            new ColorShades("#488BD4", "#3C67D3", "#68ABF4"), //blue
+            new ColorShades("#928FB8", "#5B537D", "#B2AFD8"), //gray
+            new ColorShades("#FFCF8E", "#E7B36F", "#FFE2A3")); //yellow
 
     static Map map = new Map(BOARD_SIZE);
     static StackPane root;
