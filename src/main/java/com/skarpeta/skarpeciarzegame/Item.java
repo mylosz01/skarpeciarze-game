@@ -20,6 +20,8 @@ public abstract class Item {
 
     public void craftBoat() {
         return;
-        // tylko dla boat
+    }
+    public boolean lesserThan(int amount){
+        return this.amount<amount;
     }
 }

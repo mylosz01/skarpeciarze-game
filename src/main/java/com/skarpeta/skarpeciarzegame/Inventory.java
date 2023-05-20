@@ -11,18 +11,33 @@ public class Inventory {
         this.equipment.put("Wood",new Wood(0));
         this.equipment.put("Boat",new Boat());
     }
-    public boolean craftBoat(int goldAmount, int stoneAmount, int woodAmount){
-        if(equipment.get("Gold").getAmount()<goldAmount || equipment.get("Stone").getAmount()<stoneAmount || equipment.get("Wood").getAmount()<woodAmount){
-            return false;
+    private CraftingStatus checkAmount(int goldAmount, int stoneAmount, int woodAmount){
+        if(equipment.get("Gold").lesserThan(goldAmount)){
+            return CraftingStatus.NOT_ENOUGH_GOLD;
+        }
+        if(equipment.get("Stone").lesserThan(stoneAmount)){
+            return CraftingStatus.NOT_ENOUGH_STONE;
+        }
+        if(equipment.get("Wood").lesserThan(woodAmount)){
+            return CraftingStatus.NOT_ENOUGH_WOOD;
         }
         equipment.get("Gold").decreaseAmount(goldAmount);
         equipment.get("Stone").decreaseAmount(stoneAmount);
         equipment.get("Wood").decreaseAmount(woodAmount);
-
+        return CraftingStatus.DONE;
+    }
+    public CraftingStatus craftBoat(int goldAmount, int stoneAmount, int woodAmount){
+        CraftingStatus craftingStatus = checkAmount(goldAmount,stoneAmount,woodAmount);
+        if(craftingStatus!=CraftingStatus.DONE){
+            return craftingStatus;
+        }
         equipment.get("Boat").craftBoat();
-        return true;
+        return CraftingStatus.DONE;
     }
     public int getAmount(String itemName){
         return equipment.get(itemName).getAmount();
+    }
+    public CraftingStatus build(int goldAmount, int stoneAmount, int woodAmount){
+        return checkAmount(goldAmount,stoneAmount,woodAmount);
     }
 }
