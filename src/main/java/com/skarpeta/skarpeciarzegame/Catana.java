@@ -17,7 +17,30 @@ public class Catana extends Application {
     double initialPositionY=0;
     private static final double ZOOM_FACTOR = 1.1;
 
-    static final ColorPalette palette= new ColorPalette(Color.valueOf("4BC87F"),Color.valueOf("6EAFF7"));
+    static final ColorPalette palette =
+        new ColorPalette(
+            new ColorShades(
+                Color.valueOf("#28c074"),
+                Color.valueOf("#10908E"),
+                Color.valueOf("#48e094")
+            ),
+            new ColorShades(
+                Color.valueOf("#488BD4"),
+                Color.valueOf("#3C67D3"),
+                Color.valueOf("#68ABF4")
+            ),
+            new ColorShades(
+                Color.valueOf("#928FB8"),
+                Color.valueOf("#5B537D"),
+                Color.valueOf("#B2AFD8")
+            ),
+            new ColorShades(
+                Color.valueOf("#FFCF8E"),
+                Color.valueOf("#E7B36F"),
+                Color.valueOf("#FFE2A3")
+            ));
+
+
 
     static Map map = new Map(BOARD_SIZE);
     static StackPane root;
@@ -29,7 +52,7 @@ public class Catana extends Application {
         this.game = game;
         root = new StackPane(map);
         Scene scene = new Scene(root);
-        scene.setFill(palette.blue);
+        scene.setFill(palette.blue.primary);
         scene.setOnScroll(this::handleScroll);
         scene.setOnMouseDragged(this::handleDrag);
         scene.setOnMousePressed(this::handleRightClick);
@@ -38,15 +61,12 @@ public class Catana extends Application {
         game.setWidth(WINDOW_SIZE);
         game.setHeight(WINDOW_SIZE);
         game.show();
-
     }
 
     private void handleRightClick(MouseEvent event) {
         if (event.isSecondaryButtonDown()) {
             initialPositionX = event.getX();
             initialPositionY = event.getY();
-
-            System.out.println(event.getX() - game.getWidth()/2);
         }
     }
 

@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 public class Building extends Pane {
     ImageView texture;
     public Building() {
-        this.texture = new ImageView(ImageManager.getHouse());
+        this.texture = new ImageView(ImageManager.getSawmill());
         getChildren().add(texture);
     }
 }

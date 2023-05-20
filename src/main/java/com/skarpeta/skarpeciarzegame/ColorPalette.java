@@ -1,13 +1,15 @@
 package com.skarpeta.skarpeciarzegame;
 
-import javafx.scene.paint.Color;
-
 public class ColorPalette {
-    Color green;
-    Color blue;
 
-    public ColorPalette( Color green, Color blue) {
+    ColorShades green;
+    ColorShades blue;
+    ColorShades gray;
+    ColorShades yellow;
+    public ColorPalette(ColorShades green, ColorShades blue, ColorShades gray, ColorShades yellow) {
         this.green = green;
         this.blue = blue;
+        this.gray = gray;
+        this.yellow = yellow;
     }
 }

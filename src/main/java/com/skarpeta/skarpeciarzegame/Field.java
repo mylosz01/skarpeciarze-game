@@ -3,7 +3,6 @@ package com.skarpeta.skarpeciarzegame;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
 import static com.skarpeta.skarpeciarzegame.Catana.palette;
@@ -31,14 +30,14 @@ public class Field extends Group {
 
     public void setTerrain(TerrainType terrain) {
         this.terrain = terrain;
-        Color color = switch (terrain){
-            case MOUNTAINS -> Color.GRAY;
+        ColorShades color = switch (terrain){
+            case MOUNTAINS -> palette.gray;
             case WATER -> palette.blue;
-            case DESERT -> Color.YELLOW;
+            case DESERT -> palette.yellow;
             case GRASS_LAND -> palette.green;
         };
-        hexagon.setFill(color);
-        hexagon.setStroke(color.darker());
+        hexagon.setFill(color.primary);
+        hexagon.setStroke(color.darker);
     }
 
     private void click(MouseEvent mouseEvent) {
@@ -55,8 +54,10 @@ public class Field extends Group {
             building.texture.setFitWidth(hexagon.width/3);
             building.texture.setFitHeight(hexagon.width/3);
             this.building = building;
-            if(fieldContent == null)
+            if(fieldContent == null) {
                 fieldContent = new Group(building);
+                getChildren().addAll(fieldContent);
+            }
             else {
                 fieldContent.getChildren().add(building);
                 getChildren().addAll(fieldContent);
@@ -72,8 +73,10 @@ public class Field extends Group {
             resource.texture.setFitWidth(hexagon.width/3);
             resource.texture.setFitHeight(hexagon.width/3);
             this.resource = resource;
-            if(fieldContent == null)
+            if(fieldContent == null) {
                 fieldContent = new Group(resource);
+                getChildren().addAll(fieldContent);
+            }
             else {
                 fieldContent.getChildren().add(resource);
                 getChildren().addAll(fieldContent);

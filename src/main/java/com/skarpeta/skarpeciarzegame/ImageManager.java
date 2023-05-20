@@ -6,13 +6,13 @@ import java.util.Random;
 
 public class ImageManager {
     private static final String path = "file:src/main/resources/images/";
-    private static Image house;
+    private static Image sawmill;
     private static Image tree;
     private static Image getNoise;
-    public static Image getHouse() {
-        if(house == null)
-            house = new Image(path + "house.png");
-        return house;
+    public static Image getSawmill() {
+        if(sawmill == null)
+            sawmill = new Image(path + "sawmill.png",128.0,128.0,true,false);
+        return sawmill;
     }
     public static Image getTree() {
         if(tree == null)
