@@ -1,6 +1,8 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.scene.Group;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
@@ -12,6 +14,7 @@ public class Field extends Group {
     public Hexagon hexagon;
     public Building building;
     public Resource resource;
+    public Group fieldContent;
     public TerrainType terrain;
 
     public Field(Map map, Point position, double fieldSize, TerrainType terrain) {
@@ -22,7 +25,7 @@ public class Field extends Group {
         move(position);
         hexagon.setStrokeType(StrokeType.INSIDE);
         hexagon.setStrokeWidth(fieldSize * 0.05);
-        setOnMouseClicked((e)->click());
+        setOnMouseClicked(this::click);
         getChildren().add(hexagon);
     }
 
@@ -38,16 +41,26 @@ public class Field extends Group {
         hexagon.setStroke(color.darker());
     }
 
-    public void click() {
-        System.out.println("clicked "+position);
-        System.out.println(getLayoutX()+", "+getLayoutY());
-        map.selectField(this);
+    private void click(MouseEvent mouseEvent) {
+        if(mouseEvent.getButton() == MouseButton.PRIMARY)
+        {
+            System.out.println("clicked "+position);
+            System.out.println(getLayoutX()+", "+getLayoutY());
+            map.selectField(this);
+        }
     }
 
     public void addBuilding(Building building) {
         if(!hasBuilding()){
+            building.texture.setFitWidth(hexagon.width/3);
+            building.texture.setFitHeight(hexagon.width/3);
             this.building = building;
-            getChildren().add(building);
+            if(fieldContent == null)
+                fieldContent = new Group(building);
+            else {
+                fieldContent.getChildren().add(building);
+                getChildren().addAll(fieldContent);
+            }
         }
         else {
             System.out.println("budynek juz istnieje!");
@@ -56,10 +69,15 @@ public class Field extends Group {
 
     public void addResource(Resource resource) {
         if(!hasResource()){
+            resource.texture.setFitWidth(hexagon.width/3);
+            resource.texture.setFitHeight(hexagon.width/3);
             this.resource = resource;
-            resource.setLayoutX(-hexagon.width * 0.3);
-            resource.setLayoutY(hexagon.width * 0.3);
-            getChildren().add(resource);
+            if(fieldContent == null)
+                fieldContent = new Group(resource);
+            else {
+                fieldContent.getChildren().add(resource);
+                getChildren().addAll(fieldContent);
+            }
         }
         else {
             System.out.println("zloze juz istnieje!");

@@ -21,20 +21,23 @@ public class Catana extends Application {
 
     static Map map = new Map(BOARD_SIZE);
     static StackPane root;
-    @Override
-    public void start(Stage stage) {
+    private Stage game;
 
+    @Override
+    public void start(Stage game) {
+
+        this.game = game;
         root = new StackPane(map);
         Scene scene = new Scene(root);
         scene.setFill(palette.blue);
         scene.setOnScroll(this::handleScroll);
         scene.setOnMouseDragged(this::handleDrag);
         scene.setOnMousePressed(this::handleRightClick);
-        stage.setTitle("catana");
-        stage.setScene(scene);
-        stage.setWidth(WINDOW_SIZE);
-        stage.setHeight(WINDOW_SIZE);
-        stage.show();
+        game.setTitle("catana");
+        game.setScene(scene);
+        game.setWidth(WINDOW_SIZE);
+        game.setHeight(WINDOW_SIZE);
+        game.show();
 
     }
 
@@ -42,6 +45,8 @@ public class Catana extends Application {
         if (event.isSecondaryButtonDown()) {
             initialPositionX = event.getX();
             initialPositionY = event.getY();
+
+            System.out.println(event.getX() - game.getWidth()/2);
         }
     }
 
@@ -59,8 +64,8 @@ public class Catana extends Application {
     }
 
 
-    private void handleScroll(ScrollEvent scrollEvent) {
-        double scroll = scrollEvent.getDeltaY();
+    private void handleScroll(ScrollEvent event) {
+        double scroll = event.getDeltaY();
         if (scroll > 0)
             currentScale *= ZOOM_FACTOR;
         else if (scroll < 0)
