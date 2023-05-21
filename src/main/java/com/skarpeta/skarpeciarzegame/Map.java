@@ -32,19 +32,13 @@ public class Map extends Group {
         PixelReader px = ImageManager.getNoise().getPixelReader();
 
         double pixel = px.getColor(p.x,p.y).grayscale().getBlue();
-        TerrainType terrain;
 
-        Double[] threshold = new Double[]{0.5, 0.55, 0.65};
-
-        if(pixel < threshold[0])
-            terrain = TerrainType.WATER;
-        else if(pixel < threshold[1])
-            terrain = TerrainType.DESERT;
-        else if(pixel < threshold[2])
-            terrain = TerrainType.GRASS_LAND;
-        else
-            terrain = TerrainType.MOUNTAINS;
-        return terrain;
+        Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
+        for (int index = 0; index < threshold.length; index++) {
+            if (pixel <= threshold[index])
+                return TerrainType.fromIndex(index);
+        }
+        throw new RuntimeException("niepoprawny plik");
     }
 
     public void forEach(Consumer<Field> action) {
