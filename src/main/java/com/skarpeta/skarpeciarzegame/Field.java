@@ -34,23 +34,20 @@ public class Field extends Group {
     }
 
     private void click(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton() == MouseButton.PRIMARY)
-        {
+        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
             System.out.println("clicked "+position);
             System.out.println(getLayoutX()+", "+getLayoutY());
             map.selectField(this);
         }
     }
     public void addAsset(Asset content) {
-
-        content.check(this);
-
+        content.add(this);
     }
     public boolean hasBuilding() {
-        return !(building ==null);
+        return building != null;
     }
     public boolean hasResource() {
-        return !(resource ==null);
+        return resource != null;
     }
 
 

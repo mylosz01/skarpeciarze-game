@@ -6,8 +6,10 @@ public class Building extends Asset {
     public Building() {
         super(new ImageView(ImageManager.getSawmill()));
     }
-    public void check(Field field){
-        if(!field.hasBuilding())
-            super.check(field);
+    public void add(Field field){
+        if(field.hasBuilding())
+            return;
+        super.add(field);
+        field.building = this;
     }
 }
