@@ -40,8 +40,19 @@ public class Field extends Group {
             worldMap.selectField(this);
         }
     }
-    public void addAsset(Asset content) {
-        content.add(this);
+    public void addBuilding(Building building) {
+        if(hasBuilding())
+            return;
+        this.building = building;
+        building.allignTo(this);
+        getChildren().add(building);
+    }
+    public void addResource(Resource resource) {
+        if(hasResource())
+            return;
+        this.resource = resource;
+        resource.allignTo(this);
+        getChildren().add(resource);
     }
     public boolean hasBuilding() {
         return building != null;

@@ -6,10 +6,7 @@ public class Building extends Asset {
     public Building() {
         super(new ImageView(ImageManager.getImage("sawmill")));
     }
-    public void add(Field field){
-        if(field.hasBuilding())
-            return;
-        super.add(field);
-        field.building = this;
+    public void allignTo(Field field) {
+        super.allignTo(field,-10,0.5);
     }
 }

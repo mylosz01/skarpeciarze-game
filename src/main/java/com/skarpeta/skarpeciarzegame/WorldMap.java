@@ -31,7 +31,7 @@ public class WorldMap extends Group {
         Field field = new Field(this,point, FIELD_WIDTH,terrain);
 
         if(terrain == TerrainType.GRASS_LAND && new Random().nextInt(4)==0)
-            field.addAsset(new Resource());
+            field.addResource(new Resource());
 
         getChildren().add(field);
         return field;
@@ -62,6 +62,6 @@ public class WorldMap extends Group {
 
     public void selectField(Field field) {
         //przykladowe uzycie addAsset()
-        field.addAsset(new Sawmill());
+        field.addBuilding(new Sawmill());
     }
 }
