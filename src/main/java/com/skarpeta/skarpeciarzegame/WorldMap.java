@@ -1,8 +1,10 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 
+import java.util.Random;
 import java.util.function.Consumer;
 
 import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
@@ -10,32 +12,33 @@ import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 public class WorldMap extends Group {
     private Field[][] board;
     private final int BOARD_SIZE;
+    Image noise = ImageManager.getImage("noise/noiseTexture" + new Random().nextInt(10));
     WorldMap(int size) {
+        PixelReader pixels = noise.getPixelReader();
         board = new Field[size][size];
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                Field field = calculateField(point);
-                getChildren().add(field);
-                board[x][y] = field;
+                board[x][y] = generateField(point,pixels);
             }
         }
     }
 
-    private Field calculateField(Point point) {
-        TerrainType terrain = perlinThreshold(point);
-        return new Field(this,point, FIELD_WIDTH,terrain);
+    private Field generateField(Point point, PixelReader pixels) {
+        double value = pixels.getColor(point.x,point.y).grayscale().getBlue();
+        TerrainType terrain = perlinThreshold(value);
+        Field field = new Field(this,point, FIELD_WIDTH,terrain);
+        getChildren().add(field);
+        return field;
     }
 
-    private TerrainType perlinThreshold(Point p) {
-        PixelReader px = ImageManager.getNoise().getPixelReader();
+    private TerrainType perlinThreshold(double value) {
 
-        double pixel = px.getColor(p.x,p.y).grayscale().getBlue();
 
         Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
         for (int index = 0; index < threshold.length; index++) {
-            if (pixel <= threshold[index])
+            if (value <= threshold[index])
                 return TerrainType.fromIndex(index);
         }
         throw new RuntimeException("niepoprawny plik");

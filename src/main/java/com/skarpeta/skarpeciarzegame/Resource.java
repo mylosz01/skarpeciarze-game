@@ -4,7 +4,7 @@ import javafx.scene.image.ImageView;
 
 public class Resource extends Asset {
     public Resource() {
-        super(new ImageView(ImageManager.getTree()));
+        super(new ImageView(ImageManager.getImage("tree")));
     }
     public void add(Field field){
         if(field.hasResource())

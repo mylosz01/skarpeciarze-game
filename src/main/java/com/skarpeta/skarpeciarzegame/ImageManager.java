@@ -2,27 +2,15 @@ package com.skarpeta.skarpeciarzegame;
 
 import javafx.scene.image.Image;
 
-import java.util.Random;
+import java.util.HashMap;
 
 public class ImageManager {
     private static final String path = "file:src/main/resources/images/";
-    private static Image sawmill;
-    private static Image tree;
-    private static Image getNoise;
-    public static Image getSawmill() {
-        if(sawmill == null)
-            sawmill = new Image(path + "sawmill.png",128.0,128.0,true,false);
-        return sawmill;
-    }
-    public static Image getTree() {
-        if(tree == null)
-            tree = new Image(path + "tree.png");
-        return tree;
-    }
-    public static Image getNoise() {
-        if(getNoise == null) {
-            getNoise = new Image(path + "noise/noiseTexture" + new Random().nextInt(10) + ".png");
-        }
-        return getNoise;
+
+    static HashMap<String,Image> images = new HashMap<>();
+    public static Image getImage(String imageName) {
+        if(!images.containsKey(imageName))
+            images.put(imageName, new Image(path + imageName + ".png",128.0,128.0,true,false));
+        return images.get(imageName);
     }
 }
