@@ -27,11 +27,10 @@ public class Menu extends Application {
         layoutMenu.setAlignment(Pos.CENTER);
         layoutMenu.setSpacing(20);
 
-        Label logo = new Label("Katan");
-        logo.setStyle("-fx-font: 16px \"Serif\";");
+        ImageView logo = new ImageView(ImageManager.getImage("logoGame"));
 
         ImageView btnStartGame = new ImageView(ImageManager.getImage("btnStart"));
-        
+
         btnStartGame.setOnMouseEntered(e -> {btnStartGame.setScaleX(1.3); btnStartGame.setScaleY(1.3);});
         btnStartGame.setOnMouseExited(e -> {btnStartGame.setScaleX(1); btnStartGame.setScaleY(1);});
         btnStartGame.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
@@ -48,7 +47,7 @@ public class Menu extends Application {
         btnExit.setOnMouseExited(e -> {btnExit.setScaleX(1); btnExit.setScaleY(1);});
         btnExit.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
 
-        layoutMenu.getChildren().addAll(btnStartGame,btnJoinGame,btnExit);
+        layoutMenu.getChildren().addAll(logo,btnStartGame,btnJoinGame,btnExit);
         layoutMenu.setBackground(new Background(new BackgroundImage(new Image("file:src/main/resources/images/background1.jpg"),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true))));
 
         menuScene = new Scene(layoutMenu);
