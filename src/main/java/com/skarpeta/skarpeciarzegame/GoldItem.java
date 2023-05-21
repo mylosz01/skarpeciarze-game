@@ -1,7 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
-public class Wood extends Item{
-    Wood(int amount){
+public class GoldItem extends Item{
+    GoldItem(int amount){
         super(amount);
     }
 }

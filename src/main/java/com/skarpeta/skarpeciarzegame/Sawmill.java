@@ -1,4 +1,9 @@
 package com.skarpeta.skarpeciarzegame;
 
-public class Sawmill extends Building{
+import javafx.scene.image.ImageView;
+
+public class Sawmill extends Building {
+    public Sawmill() {
+        super(new ImageView(ImageManager.getImage("sawmill")));
+    }
 }
