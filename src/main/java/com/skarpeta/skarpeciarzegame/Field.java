@@ -1,6 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.buildings.*;
+import com.skarpeta.skarpeciarzegame.resources.Resource;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;

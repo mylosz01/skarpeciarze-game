@@ -1,6 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.buildings.*;
+import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;

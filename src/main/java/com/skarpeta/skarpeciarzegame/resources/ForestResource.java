@@ -1,5 +1,6 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.resources;
 
+import com.skarpeta.skarpeciarzegame.ImageManager;
 import javafx.scene.image.ImageView;
 
 public class ForestResource extends Resource {
