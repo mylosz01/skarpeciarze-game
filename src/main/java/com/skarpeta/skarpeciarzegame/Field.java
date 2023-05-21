@@ -5,7 +5,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.StrokeType;
 
-import static com.skarpeta.skarpeciarzegame.Catana.palette;
 public class Field extends Group {
 
     private Map map;
@@ -29,14 +28,9 @@ public class Field extends Group {
 
     public void setTerrain(TerrainType terrain) {
         this.terrain = terrain;
-        ColorShades color = switch (terrain){
-            case MOUNTAINS -> palette.gray;
-            case WATER -> palette.blue;
-            case DESERT -> palette.yellow;
-            case GRASS_LAND -> palette.green;
-        };
-        hexagon.setFill(color.primary);
-        hexagon.setStroke(color.darker);
+        hexagon.setFill(terrain.getColor().primary);
+        if(terrain != TerrainType.WATER)
+            hexagon.setStroke(terrain.getColor().darker);
     }
 
     private void click(MouseEvent mouseEvent) {

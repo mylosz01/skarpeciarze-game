@@ -16,12 +16,6 @@ public class Catana extends Application {
     double initialPositionY=0;
     private static final double ZOOM_FACTOR = 1.1;
 
-    static final ColorPalette palette = new ColorPalette(
-            new ColorShades("#28c074", "#10908E", "#48e094"), //green
-            new ColorShades("#488BD4", "#3C67D3", "#68ABF4"), //blue
-            new ColorShades("#928FB8", "#5B537D", "#B2AFD8"), //gray
-            new ColorShades("#FFCF8E", "#E7B36F", "#FFE2A3")); //yellow
-
     static Map map = new Map(BOARD_SIZE);
     static StackPane root;
     private Stage game;
@@ -32,7 +26,7 @@ public class Catana extends Application {
         this.game = game;
         root = new StackPane(map);
         Scene scene = new Scene(root);
-        scene.setFill(palette.blue.primary);
+        scene.setFill(TerrainType.WATER.getColor().primary);
         scene.setOnScroll(this::handleScroll);
         scene.setOnMouseDragged(this::handleDrag);
         scene.setOnMousePressed(this::handleRightClick);

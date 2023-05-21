@@ -11,19 +11,21 @@ public class Map extends Group {
     private Field[][] board;
     private final int BOARD_SIZE;
     Map(int size) {
-
-
         board = new Field[size][size];
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                TerrainType terrain = perlinThreshold(point);
-                Field field = new Field(this,point, FIELD_WIDTH,terrain);
+                Field field = calculateField(point);
                 getChildren().add(field);
                 board[x][y] = field;
             }
         }
+    }
+
+    private Field calculateField(Point point) {
+        TerrainType terrain = perlinThreshold(point);
+        return new Field(this,point, FIELD_WIDTH,terrain);
     }
 
     private TerrainType perlinThreshold(Point p) {
