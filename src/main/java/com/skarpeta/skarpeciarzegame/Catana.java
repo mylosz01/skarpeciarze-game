@@ -18,12 +18,10 @@ public class Catana extends Application {
 
     static Map map = new Map(BOARD_SIZE);
     static StackPane root;
-    private Stage game;
 
     @Override
     public void start(Stage game) {
-
-        this.game = game;
+        
         root = new StackPane(map);
         Scene scene = new Scene(root);
         scene.setFill(TerrainType.WATER.getColor().primary);
@@ -59,13 +57,16 @@ public class Catana extends Application {
 
 
     private void handleScroll(ScrollEvent event) {
-        double scroll = event.getDeltaY();
-        if (scroll > 0)
-            currentScale *= ZOOM_FACTOR;
-        else if (scroll < 0)
-            currentScale /= ZOOM_FACTOR;
-        map.setScaleX(currentScale);
-        map.setScaleY(currentScale);
+        double zoomFactor = (event.getDeltaY() > 0) ? ZOOM_FACTOR : (1 / ZOOM_FACTOR);
+        currentScale *= zoomFactor;
+        root.setScaleX(currentScale);
+        root.setScaleY(currentScale);
+
+        double offsetX = (event.getX() - root.getWidth() / 2) * (1 - zoomFactor);
+        double offsetY = (event.getY() - root.getHeight() / 2) * (1 - zoomFactor);
+
+        root.setTranslateX((root.getTranslateX() + offsetX) * zoomFactor);
+        root.setTranslateY((root.getTranslateY() + offsetY) * zoomFactor);
     }
 
     public static void main(String[] args) {
