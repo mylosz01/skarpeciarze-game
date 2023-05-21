@@ -1,5 +1,7 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.buildings;
 
+import com.skarpeta.skarpeciarzegame.Asset;
+import com.skarpeta.skarpeciarzegame.Field;
 import javafx.scene.image.ImageView;
 
 public abstract class Building extends Asset {
