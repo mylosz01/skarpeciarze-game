@@ -1,9 +1,11 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.inventory;
+
+import com.skarpeta.skarpeciarzegame.CraftingStatus;
 
 import java.util.HashMap;
 
 public class Inventory {
-    HashMap<String,Item> equipment;
+    HashMap<String, Item> equipment;
     Inventory(){
         this.equipment = new HashMap<>();
         this.equipment.put("Gold",new GoldItem(0));

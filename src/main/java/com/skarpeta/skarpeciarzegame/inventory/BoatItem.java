@@ -1,6 +1,6 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.inventory;
 
-public class BoatItem extends Item{
+public class BoatItem extends Item {
     BoatItem(){
         super(0);
     }
