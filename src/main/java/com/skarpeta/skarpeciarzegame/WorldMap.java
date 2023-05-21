@@ -29,6 +29,10 @@ public class WorldMap extends Group {
         double value = pixels.getColor(point.x,point.y).grayscale().getBlue();
         TerrainType terrain = perlinThreshold(value);
         Field field = new Field(this,point, FIELD_WIDTH,terrain);
+
+        if(terrain == TerrainType.GRASS_LAND && new Random().nextInt(4)==0)
+            field.addAsset(new Resource());
+
         getChildren().add(field);
         return field;
     }
