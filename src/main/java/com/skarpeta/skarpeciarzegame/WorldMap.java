@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 
 import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 
-public class Map extends Group {
+public class WorldMap extends Group {
     private Field[][] board;
     private final int BOARD_SIZE;
-    Map(int size) {
+    WorldMap(int size) {
         board = new Field[size][size];
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {

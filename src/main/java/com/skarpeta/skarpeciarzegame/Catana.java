@@ -16,13 +16,13 @@ public class Catana extends Application {
     double initialPositionY=0;
     private static final double ZOOM_FACTOR = 1.1;
 
-    static Map map = new Map(BOARD_SIZE);
+    static WorldMap worldMap = new WorldMap(BOARD_SIZE);
     static StackPane root;
 
     @Override
     public void start(Stage game) {
-        
-        root = new StackPane(map);
+
+        root = new StackPane(worldMap);
         Scene scene = new Scene(root);
         scene.setFill(TerrainType.WATER.getColor().primary);
         scene.setOnScroll(this::handleScroll);

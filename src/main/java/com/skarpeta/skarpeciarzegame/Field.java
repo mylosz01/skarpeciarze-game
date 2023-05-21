@@ -7,16 +7,16 @@ import javafx.scene.shape.StrokeType;
 
 public class Field extends Group {
 
-    private Map map;
+    private WorldMap worldMap;
     public Point position;
     public Hexagon hexagon;
     public Building building;
     public Resource resource;
     public TerrainType terrain;
 
-    public Field(Map map, Point position, double fieldSize, TerrainType terrain) {
+    public Field(WorldMap worldMap, Point position, double fieldSize, TerrainType terrain) {
         hexagon = new Hexagon(fieldSize);
-        this.map = map;
+        this.worldMap = worldMap;
         this.position = position;
         setTerrain(terrain);
         move(position);
@@ -37,7 +37,7 @@ public class Field extends Group {
         if(mouseEvent.getButton() == MouseButton.PRIMARY) {
             System.out.println("clicked "+position);
             System.out.println(getLayoutX()+", "+getLayoutY());
-            map.selectField(this);
+            worldMap.selectField(this);
         }
     }
     public void addAsset(Asset content) {
