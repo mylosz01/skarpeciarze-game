@@ -1,6 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.application.*;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.Scene;
@@ -11,7 +12,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
 
-import java.io.InputStream;
 
 public class Menu extends Application {
 
@@ -30,23 +30,30 @@ public class Menu extends Application {
         Label logo = new Label("Katan");
         logo.setStyle("-fx-font: 16px \"Serif\";");
 
-        Button btnStartGame = new Button("START GAME");
-        btnStartGame.setStyle("-fx-font: 16px \"Serif\";");
+        ImageView btnStartGame = new ImageView(ImageManager.getImage("btnStart"));
+        
+        btnStartGame.setOnMouseEntered(e -> {btnStartGame.setScaleX(1.3); btnStartGame.setScaleY(1.3);});
+        btnStartGame.setOnMouseExited(e -> {btnStartGame.setScaleX(1); btnStartGame.setScaleY(1);});
+        btnStartGame.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
 
-        Button btnJoinGame = new Button("JOIN GAME");
-        btnJoinGame.setStyle("-fx-font: 16px \"Serif\";");
+        ImageView btnJoinGame = new ImageView(ImageManager.getImage("btnJoin"));
 
-        Button btnExit = new Button("EXIT");
-        btnExit.setStyle("-fx-font: 16px \"Serif\";");
+        btnJoinGame.setOnMouseEntered(e -> {btnJoinGame.setScaleX(1.3); btnJoinGame.setScaleY(1.3);});
+        btnJoinGame.setOnMouseExited(e -> {btnJoinGame.setScaleX(1); btnJoinGame.setScaleY(1);});
+        btnJoinGame.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
 
-        layoutMenu.getChildren().addAll(logo,btnStartGame,btnJoinGame,btnExit);
-        //layoutMenu.setBackground(new Background(new BackgroundImage(new Image("D:\\Java\\skarpeciarze-game\\assets\\background2.jpg"),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true))));
+        ImageView btnExit = new ImageView(ImageManager.getImage("btnQuit"));
+
+        btnExit.setOnMouseEntered(e -> {btnExit.setScaleX(1.3); btnExit.setScaleY(1.3);});
+        btnExit.setOnMouseExited(e -> {btnExit.setScaleX(1); btnExit.setScaleY(1);});
+        btnExit.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
+
+        layoutMenu.getChildren().addAll(btnStartGame,btnJoinGame,btnExit);
+        layoutMenu.setBackground(new Background(new BackgroundImage(new Image("file:src/main/resources/images/background1.jpg"),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true))));
 
         menuScene = new Scene(layoutMenu);
 
-        InputStream imageSrc = this.getClass().getResourceAsStream("/assets/background1.jpg");
-        System.out.println(imageSrc);
-        //menuScene.setCursor(new ImageCursor(new Image("D:\\Java\\skarpeciarze-game\\src\\main\\assets\\kursor.png")));
+        menuScene.setCursor(new ImageCursor(ImageManager.getImage("kursor")));
 
         menu.setScene(menuScene);
         menu.setMinWidth(700);
