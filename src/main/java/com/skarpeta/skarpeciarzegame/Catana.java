@@ -1,52 +1,75 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Catana extends Application {
-    public static final double WINDOW_SIZE = 600;
-    public static final int BOARD_SIZE = 6;
-    public static final double FIELD_WIDTH = WINDOW_SIZE/BOARD_SIZE;
+    public static final int BOARD_SIZE = 60;
+    public static final int WINDOW_SIZE = 500;
+    public static final double FIELD_WIDTH = 50;
+    private double currentScale = 1.0;
+    double initialPositionX=0;
+    double initialPositionY=0;
+    private static final double ZOOM_FACTOR = 1.1;
 
-    static Color paletteDefiningColor = Color.DARKOLIVEGREEN;
+    static WorldMap worldMap = new WorldMap(BOARD_SIZE);
+    static StackPane root;
 
-    static final ColorPalette palette= new ColorPalette(paletteDefiningColor);
-    static final Color[] fieldColors = {palette.light,palette.primary};
-
-    private final Group fieldGroup = new Group();
-
-    static Map map = new Map(BOARD_SIZE);
     @Override
-    public void start(Stage stage) {
+    public void start(Stage game) {
 
-        Pane root = new Pane();
-        Pane game = new Pane();
-
-        game.getChildren().addAll(fieldGroup);
-        root.getChildren().addAll(game);
-        game.setLayoutX(0);
-        game.setLayoutY(0);
-
-        renderFields();
-
+        root = new StackPane(worldMap);
         Scene scene = new Scene(root);
-
-        stage.setTitle("catana");
-        stage.setScene(scene);
-        stage.show();
-        stage.setResizable(false);
-        stage.setMaxWidth(stage.getWidth());
-
+        scene.setFill(TerrainType.WATER.getColor().primary);
+        scene.setOnScroll(this::handleScroll);
+        scene.setOnMouseDragged(this::handleDrag);
+        scene.setOnMousePressed(this::handleRightClick);
+        game.setTitle("catana");
+        game.setScene(scene);
+        game.setWidth(WINDOW_SIZE);
+        game.setHeight(WINDOW_SIZE);
+        game.show();
     }
-    private void renderFields() {
-        map.forEach((e)-> fieldGroup.getChildren().add(e));
+
+    private void handleRightClick(MouseEvent event) {
+        if (event.isSecondaryButtonDown()) {
+            initialPositionX = event.getX();
+            initialPositionY = event.getY();
+        }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    private void handleDrag(MouseEvent event) {
+        if (event.isSecondaryButtonDown()) {
+            double distanceX = event.getX() - initialPositionX;
+            double distanceY = event.getY() - initialPositionY;
+
+            root.setTranslateX(root.getTranslateX() + distanceX);
+            root.setTranslateY(root.getTranslateY() + distanceY);
+
+            initialPositionX = event.getX();
+            initialPositionY = event.getY();
+        }
+    }
+
+
+    private void handleScroll(ScrollEvent event) {
+        double zoomFactor = (event.getDeltaY() > 0) ? ZOOM_FACTOR : (1 / ZOOM_FACTOR);
+        currentScale *= zoomFactor;
+        root.setScaleX(currentScale);
+        root.setScaleY(currentScale);
+
+        double offsetX = (event.getX() - root.getWidth() / 2) * (1 - zoomFactor);
+        double offsetY = (event.getY() - root.getHeight() / 2) * (1 - zoomFactor);
+
+        root.setTranslateX((root.getTranslateX() + offsetX) * zoomFactor);
+        root.setTranslateY((root.getTranslateY() + offsetY) * zoomFactor);
+    }
+
+    public static void main(String[] args) {
         launch();
     }
 }
