@@ -1,8 +1,12 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.buildings.*;
+import com.skarpeta.skarpeciarzegame.resources.Resource;
+import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
 public class Field extends Group {
@@ -40,8 +44,19 @@ public class Field extends Group {
             worldMap.selectField(this);
         }
     }
-    public void addAsset(Asset content) {
-        content.add(this);
+    public void addBuilding(Building building) {
+        if(hasBuilding())
+            return;
+        this.building = building;
+        building.allignTo(this);
+        getChildren().add(building);
+    }
+    public void addResource(Resource resource) {
+        if(hasResource())
+            return;
+        this.resource = resource;
+        resource.allignTo(this);
+        getChildren().add(resource);
     }
     public boolean hasBuilding() {
         return building != null;
@@ -57,5 +72,13 @@ public class Field extends Group {
         if(p.x%2 == 1)
             y += hexagon.height * 0.5;
         relocate(x, y);
+    }
+
+    public void darken(double value, Double base) {
+        Color color = (Color) hexagon.getFill();
+        Color stroke = (Color) hexagon.getStroke();
+        double interpolate = (value-base)*4;
+        hexagon.setFill(color.interpolate(terrain.getColor().darker,interpolate));
+        hexagon.setStroke(stroke.interpolate(terrain.getColor().darker,interpolate));
     }
 }

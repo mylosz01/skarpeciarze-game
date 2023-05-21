@@ -1,15 +1,17 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.inventory;
+
+import com.skarpeta.skarpeciarzegame.CraftingStatus;
 
 import java.util.HashMap;
 
 public class Inventory {
-    HashMap<String,Item> equipment;
+    HashMap<String, Item> equipment;
     Inventory(){
         this.equipment = new HashMap<>();
-        this.equipment.put("Gold",new Gold(0));
-        this.equipment.put("Stone",new Stone(0));
-        this.equipment.put("Wood",new Wood(0));
-        this.equipment.put("Boat",new Boat());
+        this.equipment.put("Gold",new GoldItem(0));
+        this.equipment.put("Stone",new StoneItem(0));
+        this.equipment.put("Wood",new WoodItem(0));
+        this.equipment.put("Boat",new BoatItem());
     }
     private CraftingStatus checkAmount(int goldAmount, int stoneAmount, int woodAmount){
         if(equipment.get("Gold").lesserThan(goldAmount)){

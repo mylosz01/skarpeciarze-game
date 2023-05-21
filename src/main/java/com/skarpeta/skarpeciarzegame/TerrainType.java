@@ -1,5 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.tools.ColorShades;
+
 enum TerrainType {
     WATER(0, new ColorShades("#488BD4", "#3C67D3", "#68ABF4")),
     DESERT(1,new ColorShades("#FFCF8E", "#E7B36F", "#FFE2A3")),

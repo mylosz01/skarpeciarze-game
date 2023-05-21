@@ -1,7 +1,7 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.inventory;
 
-public class Boat extends Item{
-    Boat(){
+public class BoatItem extends Item {
+    BoatItem(){
         super(0);
     }
     public boolean exists(){

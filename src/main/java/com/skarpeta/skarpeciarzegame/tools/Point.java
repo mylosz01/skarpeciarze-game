@@ -1,7 +1,7 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.tools;
 public class Point {
-    Integer x;
-    Integer y;
+    public Integer x;
+    public Integer y;
 
     public Point(int x, int y) {
         this.x = x;
