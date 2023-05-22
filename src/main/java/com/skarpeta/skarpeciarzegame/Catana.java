@@ -1,6 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -31,6 +32,8 @@ public class Catana extends Application {
 
         VBox playerUIMain = new VBox();
 
+        playerUIMain.setAlignment(Pos.CENTER);
+
         playerUIMain.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
@@ -48,7 +51,9 @@ public class Catana extends Application {
         AnchorPane gameLayout = new AnchorPane();
         gameLayout.getChildren().addAll(gameMap,playerUIMain);
         AnchorPane.setLeftAnchor(gameMap,0.0);
+        AnchorPane.setTopAnchor(playerUIMain,0.0);
         AnchorPane.setRightAnchor(playerUIMain,0.0);
+        AnchorPane.setBottomAnchor(playerUIMain,0.0);
 
         Scene scene = new Scene(gameLayout);
         scene.setFill(TerrainType.WATER.getColor().primary);
