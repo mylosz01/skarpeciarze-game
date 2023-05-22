@@ -26,6 +26,6 @@ public abstract class Item {
     }
     public String toString()
     {
-        return "fsfs";
+        return Integer.toString(amount);
     }
 }

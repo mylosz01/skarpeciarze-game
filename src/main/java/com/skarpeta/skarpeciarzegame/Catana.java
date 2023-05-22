@@ -8,6 +8,7 @@ import javafx.collections.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -44,7 +45,8 @@ public class Catana extends Application {
         //ruchy gracza (gora)
         VBox btnLayout = new VBox();
         btnLayout.setAlignment(Pos.CENTER);
-        btnLayout.setSpacing(20);
+        btnLayout.setSpacing(30);
+        btnLayout.setMinWidth(300);
 
         Button buildBtn = new Button("Zbuduj");
         Button destroyBtn = new Button("Zniszcz");
@@ -57,31 +59,30 @@ public class Catana extends Application {
         //eqPlayer (lewo)
         Pane eqPlayer = new Pane();
         eqPlayer.setBorder(new Border(new BorderStroke(Color.RED,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        eqPlayer.setMinWidth(200);
 
         //lista graczy (prawo)
         Pane listPlayer = new Pane();
         listPlayer.setBorder(new Border(new BorderStroke(Color.SKYBLUE,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
-        //
-        // sample data
+        //tabela to wyswietlania ekwipunku gracza
+        Inventory playerInventory = new Inventory();
+        Map<String, Item> equipment = playerInventory.getEquipment();
 
-        Inventory inv = new Inventory();
-        Map<String, Item> map = inv.getEquipment();
+        TableColumn<Map.Entry<String, Item>, String> nameItemColumn = new TableColumn<>("Nazwa");
+        nameItemColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getKey()));
 
-        TableColumn<Map.Entry<String, Item>, String> column1 = new TableColumn<>("Nazwa");
-        column1.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getKey()));
+        TableColumn<Map.Entry<String, Item>, String> amountItemColumn = new TableColumn<>("Ilość");
+        amountItemColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getValue().getAmount().toString()));
 
-        TableColumn<Map.Entry<String, Item>, String> column2 = new TableColumn<>("Ilość");
-        column2.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getValue().getAmount().toString()));
+        ObservableList<Map.Entry<String, Item>> playerItems = FXCollections.observableArrayList(equipment.entrySet());
+        final TableView<Map.Entry<String,Item>> playerItemsTable = new TableView<>(playerItems);
 
-        ObservableList<Map.Entry<String, Item>> items = FXCollections.observableArrayList(map.entrySet());
-        final TableView<Map.Entry<String,Item>> table = new TableView<>(items);
+        playerItemsTable.getColumns().setAll(nameItemColumn, amountItemColumn);
+        playerItemsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        playerItemsTable.setPrefWidth(200);
 
-        table.getColumns().setAll(column1, column2);
-        table.setMaxWidth(100);
-
-        eqPlayer.getChildren().add(table);
-        //
+        eqPlayer.getChildren().add(playerItemsTable);
 
         //dolna czesc UI
         HBox playerUIDown = new HBox();
