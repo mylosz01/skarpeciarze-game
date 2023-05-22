@@ -1,8 +1,10 @@
 package com.skarpeta.skarpeciarzegame;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
@@ -26,37 +28,54 @@ public class Catana extends Application {
     public void start(Stage game) {
 
         gameMap = new StackPane(worldMap);
-        gameMap.setOnScroll(this::handleScroll);
-        gameMap.setOnMouseDragged(this::handleDrag);
-        gameMap.setOnMousePressed(this::handleRightClick);
 
         VBox playerUIMain = new VBox();
 
-        playerUIMain.setAlignment(Pos.CENTER);
+        playerUIMain.setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
+        playerUIMain.setAlignment(Pos.TOP_CENTER);
+        playerUIMain.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
 
-        playerUIMain.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
-        Rectangle ruchyGracza = new Rectangle(410,200,Color.LIGHTCORAL);
-        Rectangle eqGracza = new Rectangle(200,200,Color.CHOCOLATE);
-        Rectangle statyGracza = new Rectangle(200,200,Color.CHARTREUSE);
+        //ruchy gracza (gora)
+        VBox btnLayout = new VBox();
+        btnLayout.setAlignment(Pos.CENTER);
+        btnLayout.setSpacing(20);
 
+        Button buildBtn = new Button("Zbuduj");
+        Button destroyBtn = new Button("Zniszcz");
+        Button collectBtn = new Button("Zbierz");
+
+        btnLayout.getChildren().addAll(buildBtn,destroyBtn,collectBtn);
+        btnLayout.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+
+        //eqPlayer (lewo)
+        Pane eqPlayer = new Pane();
+        eqPlayer.setBorder(new Border(new BorderStroke(Color.RED,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        //lista graczy (prawo)
+        Pane listPlayer = new Pane();
+        listPlayer.setBorder(new Border(new BorderStroke(Color.SKYBLUE,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        //dolna czesc UI
         HBox playerUIDown = new HBox();
-        playerUIDown.getChildren().addAll(eqGracza,statyGracza);
-        playerUIDown.setBorder(new Border(new BorderStroke(Color.GREENYELLOW,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        playerUIDown.setPrefHeight(1000);
+        playerUIDown.getChildren().addAll(eqPlayer,listPlayer);
+        playerUIDown.setBorder(new Border(new BorderStroke(Color.GREENYELLOW,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
-        playerUIMain.getChildren().addAll(ruchyGracza,playerUIDown);
+        playerUIMain.getChildren().addAll(btnLayout,playerUIDown);
 
         AnchorPane gameLayout = new AnchorPane();
         gameLayout.getChildren().addAll(gameMap,playerUIMain);
-        AnchorPane.setLeftAnchor(gameMap,0.0);
         AnchorPane.setTopAnchor(playerUIMain,0.0);
         AnchorPane.setRightAnchor(playerUIMain,0.0);
         AnchorPane.setBottomAnchor(playerUIMain,0.0);
 
         Scene scene = new Scene(gameLayout);
         scene.setFill(TerrainType.WATER.getColor().primary);
+        scene.setOnScroll(this::handleScroll);
+        scene.setOnMouseDragged(this::handleDrag);
+        scene.setOnMousePressed(this::handleRightClick);
         game.setTitle("catana");
         game.setScene(scene);
         game.setWidth(1200);
