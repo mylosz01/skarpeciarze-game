@@ -1,16 +1,21 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.inventory.Inventory;
+import com.skarpeta.skarpeciarzegame.inventory.Item;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.beans.property.*;
+import javafx.collections.*;
+import javafx.geometry.*;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.nio.DoubleBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
@@ -56,6 +61,27 @@ public class Catana extends Application {
         //lista graczy (prawo)
         Pane listPlayer = new Pane();
         listPlayer.setBorder(new Border(new BorderStroke(Color.SKYBLUE,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        //
+        // sample data
+
+        Inventory inv = new Inventory();
+        Map<String, Item> map = inv.getEquipment();
+
+        TableColumn<Map.Entry<String, Item>, String> column1 = new TableColumn<>("Nazwa");
+        column1.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getKey()));
+
+        TableColumn<Map.Entry<String, Item>, String> column2 = new TableColumn<>("Ilość");
+        column2.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getValue().getAmount().toString()));
+
+        ObservableList<Map.Entry<String, Item>> items = FXCollections.observableArrayList(map.entrySet());
+        final TableView<Map.Entry<String,Item>> table = new TableView<>(items);
+
+        table.getColumns().setAll(column1, column2);
+        table.setMaxWidth(100);
+
+        eqPlayer.getChildren().add(table);
+        //
 
         //dolna czesc UI
         HBox playerUIDown = new HBox();
