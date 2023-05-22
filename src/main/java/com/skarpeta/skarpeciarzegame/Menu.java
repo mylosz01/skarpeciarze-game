@@ -6,8 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.ImageInput;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
@@ -29,25 +29,14 @@ public class Menu extends Application {
 
         ImageView logo = new ImageView(ImageManager.getImage("logoGame"));
 
-        ImageView btnStartGame = new ImageView(ImageManager.getImage("btnStart"));
+        MenuButton btnStartGame = new MenuButton("btnStart");
 
-        btnStartGame.setOnMouseEntered(e -> {btnStartGame.setScaleX(1.3); btnStartGame.setScaleY(1.3);});
-        btnStartGame.setOnMouseExited(e -> {btnStartGame.setScaleX(1); btnStartGame.setScaleY(1);});
-        btnStartGame.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
+        MenuButton btnJoinGame = new MenuButton("btnJoin");
 
-        ImageView btnJoinGame = new ImageView(ImageManager.getImage("btnJoin"));
+        MenuButton btnExit = new MenuButton("btnQuit");
 
-        btnJoinGame.setOnMouseEntered(e -> {btnJoinGame.setScaleX(1.3); btnJoinGame.setScaleY(1.3);});
-        btnJoinGame.setOnMouseExited(e -> {btnJoinGame.setScaleX(1); btnJoinGame.setScaleY(1);});
-        btnJoinGame.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
 
-        ImageView btnExit = new ImageView(ImageManager.getImage("btnQuit"));
-
-        btnExit.setOnMouseEntered(e -> {btnExit.setScaleX(1.3); btnExit.setScaleY(1.3);});
-        btnExit.setOnMouseExited(e -> {btnExit.setScaleX(1); btnExit.setScaleY(1);});
-        btnExit.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
-
-        layoutMenu.getChildren().addAll(logo,btnStartGame,btnJoinGame,btnExit);
+        layoutMenu.getChildren().addAll(logo,btnStartGame.getImageView(),btnJoinGame.getImageView(),btnExit.getImageView());
         layoutMenu.setBackground(new Background(new BackgroundImage(new Image("file:src/main/resources/images/background1.jpg"),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true))));
 
         menuScene = new Scene(layoutMenu);
@@ -68,4 +57,10 @@ public class Menu extends Application {
     public static void main(String[] args) throws InterruptedException {
         launch();
     }
+
+    private void mouseEntered(MouseEvent event, ImageView btn) {
+        btn.setScaleX(1.3);
+        btn.setScaleY(1.3);
+    }
+
 }
