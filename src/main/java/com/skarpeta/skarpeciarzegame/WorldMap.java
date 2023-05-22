@@ -22,7 +22,7 @@ public class WorldMap extends Group {
     WorldMap(int size) {
         int random = new Random().nextInt(10);
         System.out.println(random);
-        noise = ImageManager.getImage("noise/noiseTexture" + random);
+        noise = ImageManager.getImagePNG("noise/noiseTexture" + random);
         PixelReader pixels = noise.getPixelReader();
         board = new Field[size][size];
         BOARD_SIZE = size;
@@ -73,6 +73,6 @@ public class WorldMap extends Group {
 
     public void selectField(Field field) {
         //przykladowe uzycie addAsset()
-        field.addBuilding(new Quarry());
+        field.addBuilding(new Sawmill());
     }
 }
