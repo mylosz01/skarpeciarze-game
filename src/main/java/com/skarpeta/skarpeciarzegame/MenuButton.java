@@ -1,5 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.tools.ImageManager;
+
 import javafx.application.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

@@ -1,4 +1,5 @@
 package com.skarpeta.skarpeciarzegame;
+import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 
 import javafx.application.*;
 import javafx.geometry.Insets;
@@ -11,7 +12,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
-
 
 public class Menu extends Application {
 
