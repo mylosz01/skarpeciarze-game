@@ -19,9 +19,10 @@ public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
     public static final double WINDOW_SIZE = 1000;
     public static final double FIELD_WIDTH = 50;
+    public static final double UI_WIDTH = 300;
     private double currentScale = 1.0;
-    double initialPositionX=0;
-    double initialPositionY=0;
+    double initialPositionX = 0;
+    double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
     static WorldMap worldMap = new WorldMap(BOARD_SIZE);
@@ -59,7 +60,7 @@ public class Catana extends Application {
         AnchorPane.setTopAnchor(gamePane,0.0);
         AnchorPane.setLeftAnchor(gamePane,0.0);
         AnchorPane.setBottomAnchor(gamePane,0.0);
-        AnchorPane.setRightAnchor(gamePane,300.0); //300 to szerokosc menu prawego, wiec przypinam gre 300 od prawej krawedzi okna
+        AnchorPane.setRightAnchor(gamePane,UI_WIDTH);
 
         gamePane.getChildren().add(gameMap);
         return gamePane;
@@ -70,6 +71,7 @@ public class Catana extends Application {
         playerUIMain.setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
         playerUIMain.setAlignment(Pos.TOP_CENTER);
         playerUIMain.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+        playerUIMain.setMinWidth(UI_WIDTH);
 
         //ruchy gracza (gorny panel)
         VBox btnLayout = createInteractionMenu();
@@ -87,7 +89,6 @@ public class Catana extends Application {
         playerUIDown.getChildren().addAll(eqPlayer,listPlayer);
         playerUIDown.setBorder(new Border(new BorderStroke(Color.GREENYELLOW,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
-
         AnchorPane.setTopAnchor(playerUIMain,0.0);
         AnchorPane.setRightAnchor(playerUIMain,0.0);
         AnchorPane.setBottomAnchor(playerUIMain,0.0);
@@ -102,7 +103,6 @@ public class Catana extends Application {
         interactionMenu.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         interactionMenu.setAlignment(Pos.CENTER);
         interactionMenu.setSpacing(30);
-        interactionMenu.setMinWidth(300);
 
         Button buildBtn = new Button("Zbuduj");
         Button destroyBtn = new Button("Zniszcz");
