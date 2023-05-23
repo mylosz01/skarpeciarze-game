@@ -27,7 +27,7 @@ public class Player extends Asset {
         super.allignTo(field,x- field.hexagon.width * 0.25,y);
     }
 
-    public void movePlayer(Field destination){
+    public void movePlayer(Field destination) throws InvalidMoveException {
         if(isValidMovePlayer(destination)){
             this.playerField = destination;
             allignTo(this.playerField);
@@ -35,12 +35,10 @@ public class Player extends Asset {
     }
 
     public boolean isValidMovePlayer(Field destination) throws InvalidMoveException {
-        if(destination.terrain.equals(TerrainType.WATER)) {
+        if(destination.terrain.equals(TerrainType.WATER))
             throw new InvalidMoveException("nie posiadasz lodki!!!");
-        }
-        if(!destination.position.isTouchingHexagonal(this.playerField.position)){
+        if(!destination.position.isTouchingHexagonal(this.playerField.position))
             throw new InvalidMoveException("to pole jest poza zasiegiem");
-        }
         return true;
     }
 }

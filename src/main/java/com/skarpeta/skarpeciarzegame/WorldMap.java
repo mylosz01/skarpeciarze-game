@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
+import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
@@ -76,8 +77,12 @@ public class WorldMap extends Group {
     }
 
     public void selectField(Field field) {
+        try {
+            PlayerManager.getPlayer().movePlayer(field);
+        } catch (InvalidMoveException e) {
+            System.out.println(e.getMessage());
+        }
         //field.addBuilding(new Sawmill());
-        PlayerManager.getPlayer().movePlayer(field);
 
     }
 }
