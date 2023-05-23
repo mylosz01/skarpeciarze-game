@@ -1,5 +1,8 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
+/** Przedmioty przechowywane przez gracza w ekwipunku
+ *  (wraz z jego ilością)
+ * */
 public abstract class Item {
     private Integer amount;
     Item(int amount){

@@ -4,7 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
-
+/** Asset to klasa przechowywujaca teksture obiektów w grze */
 public class Asset extends Pane {
     private final ImageView texture;
 
@@ -17,7 +17,8 @@ public class Asset extends Pane {
         return texture;
     }
 
-    public void allignTo(double x, double y) {
+    /** align() słuzy do drobnych poprawek ustawienia assetu na ekranie */
+    public void align(double x, double y) {
         getTexture().setFitWidth(FIELD_WIDTH * 0.5);
         getTexture().setFitHeight(FIELD_WIDTH * 0.5);
         setTranslateX(x);

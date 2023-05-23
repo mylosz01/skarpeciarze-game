@@ -3,8 +3,11 @@ package com.skarpeta.skarpeciarzegame;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
+/** Kształt heksagona definiowant poprzez zbiór punktów. */
 public class Hexagon extends Polygon {
+    /** Odległość między górną a dolną podstawą */
     double height;
+    /** Odległość pomiędzy skrajnymi punktami po stronie lewej i prawej */
     double width;
     public double getWidth() {
         return width;

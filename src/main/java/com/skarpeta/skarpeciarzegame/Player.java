@@ -6,6 +6,8 @@ import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.image.ImageView;
 
+/** Gracz posiada pole Field w którym się znajduje
+ */
 public class Player extends Asset {
 
     Inventory playerEq;
@@ -17,21 +19,28 @@ public class Player extends Asset {
         this.playerEq = new Inventory();
         this.worldMap = worldMap;
         this.playerField = worldMap.getField(point);
-        allignTo(playerField);
+        align(playerField);
     }
 
-    public void allignTo(Field field) {
+    /** ustawianie pozycji gracza na ekranie, uzywajac pozycji pola */
+    public void align(Field field) {
         relocate(field.getLayoutX(),field.getLayoutY());
-        super.allignTo(this.getWidth() * -0.5,0);
+        super.align(this.getWidth() * -0.5,0);
     }
-
+    /** Poruszanie się gracza
+     *  gracz porusza się na podane pole Field destination tylko w przypadku gdy ruch jest poprawny (isValidMovePlayer)
+     */
     public void movePlayer(Field destination) throws InvalidMoveException {
         if(isValidMovePlayer(destination)){
             this.playerField = destination;
-            allignTo(this.playerField);
+            align(this.playerField);
         }
     }
 
+    /** Walidacja ruchów gracza:
+     *  niepoprawnym ruchem jest próba wejścia do wody bez łodzi
+     *  oraz próba wejścia na niesąsiadujące pole
+     */
     public boolean isValidMovePlayer(Field destination) throws InvalidMoveException {
         if(destination.terrain.equals(TerrainType.WATER))
             throw new InvalidMoveException("nie posiadasz lodki!!!");

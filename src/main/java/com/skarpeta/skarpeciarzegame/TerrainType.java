@@ -2,6 +2,9 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.tools.ColorShades;
 
+/** Przechowywanie informacji o terenie pól Field
+ *  Teren jest definiowany poprzez ColorShades - zbiór kolorów
+ */
 enum TerrainType {
     WATER(0, new ColorShades("#488BD4", "#3C67D3", "#68ABF4")),
     DESERT(1,new ColorShades("#FFCF8E", "#E7B36F", "#FFE2A3")),
@@ -23,6 +26,7 @@ enum TerrainType {
     public int getIndex() {
         return index;
     }
+    /** Zwraca typ terenu podając indeks */
     public static TerrainType fromIndex(int index) {
         for (TerrainType myEnum : TerrainType.values()) {
             if (myEnum.getIndex() == index) {

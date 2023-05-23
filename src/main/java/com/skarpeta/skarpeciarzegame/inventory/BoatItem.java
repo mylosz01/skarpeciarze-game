@@ -1,5 +1,8 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
+/** Item służący do pływania po wodzie.
+ *  Craftowany przez gracza.
+ */
 public class BoatItem extends Item {
     BoatItem(){
         super(0);
