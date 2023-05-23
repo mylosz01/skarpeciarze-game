@@ -74,7 +74,7 @@ public class WorldMap extends Group {
 
     public void selectField(Field field) {
         //field.addBuilding(new Sawmill());
-        PlayerManager.players.get(0).movePlayer(field);
+        PlayerManager.getPlayer().movePlayer(field);
 
     }
 }

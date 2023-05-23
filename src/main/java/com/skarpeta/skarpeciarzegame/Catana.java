@@ -39,11 +39,11 @@ public class Catana extends Application {
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
-        Player player = new Player(worldMap,new Point(0,0));
+        Player player = new Player(worldMap,new Point(1,1));
         PlayerManager.addPlayer(player);
         player.allignTo(player.playerField);
 
-        gameMap.getChildren().add(player);
+        worldMap.getChildren().add(player);
 
         AnchorPane gameLayout = new AnchorPane();
         gameLayout.getChildren().addAll(gamePane,playerUIMain);
