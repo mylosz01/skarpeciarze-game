@@ -41,7 +41,6 @@ public class Catana extends Application {
 
         Player player = new Player(worldMap,new Point(1,1));
         PlayerManager.addPlayer(player);
-        player.allignTo(player.playerField);
 
         worldMap.getChildren().add(player);
 
