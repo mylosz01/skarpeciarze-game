@@ -73,6 +73,6 @@ public class WorldMap extends Group {
 
     public void selectField(Field field) {
         //przykladowe uzycie addAsset()
-        field.addBuilding(new Quarry());
+        field.addBuilding(new Sawmill());
     }
 }
