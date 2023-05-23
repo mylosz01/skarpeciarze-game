@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
+import com.skarpeta.skarpeciarzegame.resources.StoneResource;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
@@ -55,6 +56,11 @@ public class WorldMap extends Group {
             field.darken(value2-threshold[terrain.getIndex()-1]);
             if(new Random().nextInt(4) == 0)
                 field.addResource(new ForestResource());
+        }
+        if(terrain == TerrainType.MOUNTAINS) {
+            field.darken(value2-threshold[terrain.getIndex()-1]);
+            if(new Random().nextInt(7) == 0)
+                field.addResource(new StoneResource());
         }
 
         getChildren().add(field);
