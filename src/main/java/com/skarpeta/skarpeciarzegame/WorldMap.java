@@ -1,92 +1,35 @@
 package com.skarpeta.skarpeciarzegame;
 
-import com.skarpeta.skarpeciarzegame.resources.ForestResource;
-import com.skarpeta.skarpeciarzegame.resources.StoneResource;
-import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
-
-import java.io.File;
 import java.util.NoSuchElementException;
-import java.util.Random;
 import java.util.function.Consumer;
 
-import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 /** Mapa gry, definiowana przez tablicę pól Field */
 public class WorldMap extends Group {
     /** Zbiór pól mapy */
     private final Field[][] board;
     private final int BOARD_SIZE;
-    /** Obraz będący żródłem wygenerowanej mapy */
-    Image noise;
-    /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
-    Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
-
+    WorldGeneration worldGeneration = new WorldGeneration();
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
     WorldMap(int size) {
-        int random = new Random().nextInt(new File("src/main/resources/images/noise").list().length);
-        noise = ImageManager.getImage("noise/noiseTexture" + random + ".png",128,128);
-        PixelReader pixels = noise.getPixelReader();
         board = new Field[size][size];
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                board[x][y] = generateField(point,pixels);
+                board[x][y] = worldGeneration.generateField(this,point);
             }
         }
-    }
-
-    /** Generuje pole na podstawie danych z obrazka noise.
-     *  Ustawia teren oraz generuje losowe materialy do zbierania przez graczy
-     */
-    private Field generateField(Point point, PixelReader pixels) {
-        double noiseChannel1 = pixels.getColor(point.x,point.y).getRed();
-        double noiseChannel3 = pixels.getColor(point.x,point.y).getBlue();
-        //double noiseChannel2 = pixels.getColor(point.x,point.y).grayscale().getBrightness();
-
-        TerrainType terrain = thresholdedTerrain(noiseChannel1);
-        Field field = new Field(this,point, FIELD_WIDTH,terrain,noiseChannel3);
-
-        if(terrain == TerrainType.GRASS_LAND) {
-            field.darken(noiseChannel3-threshold[terrain.getIndex()-1]);
-            if(randomBoolean(noiseChannel3))
-                field.addResource(new ForestResource());
-        }
-        if(terrain == TerrainType.MOUNTAINS) {
-            if(new Random().nextInt(7) == 0)
-                field.addResource(new StoneResource());
-        }
-        getChildren().add(field);
-        return field;
     }
 
     /** wyswietla jeden z noise odpowiedzialnych za generacje drzew */
     public void debugModeTerrain()
     {
         this.forEach((e)->e.setColor(Color.BLACK.interpolate(Color.WHITE,e.height)));//debug);
-    }
-
-    private boolean randomBoolean(double value3) {
-        double calc = (value3-0.3)*60;
-        if(calc<1)
-            calc=1;
-        int random = new Random().nextInt((int) Math.floor(calc));
-        return random == 0;
-    }
-
-    /** Zwraca teren przypisany danej wysokości (wysokości definiowane poprzez threshold[]) */
-    private TerrainType thresholdedTerrain(double value) {
-        for (int index = 0; index < threshold.length; index++) {
-            if (value <= threshold[index])
-                return TerrainType.fromIndex(index);
-        }
-        throw new RuntimeException("niepoprawny plik");
     }
 
     /** Wykonywanie akcji dla każdego z pola */
