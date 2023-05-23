@@ -1,6 +1,5 @@
 package com.skarpeta.skarpeciarzegame;
 
-import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.resources.StoneResource;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
@@ -10,7 +9,9 @@ import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
+import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -28,8 +29,7 @@ public class WorldMap extends Group {
 
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
     WorldMap(int size) {
-        int random = new Random().nextInt(10); //@fixme magic number
-        System.out.println(random);
+        int random = new Random().nextInt(new File("src/main/resources/images/noise").list().length);
         noise = ImageManager.getImage("noise/noiseTexture" + random + ".png",128,128);
         PixelReader pixels = noise.getPixelReader();
         board = new Field[size][size];
@@ -46,29 +46,42 @@ public class WorldMap extends Group {
      *  Ustawia teren oraz generuje losowe materialy do zbierania przez graczy
      */
     private Field generateField(Point point, PixelReader pixels) {
-        double value = pixels.getColor(point.x,point.y).getRed();
-        double value2 = pixels.getColor(point.x,point.y).grayscale().getBrightness();
-        double value3 = pixels.getColor(point.x,point.y).getBlue();
-        TerrainType terrain = perlinThreshold(value);
-        Field field = new Field(this,point, FIELD_WIDTH,terrain);
+        double noiseChannel1 = pixels.getColor(point.x,point.y).getRed();
+        double noiseChannel3 = pixels.getColor(point.x,point.y).getBlue();
+        //double noiseChannel2 = pixels.getColor(point.x,point.y).grayscale().getBrightness();
+
+        TerrainType terrain = thresholdedTerrain(noiseChannel1);
+        Field field = new Field(this,point, FIELD_WIDTH,terrain,noiseChannel3);
 
         if(terrain == TerrainType.GRASS_LAND) {
-            field.darken(value2-threshold[terrain.getIndex()-1]);
-            if(new Random().nextInt(4) == 0)
+            field.darken(noiseChannel3-threshold[terrain.getIndex()-1]);
+            if(randomBoolean(noiseChannel3))
                 field.addResource(new ForestResource());
         }
         if(terrain == TerrainType.MOUNTAINS) {
-            field.darken(value2-threshold[terrain.getIndex()-1]);
             if(new Random().nextInt(7) == 0)
                 field.addResource(new StoneResource());
         }
-
         getChildren().add(field);
         return field;
     }
 
+    /** wyswietla jeden z noise odpowiedzialnych za generacje drzew */
+    public void debugModeTerrain()
+    {
+        this.forEach((e)->e.setColor(Color.BLACK.interpolate(Color.WHITE,e.height)));//debug);
+    }
+
+    private boolean randomBoolean(double value3) {
+        double calc = (value3-0.3)*60;
+        if(calc<1)
+            calc=1;
+        int random = new Random().nextInt((int) Math.floor(calc));
+        return random == 0;
+    }
+
     /** Zwraca teren przypisany danej wysokości (wysokości definiowane poprzez threshold[]) */
-    private TerrainType perlinThreshold(double value) {
+    private TerrainType thresholdedTerrain(double value) {
         for (int index = 0; index < threshold.length; index++) {
             if (value <= threshold[index])
                 return TerrainType.fromIndex(index);
