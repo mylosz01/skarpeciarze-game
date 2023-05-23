@@ -26,18 +26,15 @@ public class Player extends Asset {
         super.allignTo(field,x- field.hexagon.width * 0.25,y);
     }
 
-    public void movePlayer(Field field){
-        if(!isValidMovePlayer(field))
-            return;
-        this.playerField = field;
-        allignTo(this.playerField);
+    public void movePlayer(Field destination){
+        if(isValidMovePlayer(destination)){
+            this.playerField = destination;
+            allignTo(this.playerField);
+        }
     }
 
     public boolean isValidMovePlayer(Field destination){
         System.out.println(destination.position.isTouchingHexagonal(this.playerField.position));
-        if(!destination.position.isTouchingHexagonal(this.playerField.position))
-            return false;
-
-        return true;
+        return destination.position.isTouchingHexagonal(this.playerField.position);
     }
 }

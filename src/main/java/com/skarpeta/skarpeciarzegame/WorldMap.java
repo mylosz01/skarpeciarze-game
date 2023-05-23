@@ -9,6 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.function.Consumer;
 
@@ -69,6 +70,8 @@ public class WorldMap extends Group {
     }
 
     public Field getField(Point p) {
+        if(p.isNegative())
+            throw new NoSuchElementException("pola nie moga byc na pozycji ujemnej");
         return board[p.x][p.y];
     }
 
