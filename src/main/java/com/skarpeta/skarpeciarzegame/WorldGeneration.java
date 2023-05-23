@@ -14,13 +14,16 @@ import java.util.Random;
 import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 
+/** Generowanie świata, czytanie pliku z perlin noise */
 public class WorldGeneration {
 
     /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
-     Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
-     ArrayList<String > noiseChannels = new ArrayList<>();
+    Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
+    ArrayList<String > noiseChannels = new ArrayList<>();
     PixelReader pixels;
 
+
+    /** Konstruktor tworzy nowy plik noise*/
     WorldGeneration() {
         int random = new Random().nextInt(new File("src/main/resources/images/noise").list().length);
         Image noise = ImageManager.getImage("noise/noiseTexture" + random + ".png", 128, 128);
@@ -54,6 +57,7 @@ public class WorldGeneration {
         worldMap.getChildren().add(field);
         return field;
     }
+    /** zwraca wartość piksela w punkcie Point z losowego kanału RGB*/
     private double getRandomChannel(int i, Point point) {
         return switch (noiseChannels.get(i)) {
             case "r" -> pixels.getColor(point.x, point.y).getRed();
@@ -62,8 +66,9 @@ public class WorldGeneration {
             default -> 0;
         };
     }
-    private boolean randomBoolean(double value3) {
-        double calc = (value3-0.3)*60;
+    /** Zwraca losową wartość boolean z prawdopodobieństwem zależnym od value */
+    private static boolean randomBoolean(double value) {
+        double calc = (value-0.3)*60;
         if(calc<1)
             calc=1;
         int random = new Random().nextInt((int) Math.floor(calc));
