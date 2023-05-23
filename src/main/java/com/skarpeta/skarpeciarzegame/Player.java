@@ -17,14 +17,12 @@ public class Player extends Asset {
         this.playerEq = new Inventory();
         this.worldMap = worldMap;
         this.playerField = worldMap.getField(point);
+        allignTo(playerField);
     }
 
     public void allignTo(Field field) {
-        double x = field.position.x * field.hexagon.width * 0.75;
-        double y = field.position.y * field.hexagon.height;
-        if(field.position.x%2 == 1)
-            y += field.hexagon.height * 0.5;
-        super.allignTo(field,x- field.hexagon.width * 0.25,y);
+        relocate(field.getLayoutX(),field.getLayoutY());
+        super.allignTo(this.getWidth() * -0.5,0);
     }
 
     public void movePlayer(Field destination) throws InvalidMoveException {
