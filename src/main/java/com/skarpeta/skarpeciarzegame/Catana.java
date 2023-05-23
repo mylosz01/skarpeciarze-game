@@ -161,15 +161,14 @@ public class Catana extends Application {
 
     private void handleScroll(ScrollEvent event) {
         double zoomFactor = (event.getDeltaY() > 0) ? ZOOM_FACTOR : (1 / ZOOM_FACTOR);
-        currentScale *= zoomFactor;
-        gameMap.setScaleX(currentScale);
-        gameMap.setScaleY(currentScale);
-
         double offsetX = (event.getX() - gameMap.getWidth() / 2) * (1 - zoomFactor);
         double offsetY = (event.getY() - gameMap.getHeight() / 2) * (1 - zoomFactor);
 
+        gameMap.setScaleX(currentScale*zoomFactor);
+        gameMap.setScaleY(currentScale*zoomFactor);
         gameMap.setTranslateX((gameMap.getTranslateX() + offsetX) * zoomFactor);
         gameMap.setTranslateY((gameMap.getTranslateY() + offsetY) * zoomFactor);
+        currentScale *= zoomFactor;
     }
 
     public static void main(String[] args) {
