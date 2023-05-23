@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
+import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -72,7 +73,8 @@ public class WorldMap extends Group {
     }
 
     public void selectField(Field field) {
-        //przykladowe uzycie addAsset()
-        field.addBuilding(new Sawmill());
+        //field.addBuilding(new Sawmill());
+        PlayerManager.players.get(0).movePlayer(field);
+
     }
 }
