@@ -16,7 +16,7 @@ public class Point {
         this.y= point1.y;
     }
 
-    boolean isNegative() {
+    public boolean isNegative() {
         return x < 0 || y < 0;
     }
 
@@ -72,18 +72,28 @@ public class Point {
     public Point add(int x, int y) {
         return new Point(this.x+x,this.y+y);
     }
+    public Point add(Point p) {
+        return new Point(this.x+p.x,this.y+p.y);
+    }
+    public Point subtract(int x, int y) {
+        return new Point(this.x-x,this.y-y);
+    }
+    public Point subtract(Point p) {
+        return new Point(this.x-p.x,this.y-p.y);
+    }
 
-    public void moveTowards(Point point) {
-        int moveX, moveY;
-        if(xDiff(point)>0)
-            moveX=-1;
-        else
-            moveX=1;
-        if(yDiff(point)>0)
-            moveY=-1;
-        else
-            moveY=1;
-        this.move(moveX,moveY);
+    public static Point moveTowards(Point source, Point towards) {
+        Point vector = towards.subtract(source);
+        return vector.normalize().add(source);
+    }
+
+    private Point normalize() {
+        Point p = new Point(this);
+        if(p.x!=0)
+            p.x/=Math.abs(p.x);
+        if(p.y!=0)
+            p.y/=Math.abs(p.y);
+        return p;
     }
 
     private void move(int x, int y) {
