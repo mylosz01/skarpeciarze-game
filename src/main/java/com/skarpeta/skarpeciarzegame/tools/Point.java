@@ -1,4 +1,7 @@
 package com.skarpeta.skarpeciarzegame.tools;
+
+import java.util.Objects;
+
 public class Point {
     public Integer x;
     public Integer y;
@@ -24,8 +27,31 @@ public class Point {
     boolean isDiagonalTo(Point point) {
         return yDiffAbs(point) == xDiffAbs(point);
     }
-    boolean isNextTo(Point point) {
+    public boolean isNextTo(Point point) {
         return yDiffAbs(point) <= 1 && xDiffAbs(point) <= 1;
+    }
+
+    public boolean isTouchingHexagonal(Point point) {
+        System.out.println("hexagonalne punkty : "+this + ", " + point);
+        if(Math.abs(this.y - point.y) + Math.abs(this.x - point.x) == 1){
+            return true;
+        }
+        System.out.println("sprawdzamy przekatne");
+        if(this.x%2==1)
+        {
+            System.out.println("gracz porusza sie z parzystego pola");
+            if((point.y - this.y)==1 && (Math.abs(point.x - this.x)) == 1){
+                return true;
+            }
+        }else {
+            System.out.println("gracz porusza sie z NIEparzystego pola");
+            if((point.y - this.y)==-1 && (Math.abs(point.x - this.x)) == 1){
+                return true;
+            }
+
+        }
+
+        return false;
     }
 
     public int diagonalDistance(Point point) {

@@ -27,7 +27,17 @@ public class Player extends Asset {
     }
 
     public void movePlayer(Field field){
+        if(!isValidMovePlayer(field))
+            return;
         this.playerField = field;
         allignTo(this.playerField);
+    }
+
+    public boolean isValidMovePlayer(Field destination){
+        System.out.println(destination.position.isTouchingHexagonal(this.playerField.position));
+        if(!destination.position.isTouchingHexagonal(this.playerField.position))
+            return false;
+
+        return true;
     }
 }
