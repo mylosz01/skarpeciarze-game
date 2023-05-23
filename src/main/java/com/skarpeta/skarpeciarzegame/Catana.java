@@ -8,19 +8,16 @@ import javafx.collections.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.nio.DoubleBuffer;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
-    public static final int WINDOW_SIZE = 500;
+    public static final double WINDOW_SIZE = 1000;
     public static final double FIELD_WIDTH = 50;
     private double currentScale = 1.0;
     double initialPositionX=0;
@@ -35,36 +32,90 @@ public class Catana extends Application {
 
         gameMap = new StackPane(worldMap);
 
-        VBox playerUIMain = new VBox();
 
+        VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
+        Pane gamePane = createGamePane();//okienko gry po lewej
+
+        AnchorPane gameLayout = new AnchorPane();
+        gameLayout.getChildren().addAll(gamePane,playerUIMain);
+
+        Scene scene = new Scene(gameLayout);
+        scene.setOnScroll(this::handleScroll);
+        scene.setOnMouseDragged(this::handleDrag);
+        scene.setOnMousePressed(this::handleRightClick);
+
+        game.setTitle("catana");
+        game.setScene(scene);
+        game.setWidth(WINDOW_SIZE);
+        game.setHeight(WINDOW_SIZE);
+        game.show();
+    }
+
+    private Pane createGamePane() { //lewy panel okna (gra)
+        Pane gamePane = new Pane();
+        gamePane.setBackground(new Background(new BackgroundFill(TerrainType.WATER.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
+        gamePane.setBorder(new Border(new BorderStroke(Color.GOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(10))));
+
+        AnchorPane.setTopAnchor(gamePane,0.0);
+        AnchorPane.setLeftAnchor(gamePane,0.0);
+        AnchorPane.setBottomAnchor(gamePane,0.0);
+        AnchorPane.setRightAnchor(gamePane,300.0); //300 to szerokosc menu prawego, wiec przypinam gre 300 od prawej krawedzi okna
+
+        gamePane.getChildren().add(gameMap);
+        return gamePane;
+    }
+
+    private VBox createplayerUIMain() { //prawy panel okna (ui)
+        VBox playerUIMain = new VBox();
         playerUIMain.setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
         playerUIMain.setAlignment(Pos.TOP_CENTER);
         playerUIMain.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
 
+        //ruchy gracza (gorny panel)
+        VBox btnLayout = createInteractionMenu();
 
-        //ruchy gracza (gora)
-        VBox btnLayout = new VBox();
-        btnLayout.setAlignment(Pos.CENTER);
-        btnLayout.setSpacing(30);
-        btnLayout.setMinWidth(300);
+        //lista graczy (prawy panel)
+        Pane listPlayer = new Pane();
+        listPlayer.setBorder(new Border(new BorderStroke(Color.SKYBLUE,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+        //eqPlayer (lewy panel)
+        Pane eqPlayer = createEqPlayerPane();
+
+        //dolna czesc UI
+        HBox playerUIDown = new HBox();
+        playerUIDown.setPrefHeight(1000);
+        playerUIDown.getChildren().addAll(eqPlayer,listPlayer);
+        playerUIDown.setBorder(new Border(new BorderStroke(Color.GREENYELLOW,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+
+
+        AnchorPane.setTopAnchor(playerUIMain,0.0);
+        AnchorPane.setRightAnchor(playerUIMain,0.0);
+        AnchorPane.setBottomAnchor(playerUIMain,0.0);
+
+        playerUIMain.getChildren().addAll(btnLayout,playerUIDown);
+        return playerUIMain;
+    }
+
+    private VBox createInteractionMenu() { //gorny panel z przyciskami
+
+        VBox interactionMenu = new VBox();
+        interactionMenu.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        interactionMenu.setAlignment(Pos.CENTER);
+        interactionMenu.setSpacing(30);
+        interactionMenu.setMinWidth(300);
 
         Button buildBtn = new Button("Zbuduj");
         Button destroyBtn = new Button("Zniszcz");
         Button collectBtn = new Button("Zbierz");
 
-        btnLayout.getChildren().addAll(buildBtn,destroyBtn,collectBtn);
-        btnLayout.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        interactionMenu.getChildren().addAll(buildBtn,destroyBtn,collectBtn);
+        return  interactionMenu;
+    }
 
-
-        //eqPlayer (lewo)
+    private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
         eqPlayer.setBorder(new Border(new BorderStroke(Color.RED,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         eqPlayer.setMinWidth(200);
-
-        //lista graczy (prawo)
-        Pane listPlayer = new Pane();
-        listPlayer.setBorder(new Border(new BorderStroke(Color.SKYBLUE,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
-
         //tabela to wyswietlania ekwipunku gracza
         Inventory playerInventory = new Inventory();
         Map<String, Item> equipment = playerInventory.getEquipment();
@@ -83,31 +134,7 @@ public class Catana extends Application {
         playerItemsTable.setPrefWidth(200);
 
         eqPlayer.getChildren().add(playerItemsTable);
-
-        //dolna czesc UI
-        HBox playerUIDown = new HBox();
-        playerUIDown.setPrefHeight(1000);
-        playerUIDown.getChildren().addAll(eqPlayer,listPlayer);
-        playerUIDown.setBorder(new Border(new BorderStroke(Color.GREENYELLOW,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
-
-        playerUIMain.getChildren().addAll(btnLayout,playerUIDown);
-
-        AnchorPane gameLayout = new AnchorPane();
-        gameLayout.getChildren().addAll(gameMap,playerUIMain);
-        AnchorPane.setTopAnchor(playerUIMain,0.0);
-        AnchorPane.setRightAnchor(playerUIMain,0.0);
-        AnchorPane.setBottomAnchor(playerUIMain,0.0);
-
-        Scene scene = new Scene(gameLayout);
-        scene.setFill(TerrainType.WATER.getColor().primary);
-        scene.setOnScroll(this::handleScroll);
-        scene.setOnMouseDragged(this::handleDrag);
-        scene.setOnMousePressed(this::handleRightClick);
-        game.setTitle("catana");
-        game.setScene(scene);
-        game.setWidth(1200);
-        game.setHeight(800);
-        game.show();
+        return eqPlayer;
     }
 
     private void handleRightClick(MouseEvent event) {
