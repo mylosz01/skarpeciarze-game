@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
+import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.image.ImageView;
 
@@ -33,8 +34,13 @@ public class Player extends Asset {
         }
     }
 
-    public boolean isValidMovePlayer(Field destination){
-        System.out.println(destination.position.isTouchingHexagonal(this.playerField.position));
-        return destination.position.isTouchingHexagonal(this.playerField.position);
+    public boolean isValidMovePlayer(Field destination) throws InvalidMoveException {
+        if(destination.terrain.equals(TerrainType.WATER)) {
+            throw new InvalidMoveException("nie posiadasz lodki!!!");
+        }
+        if(!destination.position.isTouchingHexagonal(this.playerField.position)){
+            throw new InvalidMoveException("to pole jest poza zasiegiem");
+        }
+        return true;
     }
 }
