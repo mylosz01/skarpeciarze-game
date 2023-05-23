@@ -32,25 +32,20 @@ public class Point {
     }
 
     public boolean isTouchingHexagonal(Point point) {
-        System.out.println("hexagonalne punkty : "+this + ", " + point);
-        if(Math.abs(this.y - point.y) + Math.abs(this.x - point.x) == 1){
+        //ruchy lewo prawo (z perspektywy tablicy na "kwadratach")
+        if(Math.abs(this.y - point.y) + Math.abs(this.x - point.x) == 1)
             return true;
-        }
-        System.out.println("sprawdzamy przekatne");
-        if(this.x%2==1)
-        {
-            System.out.println("gracz porusza sie z parzystego pola");
-            if((point.y - this.y)==1 && (Math.abs(point.x - this.x)) == 1){
+
+        //dodatkowe sprawdzenie dla pól które dotykają się tylko z perspektywy heksagonów
+        if(this.x%2==1) {
+            //dla NIEparzystej wartosci X pola, poprawnym ruchem beda DOLNE przekatne (z perspektywy tablicy na "kwadratach")
+            if((point.y - this.y)==1 && (Math.abs(point.x - this.x)) == 1)
                 return true;
-            }
         }else {
-            System.out.println("gracz porusza sie z NIEparzystego pola");
-            if((point.y - this.y)==-1 && (Math.abs(point.x - this.x)) == 1){
+            //dla PARZYSTEJ wartosci X pola, poprawnym ruchem beda GÓRNE przekatne (z perspektywy tablicy na "kwadratach")
+            if((point.y - this.y)==-1 && (Math.abs(point.x - this.x)) == 1)
                 return true;
-            }
-
         }
-
         return false;
     }
 
