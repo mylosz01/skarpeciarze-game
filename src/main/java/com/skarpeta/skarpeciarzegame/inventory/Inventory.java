@@ -5,14 +5,17 @@ import com.skarpeta.skarpeciarzegame.CraftingStatus;
 import java.util.HashMap;
 
 public class Inventory {
+
     HashMap<String, Item> equipment;
-    Inventory(){
+
+    public Inventory(){
         this.equipment = new HashMap<>();
         this.equipment.put("Gold",new GoldItem(0));
         this.equipment.put("Stone",new StoneItem(0));
         this.equipment.put("Wood",new WoodItem(0));
         this.equipment.put("Boat",new BoatItem());
     }
+
     private CraftingStatus checkAmount(int goldAmount, int stoneAmount, int woodAmount){
         if(equipment.get("Gold").lesserThan(goldAmount)){
             return CraftingStatus.NOT_ENOUGH_GOLD;
@@ -28,6 +31,7 @@ public class Inventory {
         equipment.get("Wood").decreaseAmount(woodAmount);
         return CraftingStatus.DONE;
     }
+
     public CraftingStatus craftBoat(int goldAmount, int stoneAmount, int woodAmount){
         CraftingStatus craftingStatus = checkAmount(goldAmount,stoneAmount,woodAmount);
         if(craftingStatus!=CraftingStatus.DONE){
@@ -36,10 +40,16 @@ public class Inventory {
         equipment.get("Boat").craftBoat();
         return CraftingStatus.DONE;
     }
+
     public int getAmount(String itemName){
         return equipment.get(itemName).getAmount();
     }
+
     public CraftingStatus build(int goldAmount, int stoneAmount, int woodAmount){
         return checkAmount(goldAmount,stoneAmount,woodAmount);
+    }
+
+    public HashMap<String, Item> getEquipment() {
+        return equipment;
     }
 }

@@ -22,7 +22,7 @@ public class WorldMap extends Group {
     WorldMap(int size) {
         int random = new Random().nextInt(10);
         System.out.println(random);
-        noise = ImageManager.getImagePNG("noise/noiseTexture" + random);
+        noise = ImageManager.getImage("noise/noiseTexture" + random + ".png",128,128);
         PixelReader pixels = noise.getPixelReader();
         board = new Field[size][size];
         BOARD_SIZE = size;

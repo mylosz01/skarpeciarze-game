@@ -1,7 +1,7 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
 public abstract class Item {
-    private int amount;
+    private Integer amount;
     Item(int amount){
         this.amount = amount;
     }
@@ -11,7 +11,7 @@ public abstract class Item {
         }
         this.amount = newAmount;
     }
-    public int getAmount(){
+    public Integer getAmount(){
         return this.amount;
     }
     public void decreaseAmount(int number){
@@ -23,5 +23,9 @@ public abstract class Item {
     }
     public boolean lesserThan(int amount){
         return this.amount<amount;
+    }
+    public String toString()
+    {
+        return Integer.toString(amount);
     }
 }

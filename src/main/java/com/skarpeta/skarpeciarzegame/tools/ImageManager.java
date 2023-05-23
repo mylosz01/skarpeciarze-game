@@ -8,9 +8,10 @@ public class ImageManager {
     private static final String path = "file:src/main/resources/images/";
 
     static HashMap<String,Image> images = new HashMap<>();
-    public static Image getImagePNG(String imageName) {
+  
+    public static Image getImage(String imageName,double sizeX,double sizeY) {
         if(!images.containsKey(imageName))
-            images.put(imageName, new Image(path + imageName + ".png",128.0,128.0,true,false));
+            images.put(imageName, new Image(path + imageName,sizeX,sizeY,true,false));
         return images.get(imageName);
     }
     public static Image getImageJPG(String imageName) {

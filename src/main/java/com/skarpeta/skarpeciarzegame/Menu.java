@@ -2,15 +2,11 @@ package com.skarpeta.skarpeciarzegame;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 
 import javafx.application.*;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.image.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.*;
 import javafx.stage.*;
 
 public class Menu extends Application {
@@ -29,14 +25,14 @@ public class Menu extends Application {
 
         Group logoPane = new Group();
 
-        ImageView logo = new ImageView(ImageManager.getImage("logoGame"));
+        ImageView logo = new ImageView(ImageManager.getImage("logoGame2.png",128,128));
         logoPane.getChildren().add(logo);
 
-        MenuButton btnStartGame = new MenuButton("btnStart");
+        MenuButton btnStartGame = new MenuButton("btnStart.png");
 
-        MenuButton btnJoinGame = new MenuButton("btnJoin");
+        MenuButton btnJoinGame = new MenuButton("btnJoin.png");
 
-        MenuButton btnExit = new MenuButton("btnQuit");
+        MenuButton btnExit = new MenuButton("btnQuit.png");
 
         VBox btnLayout = new VBox();
         btnLayout.setSpacing(10);
@@ -44,11 +40,11 @@ public class Menu extends Application {
         btnLayout.getChildren().addAll(btnStartGame.getImageView(),btnJoinGame.getImageView(),btnExit.getImageView());
 
         layoutMenu.getChildren().addAll(logoPane,btnLayout);
-        layoutMenu.setBackground(new Background(new BackgroundImage(new Image("file:src/main/resources/images/background1.jpg"),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, true, true))));
+        layoutMenu.setBackground(new Background(new BackgroundImage(ImageManager.getImage("background1.jpg",1280,1280),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, true, true, true))));
 
         menuScene = new Scene(layoutMenu);
 
-        menuScene.setCursor(new ImageCursor(ImageManager.getImage("kursor")));
+        menuScene.setCursor(new ImageCursor(ImageManager.getImage("kursor.png",16,16)));
 
         menu.setScene(menuScene);
         menu.setMinWidth(700);
