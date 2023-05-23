@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.collections.*;
@@ -29,10 +30,9 @@ public class Catana extends Application {
     static StackPane gameMap;
 
     @Override
-    public void start(Stage game) {
+    public void start(Stage katana) {
 
         gameMap = new StackPane(worldMap);
-
 
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
@@ -45,11 +45,12 @@ public class Catana extends Application {
         scene.setOnMouseDragged(this::handleDrag);
         scene.setOnMousePressed(this::handleRightClick);
 
-        game.setTitle("catana");
-        game.setScene(scene);
-        game.setWidth(WINDOW_SIZE);
-        game.setHeight(WINDOW_SIZE);
-        game.show();
+        katana.setTitle("Katana");
+        katana.getIcons().add(ImageManager.getImage("logoGame2"));
+        katana.setScene(scene);
+        katana.setWidth(WINDOW_SIZE);
+        katana.setHeight(WINDOW_SIZE);
+        katana.show();
     }
 
     private Pane createGamePane() { //lewy panel okna (gra)
