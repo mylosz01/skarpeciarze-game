@@ -14,10 +14,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.stage.*;
 
+/** Przycisk z wybraną grafiką */
 public class MenuButton {
 
     private final ImageView btnImage;
 
+    /** Tworzenie przycisku z grafiką o nazwie pliku imageName (wraz z rozszerzeniem)*/
     MenuButton(String imageName){
 
         btnImage = new ImageView(ImageManager.getImage(imageName,128,128));
@@ -27,6 +29,7 @@ public class MenuButton {
         btnImage.setOnMouseClicked(e -> System.out.println("CLikcked!!"));
     }
 
+    /** Zwracanie grafiki przycisku jako ImageView */
     public ImageView getImageView(){
         return btnImage;
     }

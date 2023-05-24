@@ -9,6 +9,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
+/** Heksagonalne pole, składnik mapy,
+ * definiowany poprzez typ terenu (TerrainType)
+ */
 public class Field extends Group {
 
     private WorldMap worldMap;
@@ -18,6 +21,9 @@ public class Field extends Group {
     public Resource resource;
     public TerrainType terrain;
 
+    /** Tworzy heksagonalne pole mapy worldMap, w punkcie (tablicowym) position, o terenie terrain
+     *  Pozycja na ekranie jest zmieniana poprzez move()
+     */
     public Field(WorldMap worldMap, Point position, double fieldSize, TerrainType terrain) {
         hexagon = new Hexagon(fieldSize);
         this.worldMap = worldMap;
@@ -30,6 +36,7 @@ public class Field extends Group {
         getChildren().add(hexagon);
     }
 
+    /** Zmienia teren pola i ustawia jego wygląd */
     public void setTerrain(TerrainType terrain) {
         this.terrain = terrain;
         hexagon.setFill(terrain.getColor().primary);
@@ -37,35 +44,40 @@ public class Field extends Group {
             hexagon.setStroke(terrain.getColor().darker);
     }
 
+    /** Wykrywa przyciśnięcie pola lub leżących na nim obiektów */
     private void click(MouseEvent mouseEvent) {
         if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-            System.out.println("clicked "+position);
-            System.out.println(getLayoutX()+", "+getLayoutY());
+            System.out.println("clicked field: "+position);
+            System.out.println("mosue coords: "+getLayoutX()+", "+getLayoutY());
             worldMap.selectField(this);
         }
     }
+    /** Dodaje budynek do pola */
     public void addBuilding(Building building) {
         if(hasBuilding())
             return;
         this.building = building;
-        building.allignTo(this);
         getChildren().add(building);
     }
+    /** Dodaje materiały do pola, gotowe do zebrania przez gracza */
     public void addResource(Resource resource) {
         if(hasResource())
             return;
         this.resource = resource;
-        resource.allignTo(this);
         getChildren().add(resource);
     }
+    /** Zwraca true gdy pole posiada wybudowany budynek */
     public boolean hasBuilding() {
         return building != null;
     }
+    /** Zwraca true gdy pole posiada wygenerowane materiały */
     public boolean hasResource() {
         return resource != null;
     }
 
-
+    /** Konwersja koordynatów tablicowych całkowitych (Point) na poprawne wyświetlanie heksagonów na ekranie.
+     *  Nieparzyste rzędy przesuwane są o połowe wysokości w dół
+     */
     public void move(Point p) {
         double x = p.x * hexagon.width * 0.75;
         double y = p.y * hexagon.height;
@@ -74,10 +86,11 @@ public class Field extends Group {
         relocate(x, y);
     }
 
-    public void darken(double value, Double base) {
+    /** Wizualne przyciemnienie pola o podaną value */
+    public void darken(double value) {
         Color color = (Color) hexagon.getFill();
         Color stroke = (Color) hexagon.getStroke();
-        double interpolate = (value-base)*4;
+        double interpolate = (value)*4;
         hexagon.setFill(color.interpolate(terrain.getColor().darker,interpolate));
         hexagon.setStroke(stroke.interpolate(terrain.getColor().darker,interpolate));
     }
