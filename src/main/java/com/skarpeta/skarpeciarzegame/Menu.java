@@ -51,6 +51,7 @@ public class Menu extends Application {
         menu.setMaxWidth(1000);
         menu.setMaxHeight(700);
 
+        menu.getIcons().add(ImageManager.getImage("logoGame2.png",128,128));
         menu.setTitle("Sockware game Catan");
         menu.show();
     }
