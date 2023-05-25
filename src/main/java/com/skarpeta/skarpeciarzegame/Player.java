@@ -25,7 +25,7 @@ public class Player extends Asset {
     /** ustawianie pozycji gracza na ekranie, uzywajac pozycji pola */
     public void align(Field field) {
         relocate(field.getLayoutX(),field.getLayoutY());
-        super.align(this.getWidth() * -0.5,0);
+        super.align(this.getTexture().getFitWidth() * -0.5,0);
     }
     /** Poruszanie się gracza
      *  gracz porusza się na podane pole Field destination tylko w przypadku gdy ruch jest poprawny (isValidMovePlayer)
