@@ -23,8 +23,9 @@ public class Client implements Runnable {
 
     }
 
-    public void receiveData(){
-
+    public void receiveData() throws IOException, ClassNotFoundException {
+        SocketData socketData = (SocketData) inputStream.readObject();
+        System.out.println("Odebrano dane Client: "+ socketData.plyerNum +" " + socketData.xPlayer + " " + socketData.yPlayer);
     }
 
     public void closeConnection() throws IOException {
@@ -37,7 +38,13 @@ public class Client implements Runnable {
     public void run() {
 
         while (true){
-            receiveData();
+            try {
+                receiveData();
+            } catch (IOException e) {
+                System.out.println("Client receive error");
+            } catch (ClassNotFoundException e) {
+                System.out.println("SocketData class not found");
+            }
         }
     }
 

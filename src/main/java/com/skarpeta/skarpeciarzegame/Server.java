@@ -17,19 +17,20 @@ public class Server implements Runnable{
     @Override
     public void run() {
 
+        int test=0;
         while(true){
             System.out.println("Server waiting for player...");
             try {
                 Socket newClientSocket = serverSocket.accept();
 
-                ClientHandler newClient = new ClientHandler(newClientSocket);
+                ClientHandler newClient = new ClientHandler(test++,newClientSocket);
 
                 Thread newClientThread = new Thread(newClient);
+                newClientThread.setDaemon(true);
                 newClientThread.start();
 
             } catch (IOException e) {
                 System.out.println("Server thread error...");
-                throw new RuntimeException(e);
             }
 
         }

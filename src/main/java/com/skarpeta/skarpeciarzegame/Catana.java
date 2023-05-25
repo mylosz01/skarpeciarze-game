@@ -16,7 +16,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Map;
+import java.net.*;
+import java.io.*;
+import java.util.Random;
 
 public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
@@ -32,14 +36,29 @@ public class Catana extends Application {
     static StackPane gameMap;
 
     @Override
-    public void start(Stage katana) {
+    public void start(Stage katana) throws IOException {
 
         gameMap = new StackPane(worldMap);
+
+        //sprawdzanie czy serwer istnieje
+        if(!Client.checkServerRunning()){
+            System.out.println("Server start");
+            Server server = new Server(worldMap);
+            Thread serverAccept = new Thread(server);
+            serverAccept.setDaemon(true);
+            serverAccept.start();
+        }
+
+        System.out.println("Client start");
+        Client clientPlayer = new Client();
+        Thread playerSend = new Thread(clientPlayer);
+        playerSend.setDaemon(true);
+        playerSend.start();
 
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
-        Player player = new Player(worldMap,new Point(1,1));
+        Player player = new Player(worldMap,new Point(new Random().nextInt(BOARD_SIZE),new Random().nextInt(BOARD_SIZE)));
         PlayerManager.addPlayer(player);
 
         worldMap.getChildren().add(player);
