@@ -5,7 +5,10 @@ import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+
+import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.function.Consumer;
 
 /** Mapa gry, definiowana przez tablicę pól Field */
@@ -55,7 +58,24 @@ public class WorldMap extends Group {
             PlayerManager.getPlayer().movePlayer(field);
         } catch (InvalidMoveException e) {
             System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(" "+e.getMessage());
         }
         //field.addBuilding(new Sawmill());
+    }
+
+    public Point placePlayer(){
+        int newX;
+        int newY;
+        while(true){
+            newX = new Random().nextInt(BOARD_SIZE);
+            newY = new Random().nextInt(BOARD_SIZE);
+
+            if(board[newX][newY].terrain != TerrainType.WATER){
+                break;
+            }
+        }
+
+        return new Point(newX,newY);
     }
 }
