@@ -42,14 +42,14 @@ public class Catana extends Application {
 
         //sprawdzanie czy serwer istnieje
         if(!Client.checkServerRunning()){
-            System.out.println("Server start");
+            System.out.println("SERVER START");
             Server server = new Server(worldMap);
             Thread serverAccept = new Thread(server);
             serverAccept.setDaemon(true);
             serverAccept.start();
         }
 
-        System.out.println("Client start");
+        System.out.println("CLIENT START");
         Client clientPlayer = new Client();
         Thread playerSend = new Thread(clientPlayer);
         playerSend.setDaemon(true);
@@ -58,7 +58,8 @@ public class Catana extends Application {
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
-        Player player = new Player(worldMap,new Point(new Random().nextInt(BOARD_SIZE),new Random().nextInt(BOARD_SIZE)));
+        Player player = new Player(worldMap,worldMap.placePlayer());
+        clientPlayer.setPlayer(player);
         PlayerManager.addPlayer(player);
 
         worldMap.getChildren().add(player);
@@ -78,6 +79,7 @@ public class Catana extends Application {
         katana.setHeight(700);
         katana.show();
 
+        System.out.println("OKI DOKI");
     }
 
     private Pane createGamePane() { //lewy panel okna (gra)

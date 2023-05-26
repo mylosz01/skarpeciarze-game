@@ -6,13 +6,15 @@ import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.image.ImageView;
 
+import java.io.IOException;
+
 /** Gracz posiada pole Field w którym się znajduje
  */
 public class Player extends Asset {
 
     Inventory playerEq;
     WorldMap worldMap;
-    Field playerField;
+    public Field playerField;
 
     Player(WorldMap worldMap, Point point){
         super(new ImageView(ImageManager.getImage("player.png",32,32)));
@@ -30,9 +32,10 @@ public class Player extends Asset {
     /** Poruszanie się gracza
      *  gracz porusza się na podane pole Field destination tylko w przypadku gdy ruch jest poprawny (isValidMovePlayer)
      */
-    public void movePlayer(Field destination) throws InvalidMoveException {
+    public void movePlayer(Field destination) throws InvalidMoveException, IOException {
         if(isValidMovePlayer(destination)){
             this.playerField = destination;
+            Client.sendData();
             align(this.playerField);
         }
     }

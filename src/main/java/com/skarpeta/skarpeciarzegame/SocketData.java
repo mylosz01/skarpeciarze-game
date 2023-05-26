@@ -4,13 +4,10 @@ import java.io.*;
 
 public class SocketData implements Serializable {
 
+    public Field playerField;
     int plyerNum;
-    int xPlayer;
-    int yPlayer;
 
-    SocketData(int num,int x,int y){
-        this.plyerNum = num;
-        this.xPlayer = x;
-        this.yPlayer = y;
+    SocketData(int num){
+        plyerNum = num;
     }
 }

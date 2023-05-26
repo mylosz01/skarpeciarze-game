@@ -2,15 +2,18 @@ package com.skarpeta.skarpeciarzegame;
 
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class Server implements Runnable{
 
     private final ServerSocket serverSocket;
+    private final List<ClientHandler> clientsList;
     private final WorldMap worldMAP;
     private static final int PORT_NUMBER = 5555;
 
     Server(WorldMap worldMap) throws IOException {
         worldMAP = worldMap;
+        clientsList = Collections.synchronizedList(new ArrayList<>());
         serverSocket = new ServerSocket(PORT_NUMBER);
     }
 
@@ -19,24 +22,20 @@ public class Server implements Runnable{
 
         int test=0;
         while(true){
-            System.out.println("Server waiting for player...");
+            System.out.println("#SERVER# Waiting for players...");
             try {
                 Socket newClientSocket = serverSocket.accept();
-
-                ClientHandler newClient = new ClientHandler(test++,newClientSocket);
+                System.out.println("NEW PLAYER ACCEPTED..." + test);
+                ClientHandler newClient = new ClientHandler(test++,newClientSocket,clientsList);
 
                 Thread newClientThread = new Thread(newClient);
                 newClientThread.setDaemon(true);
                 newClientThread.start();
 
             } catch (IOException e) {
-                System.out.println("Server thread error...");
+                System.out.println("#SERVER# Error...");
             }
 
         }
-    }
-
-    private void sendToAllPlayers(){
-
     }
 }

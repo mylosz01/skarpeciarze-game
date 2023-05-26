@@ -2,11 +2,13 @@ package com.skarpeta.skarpeciarzegame;
 
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class Client implements Runnable {
 
+    private static Player player;
     private final Socket clientSocket;
-    private final ObjectOutputStream outputStream;
+    private static ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
     private static final String IP_ADDRESS = "127.0.0.1";
     private static final int PORT_NUMBER = 5555;
@@ -19,13 +21,21 @@ public class Client implements Runnable {
         inputStream = new ObjectInputStream(in);
     }
 
-    public void sendData(){
+    public void setPlayer(Player gamer){
+        player = gamer;
+    }
 
+    public static void sendData() throws IOException {
+        int rn = new Random().nextInt(100);
+        SocketData newSocketData = new SocketData(rn);
+        //newSocketData.playerField = player.playerField;
+        outputStream.writeObject(newSocketData);
+        System.out.println("#CLIENT# Send: "+ rn);
     }
 
     public void receiveData() throws IOException, ClassNotFoundException {
         SocketData socketData = (SocketData) inputStream.readObject();
-        System.out.println("Odebrano dane Client: "+ socketData.plyerNum +" " + socketData.xPlayer + " " + socketData.yPlayer);
+        System.out.println("#CLIENT# Receive: "+ socketData.plyerNum);
     }
 
     public void closeConnection() throws IOException {
@@ -37,13 +47,16 @@ public class Client implements Runnable {
     @Override
     public void run() {
 
+        System.out.println("#CLIENT# Start listening...");
         while (true){
             try {
                 receiveData();
             } catch (IOException e) {
-                System.out.println("Client receive error");
+                System.out.println("#CLIENT# Receive error");
+                break;
             } catch (ClassNotFoundException e) {
-                System.out.println("SocketData class not found");
+                System.out.println("#CLIENT# SocketData class not found");
+                break;
             }
         }
     }
@@ -52,10 +65,10 @@ public class Client implements Runnable {
 
         try{
             Socket test = new Socket(IP_ADDRESS,PORT_NUMBER);
-            System.out.println("Server jest aktywny...");
+            System.out.println("#SERVER# Is active...");
             test.close();
         } catch (Exception e) {
-            System.out.println("Server nie jest dostępny1...");
+            System.out.println("#SERVER# Is not active...");
             return false;
         }
 

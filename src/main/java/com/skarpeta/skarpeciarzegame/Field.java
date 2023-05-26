@@ -56,7 +56,7 @@ public class Field extends Group {
     private void click(MouseEvent mouseEvent) {
         if(mouseEvent.getButton() == MouseButton.PRIMARY) {
             System.out.println("clicked field: "+position);
-            System.out.println("mosue coords: "+getLayoutX()+", "+getLayoutY());
+            //System.out.println("mosue coords: "+getLayoutX()+", "+getLayoutY());
             worldMap.selectField(this);
         }
     }
