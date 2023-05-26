@@ -7,12 +7,13 @@ public class BoatItem extends Item {
     BoatItem(){
         super(0);
     }
-    public boolean exists(){
-        return getAmount() == 0;
+    @Override
+    public boolean boatExists(){
+        return getAmount() == 1;
     }
     @Override
     public void craftBoat(){
-        if(exists()){
+        if(boatExists()){
             return;
         }
         setAmount(1);

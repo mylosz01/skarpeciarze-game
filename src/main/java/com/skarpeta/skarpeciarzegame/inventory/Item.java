@@ -8,27 +8,39 @@ public abstract class Item {
     Item(int amount){
         this.amount = amount;
     }
+
     public void setAmount(int newAmount){
         if(newAmount<0){
             newAmount = 0;
         }
         this.amount = newAmount;
     }
+
     public Integer getAmount(){
         return this.amount;
     }
+
     public void decreaseAmount(int number){
         setAmount(getAmount()-number);
     }
 
-    public void craftBoat() {
+    public void increaseAmount(int number){
+        decreaseAmount(-number);
+    }
+
+    public void craftBoat(){
         return;
     }
+
     public boolean lesserThan(int amount){
         return this.amount<amount;
     }
-    public String toString()
-    {
+
+    public String toString(){
         return Integer.toString(amount);
+    }
+
+    public boolean boatExists(){
+        return false;
     }
 }
