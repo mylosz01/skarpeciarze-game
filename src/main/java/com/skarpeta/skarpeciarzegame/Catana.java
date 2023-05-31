@@ -122,11 +122,17 @@ public class Catana extends Application {
     private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
         VBox playerItemsTable = new VBox();
+        playerItemsTable.setSpacing(10);
+        playerItemsTable.setAlignment(Pos.CENTER);
 
         for (Map.Entry<String, Item> entry : player.playerEq.equipment.entrySet()) {
             String id = entry.getKey();
             Item item = entry.getValue();
-            playerItemsTable.getChildren().add(new HBox(item, new Label(id), new Label(String.valueOf(item.getAmount()))));
+
+            HBox rowItem = new HBox(item, new Label(id), new Label(String.valueOf(item.getAmount())));
+            rowItem.setAlignment(Pos.CENTER);
+            rowItem.setSpacing(20);
+            playerItemsTable.getChildren().add(rowItem);
         }
 
         eqPlayer.getChildren().add(playerItemsTable);
