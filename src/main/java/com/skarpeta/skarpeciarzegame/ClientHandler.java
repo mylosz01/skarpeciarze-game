@@ -1,7 +1,5 @@
 package com.skarpeta.skarpeciarzegame;
 
-import com.almasb.fxgl.core.collection.Array;
-
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -25,14 +23,15 @@ public class ClientHandler implements Runnable{
         clientList.add(this);
     }
 
-    public void receiveData() throws IOException, ClassNotFoundException {
-        SocketData socketData = (SocketData) inputStream.readObject();
-        System.out.println("#CLIENT HANDLER " + number + " # RECEIVE: " + socketData.plyerNum);
+    public SocketPackage receiveData() throws IOException, ClassNotFoundException {
+        SocketPackage socketPackage = (SocketPackage) inputStream.readObject();
+        System.out.println("#CLIENT HANDLER " + number + " # RECEIVE: " + socketPackage);
+        return socketPackage;
     }
 
-    public void sendData() throws IOException {
-        SocketData data = new SocketData(number);
-        outputStream.writeObject(data);
+    public void sendData(SocketPackage toSend) throws IOException {
+        //SocketPackage data = new SocketPackage(number,6,9);
+        outputStream.writeObject(toSend);
     }
 
     public void closeConnection() throws IOException {
@@ -41,11 +40,12 @@ public class ClientHandler implements Runnable{
         clientSocket.close();
     }
 
-    private void sendToAllClients(){
+    private void sendToAllClients(SocketPackage socketPackage){
         ArrayList<ClientHandler> toRemove = new ArrayList<>();
         for(ClientHandler clientHandler : clientList){
             try {
-                clientHandler.sendData();
+                //if(clientHandler != this)
+                    clientHandler.sendData(socketPackage);
             } catch (IOException e){
                 toRemove.add(clientHandler);
                 System.out.println("client unreachable");
@@ -59,8 +59,8 @@ public class ClientHandler implements Runnable{
         while(true){
             try {
 
-                receiveData();
-                sendToAllClients();
+                SocketPackage socketPackage = receiveData();
+                sendToAllClients(socketPackage);
             }catch (IOException e) {
                 try {
                     closeConnection();
@@ -76,5 +76,4 @@ public class ClientHandler implements Runnable{
         }
 
     }
-
 }

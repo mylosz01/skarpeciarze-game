@@ -31,7 +31,7 @@ public class WorldGeneration {
         noiseChannels.add("r");
         noiseChannels.add("g");
         noiseChannels.add("b");
-        Collections.shuffle(noiseChannels);
+        //Collections.shuffle(noiseChannels);
     }
 
     /** Generuje pole na podstawie danych z obrazka noise.

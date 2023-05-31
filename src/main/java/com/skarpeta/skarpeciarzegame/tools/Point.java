@@ -1,10 +1,12 @@
 package com.skarpeta.skarpeciarzegame.tools;
 
+import java.io.Serializable;
+
 /** Klasa służąca do wykonywania obliczeń na punktach typu Integer
  *  Opakowana również w funkcjonalności ekskluzywne dla matematyki na heksagonach
  */
 
-public class Point {
+public class Point implements Serializable {
     public Integer x;
     public Integer y;
 

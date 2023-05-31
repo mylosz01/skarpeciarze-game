@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.net.*;
 import java.io.*;
-import java.util.Random;
+import java.util.*;
 
 public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
@@ -34,6 +34,7 @@ public class Catana extends Application {
 
     static WorldMap worldMap = new WorldMap(BOARD_SIZE);
     static StackPane gameMap;
+    Server server;
 
     @Override
     public void start(Stage katana) throws IOException {
@@ -43,7 +44,7 @@ public class Catana extends Application {
         //sprawdzanie czy serwer istnieje
         if(!Client.checkServerRunning()){
             System.out.println("SERVER START");
-            Server server = new Server(worldMap);
+            server = new Server(worldMap);
             Thread serverAccept = new Thread(server);
             serverAccept.setDaemon(true);
             serverAccept.start();
@@ -59,7 +60,6 @@ public class Catana extends Application {
         Pane gamePane = createGamePane();//okienko gry po lewej
 
         Player player = new Player(worldMap,worldMap.placePlayer());
-        clientPlayer.setPlayer(player);
         PlayerManager.addPlayer(player);
 
         worldMap.getChildren().add(player);

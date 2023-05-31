@@ -1,12 +1,13 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.tools.Point;
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
 
 public class Client implements Runnable {
 
-    private static Player player;
     private final Socket clientSocket;
     private static ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
@@ -21,21 +22,15 @@ public class Client implements Runnable {
         inputStream = new ObjectInputStream(in);
     }
 
-    public void setPlayer(Player gamer){
-        player = gamer;
-    }
-
-    public static void sendData() throws IOException {
-        int rn = new Random().nextInt(100);
-        SocketData newSocketData = new SocketData(rn);
-        //newSocketData.playerField = player.playerField;
-        outputStream.writeObject(newSocketData);
-        System.out.println("#CLIENT# Send: "+ rn);
+    public static void sendData(Point newPosition) throws IOException {
+        SocketPackage newSocketPackage = new SocketPackage(PlayerMove.MOVE_UP,newPosition);
+        outputStream.writeObject(newSocketPackage);
+        System.out.println("#CLIENT# Send: "+ newPosition);
     }
 
     public void receiveData() throws IOException, ClassNotFoundException {
-        SocketData socketData = (SocketData) inputStream.readObject();
-        System.out.println("#CLIENT# Receive: "+ socketData.plyerNum);
+        SocketPackage socketPackage = (SocketPackage) inputStream.readObject();
+        System.out.println("#CLIENT# Receive: "+ socketPackage);
     }
 
     public void closeConnection() throws IOException {

@@ -35,7 +35,7 @@ public class Player extends Asset {
     public void movePlayer(Field destination) throws InvalidMoveException, IOException {
         if(isValidMovePlayer(destination)){
             this.playerField = destination;
-            Client.sendData();
+            Client.sendData(destination.position);
             align(this.playerField);
         }
     }
