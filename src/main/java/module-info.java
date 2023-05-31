@@ -9,7 +9,8 @@ module com.skarpeta.skarpeciarzegame {
             requires org.kordamp.ikonli.javafx;
             requires org.kordamp.bootstrapfx.core;
             requires com.almasb.fxgl.all;
-    
+    requires java.desktop;
+
     opens com.skarpeta.skarpeciarzegame to javafx.fxml;
     exports com.skarpeta.skarpeciarzegame;
     exports com.skarpeta.skarpeciarzegame.buildings;

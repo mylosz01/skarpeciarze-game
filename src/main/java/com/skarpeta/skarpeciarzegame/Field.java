@@ -14,18 +14,21 @@ import javafx.scene.shape.StrokeType;
  */
 public class Field extends Group {
 
-    private WorldMap worldMap;
+    private final WorldMap worldMap;
     public Point position;
     public Hexagon hexagon;
     public Building building;
     public Resource resource;
     public TerrainType terrain;
+    /**do przyszlego wykorzystania, przechowuje noise channel */
+    public double height;
 
     /** Tworzy heksagonalne pole mapy worldMap, w punkcie (tablicowym) position, o terenie terrain
      *  Pozycja na ekranie jest zmieniana poprzez move()
      */
-    public Field(WorldMap worldMap, Point position, double fieldSize, TerrainType terrain) {
+    public Field(WorldMap worldMap, Point position, double fieldSize, TerrainType terrain, double height) {
         hexagon = new Hexagon(fieldSize);
+        this.height = height;
         this.worldMap = worldMap;
         this.position = position;
         setTerrain(terrain);
@@ -42,6 +45,11 @@ public class Field extends Group {
         hexagon.setFill(terrain.getColor().primary);
         if(terrain != TerrainType.WATER)
             hexagon.setStroke(terrain.getColor().darker);
+    }
+
+    /** Override koloru, nie ma powrotu (debug only!!!!1)*/
+    public void setColor(Color color) {
+        hexagon.setFill(color);
     }
 
     /** Wykrywa przyciśnięcie pola lub leżących na nim obiektów */
