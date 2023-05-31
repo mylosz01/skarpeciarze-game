@@ -77,7 +77,7 @@ public class Catana extends Application {
         VBox playerUIMain = new VBox();
         playerUIMain.setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
         playerUIMain.setAlignment(Pos.TOP_CENTER);
-        playerUIMain.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+        playerUIMain.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().darker,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         playerUIMain.setMinWidth(UI_WIDTH);
 
         //ruchy gracza (gorny panel)
@@ -85,7 +85,8 @@ public class Catana extends Application {
 
         //lista graczy (prawy panel)
         Pane listPlayer = new Pane();
-        listPlayer.setBorder(new Border(new BorderStroke(Color.SKYBLUE,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        listPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        listPlayer.setPadding(new Insets(3));
 
         //eqPlayer (lewy panel)
         Pane eqPlayer = createEqPlayerPane();
@@ -94,7 +95,7 @@ public class Catana extends Application {
         HBox playerUIDown = new HBox();
         playerUIDown.setPrefHeight(1000);
         playerUIDown.getChildren().addAll(eqPlayer,listPlayer);
-        playerUIDown.setBorder(new Border(new BorderStroke(Color.GREENYELLOW,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        //playerUIDown.setBorder(new Border(new BorderStroke(Color.T,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
         AnchorPane.setTopAnchor(playerUIMain,0.0);
         AnchorPane.setRightAnchor(playerUIMain,0.0);
@@ -107,7 +108,7 @@ public class Catana extends Application {
     private VBox createInteractionMenu() { //gorny panel z przyciskami
 
         VBox interactionMenu = new VBox();
-        interactionMenu.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        interactionMenu.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
         interactionMenu.setAlignment(Pos.CENTER);
         interactionMenu.setSpacing(30);
 
@@ -130,6 +131,8 @@ public class Catana extends Application {
         }
 
         eqPlayer.getChildren().add(playerItemsTable);
+        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+
         return eqPlayer;
     }
 
