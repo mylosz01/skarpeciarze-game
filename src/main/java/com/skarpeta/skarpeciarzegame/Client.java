@@ -12,17 +12,17 @@ public class Client implements Runnable {
     private final ObjectInputStream inputStream;
     private static final String IP_ADDRESS = "127.0.0.1";
     private static final int PORT_NUMBER = 5555;
+    private WorldMap worldMap;
 
-    int seedMap;
+    private int seedMap;
 
-    public Client() throws IOException {
+    public Client() throws IOException, ClassNotFoundException {
         clientSocket = new Socket(IP_ADDRESS,PORT_NUMBER);
         OutputStream out = clientSocket.getOutputStream();
         outputStream = new ObjectOutputStream(out);
         InputStream in = clientSocket.getInputStream();
         inputStream = new ObjectInputStream(in);
-
-        
+        receiveData();
     }
 
     public static void sendData(Point newPosition) throws IOException {
@@ -33,6 +33,9 @@ public class Client implements Runnable {
 
     public void receiveData() throws IOException, ClassNotFoundException {
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
+        if(dataPacket.packetType == PacketType.INITIAL){
+            worldMap = new WorldMap(5,dataPacket.seedMap);
+        }
         System.out.println("#CLIENT# Receive: "+ dataPacket);
     }
 
@@ -57,6 +60,14 @@ public class Client implements Runnable {
                 break;
             }
         }
+    }
+
+    public WorldMap getWorldMap(){
+        return worldMap;
+    }
+
+    public int getSeedMap(){
+        return seedMap;
     }
 
     public static boolean checkServerRunning(){

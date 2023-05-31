@@ -17,10 +17,12 @@ public class WorldMap extends Group {
     private final Field[][] board;
     private final int BOARD_SIZE;
 
-    private final int seed = 400;
-    WorldGeneration worldGeneration = new WorldGeneration(seed);
+    private final int seed;
+
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
-    WorldMap(int size) {
+    WorldMap(int size,int seed) {
+        this.seed = seed;
+        WorldGeneration worldGeneration = new WorldGeneration(seed);
         board = new Field[size][size];
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {

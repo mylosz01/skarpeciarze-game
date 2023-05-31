@@ -30,7 +30,6 @@ public class ClientHandler implements Runnable{
     }
 
     public void sendData(DataPacket toSend) throws IOException {
-        //SocketPackage data = new SocketPackage(number,6,9);
         outputStream.writeObject(toSend);
     }
 

@@ -36,7 +36,7 @@ public class Catana extends Application {
     static StackPane gameMap;
 
     @Override
-    public void start(Stage katana) throws IOException {
+    public void start(Stage katana) throws IOException, ClassNotFoundException {
 
         System.out.println("CLIENT START");
         Client clientPlayer = new Client();
@@ -44,10 +44,11 @@ public class Catana extends Application {
         playerSend.setDaemon(true);
         playerSend.start();
 
+        worldMap = clientPlayer.getWorldMap();
+        gameMap = new StackPane(worldMap);
+
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
-
-        gameMap = new StackPane(worldMap);
 
         Player player = new Player(worldMap,worldMap.placePlayer());
         PlayerManager.addPlayer(player);
