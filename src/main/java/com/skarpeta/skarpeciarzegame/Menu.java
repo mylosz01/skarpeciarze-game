@@ -28,19 +28,17 @@ public class Menu extends Application {
         ImageView logo = new ImageView(ImageManager.getImage("logoGame2.png",128,128));
         logoPane.getChildren().add(logo);
 
-        MenuButton btnStartGame = new MenuButton("btnStart.png");
-
-        MenuButton btnJoinGame = new MenuButton("btnJoin.png");
-
-        MenuButton btnExit = new MenuButton("btnQuit.png");
+        MenuButton btnStartGame = new MenuButton("start.png");
+        MenuButton btnJoinGame = new MenuButton("join.png");
+        MenuButton btnExit = new MenuButton("exit.png");
 
         VBox btnLayout = new VBox();
         btnLayout.setSpacing(10);
         btnLayout.setAlignment(Pos.CENTER);
-        btnLayout.getChildren().addAll(btnStartGame.getImageView(),btnJoinGame.getImageView(),btnExit.getImageView());
+        btnLayout.getChildren().addAll(btnStartGame,btnJoinGame,btnExit);
 
         layoutMenu.getChildren().addAll(logoPane,btnLayout);
-        layoutMenu.setBackground(new Background(new BackgroundImage(ImageManager.getImage("background1.jpg",1280,1280),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, true, true, true))));
+        layoutMenu.setBackground(new Background(new BackgroundImage(ImageManager.getImage("background_catana1.png",1280,1280),BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, true, true, true))));
 
         menuScene = new Scene(layoutMenu);
 
@@ -53,6 +51,7 @@ public class Menu extends Application {
         menu.setMaxWidth(1000);
         menu.setMaxHeight(700);
 
+        menu.getIcons().add(ImageManager.getImage("logoGame2.png",128,128));
         menu.setTitle("Sockware game Catan");
         menu.show();
     }
