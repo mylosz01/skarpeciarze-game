@@ -25,6 +25,8 @@ public class Catana extends Application {
     double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
+    Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5)));
+
     static WorldMap worldMap = new WorldMap(BOARD_SIZE);
     static StackPane gameMap;
     Player player;
@@ -62,7 +64,7 @@ public class Catana extends Application {
     private Pane createGamePane() { //lewy panel okna (gra)
         Pane gamePane = new Pane();
         gamePane.setBackground(new Background(new BackgroundFill(TerrainType.WATER.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
-        gamePane.setBorder(new Border(new BorderStroke(Color.GOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(10))));
+        //gamePane.setBorder(new Border(new BorderStroke(Color.GOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(10))));
 
         AnchorPane.setTopAnchor(gamePane,0.0);
         AnchorPane.setLeftAnchor(gamePane,0.0);
@@ -85,7 +87,7 @@ public class Catana extends Application {
 
         //lista graczy (prawy panel)
         Pane listPlayer = new Pane();
-        listPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        listPlayer.setBorder(insideBorder);
         listPlayer.setPadding(new Insets(3));
 
         //eqPlayer (lewy panel)
@@ -108,7 +110,7 @@ public class Catana extends Application {
     private VBox createInteractionMenu() { //gorny panel z przyciskami
 
         VBox interactionMenu = new VBox();
-        interactionMenu.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        interactionMenu.setBorder(insideBorder);
         interactionMenu.setAlignment(Pos.CENTER);
         interactionMenu.setSpacing(30);
 
