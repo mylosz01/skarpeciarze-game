@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class Inventory {
 
-    HashMap<String, Item> equipment;
+    public HashMap<String, Item> equipment;
 
     public Inventory(){
         this.equipment = new HashMap<>();

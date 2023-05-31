@@ -1,13 +1,9 @@
 package com.skarpeta.skarpeciarzegame;
 
-import com.skarpeta.skarpeciarzegame.inventory.Inventory;
-import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Application;
-import javafx.beans.property.*;
-import javafx.collections.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -15,9 +11,6 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.util.Map;
-
 public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
     public static final double WINDOW_SIZE = 1000;
@@ -30,19 +23,20 @@ public class Catana extends Application {
 
     static WorldMap worldMap = new WorldMap(BOARD_SIZE);
     static StackPane gameMap;
+    Player player;
 
     @Override
     public void start(Stage katana) {
 
         gameMap = new StackPane(worldMap);
+        player = new Player(worldMap,new Point(1,1));
+        PlayerManager.addPlayer(player);
+
+        worldMap.getChildren().add(player);
 
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
-        Player player = new Player(worldMap,new Point(1,1));
-        PlayerManager.addPlayer(player);
-
-        worldMap.getChildren().add(player);
 
         AnchorPane gameLayout = new AnchorPane();
         gameLayout.getChildren().addAll(gamePane,playerUIMain);
@@ -123,25 +117,10 @@ public class Catana extends Application {
 
     private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
-        eqPlayer.setBorder(new Border(new BorderStroke(Color.RED,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
-        eqPlayer.setMinWidth(200);
-        //tabela to wyswietlania ekwipunku gracza
-        Inventory playerInventory = new Inventory();
-        Map<String, Item> equipment = playerInventory.getEquipment();
 
-        TableColumn<Map.Entry<String, Item>, String> nameItemColumn = new TableColumn<>("Nazwa");
-        nameItemColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getKey()));
 
-        TableColumn<Map.Entry<String, Item>, String> amountItemColumn = new TableColumn<>("Ilość");
-        amountItemColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getValue().getAmount().toString()));
-
-        ObservableList<Map.Entry<String, Item>> playerItems = FXCollections.observableArrayList(equipment.entrySet());
-        final TableView<Map.Entry<String,Item>> playerItemsTable = new TableView<>(playerItems);
-
-        playerItemsTable.getColumns().setAll(nameItemColumn, amountItemColumn);
-        playerItemsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        playerItemsTable.setPrefWidth(200);
-
+        VBox playerItemsTable = new VBox();
+        player.playerEq.equipment.forEach((id,item)->playerItemsTable.getChildren().add(item));
         eqPlayer.getChildren().add(playerItemsTable);
         return eqPlayer;
     }
