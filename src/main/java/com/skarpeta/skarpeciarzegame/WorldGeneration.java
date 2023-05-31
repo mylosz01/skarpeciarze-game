@@ -22,10 +22,12 @@ public class WorldGeneration {
     ArrayList<String > noiseChannels = new ArrayList<>();
     PixelReader pixels;
 
+    int seed;
 
     /** Konstruktor tworzy nowy plik noise*/
-    WorldGeneration() {
-        int random = new Random().nextInt(new File("src/main/resources/images/noise").list().length);
+    WorldGeneration(int seed) {
+        this.seed = seed;
+        int random = new Random(seed).nextInt(new File("src/main/resources/images/noise").list().length);
         Image noise = ImageManager.getImage("noise/noiseTexture" + random + ".png", 128, 128);
         this.pixels = noise.getPixelReader();
         noiseChannels.add("r");
@@ -51,7 +53,7 @@ public class WorldGeneration {
                 field.addResource(new ForestResource());
         }
         if(terrain == TerrainType.MOUNTAINS) {
-            if(new Random().nextInt(7) == 0)
+            if(new Random(seed).nextInt(7) == 0)
                 field.addResource(new StoneResource());
         }
         worldMap.getChildren().add(field);
@@ -67,11 +69,11 @@ public class WorldGeneration {
         };
     }
     /** Zwraca losową wartość boolean z prawdopodobieństwem zależnym od value */
-    private static boolean randomBoolean(double value) {
+    private boolean randomBoolean(double value) {
         double calc = (value-0.3)*60;
         if(calc<1)
             calc=1;
-        int random = new Random().nextInt((int) Math.floor(calc));
+        int random = new Random(seed).nextInt((int) Math.floor(calc));
         return random == 0;
     }
 

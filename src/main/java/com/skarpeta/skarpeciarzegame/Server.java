@@ -1,5 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.tools.Point;
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -8,11 +10,11 @@ public class Server implements Runnable{
 
     private final ServerSocket serverSocket;
     private final List<ClientHandler> clientsList;
-    private final WorldMap worldMAP;
     private static final int PORT_NUMBER = 5555;
 
-    Server(WorldMap worldMap) throws IOException {
-        worldMAP = worldMap;
+    private final int mapSeed = 400;
+
+    Server() throws IOException {
         clientsList = Collections.synchronizedList(new ArrayList<>());
         serverSocket = new ServerSocket(PORT_NUMBER);
     }
@@ -28,6 +30,7 @@ public class Server implements Runnable{
                 System.out.println("NEW PLAYER ACCEPTED..." + test);
                 ClientHandler newClient = new ClientHandler(test++,newClientSocket,clientsList);
 
+                newClient.sendData(new DataPacket(PacketType.INITIAL,mapSeed));
                 Thread newClientThread = new Thread(newClient);
                 newClientThread.setDaemon(true);
                 newClientThread.start();
@@ -37,5 +40,14 @@ public class Server implements Runnable{
             }
 
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("SERVER START");
+        Server server = new Server();
+        Thread serverAccept = new Thread(server);
+        //serverAccept.setDaemon(true);
+        serverAccept.start();
+
     }
 }

@@ -4,7 +4,6 @@ import com.skarpeta.skarpeciarzegame.tools.Point;
 
 import java.net.*;
 import java.io.*;
-import java.util.*;
 
 public class Client implements Runnable {
 
@@ -14,23 +13,27 @@ public class Client implements Runnable {
     private static final String IP_ADDRESS = "127.0.0.1";
     private static final int PORT_NUMBER = 5555;
 
+    int seedMap;
+
     public Client() throws IOException {
         clientSocket = new Socket(IP_ADDRESS,PORT_NUMBER);
         OutputStream out = clientSocket.getOutputStream();
         outputStream = new ObjectOutputStream(out);
         InputStream in = clientSocket.getInputStream();
         inputStream = new ObjectInputStream(in);
+
+        
     }
 
     public static void sendData(Point newPosition) throws IOException {
-        SocketPackage newSocketPackage = new SocketPackage(PlayerMove.MOVE_UP,newPosition);
-        outputStream.writeObject(newSocketPackage);
+        DataPacket newDataPacket = new DataPacket(PlayerMove.MOVE_UP,newPosition);
+        outputStream.writeObject(newDataPacket);
         System.out.println("#CLIENT# Send: "+ newPosition);
     }
 
     public void receiveData() throws IOException, ClassNotFoundException {
-        SocketPackage socketPackage = (SocketPackage) inputStream.readObject();
-        System.out.println("#CLIENT# Receive: "+ socketPackage);
+        DataPacket dataPacket = (DataPacket) inputStream.readObject();
+        System.out.println("#CLIENT# Receive: "+ dataPacket);
     }
 
     public void closeConnection() throws IOException {

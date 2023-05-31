@@ -16,7 +16,9 @@ public class WorldMap extends Group {
     /** Zbiór pól mapy */
     private final Field[][] board;
     private final int BOARD_SIZE;
-    WorldGeneration worldGeneration = new WorldGeneration();
+
+    private final int seed = 400;
+    WorldGeneration worldGeneration = new WorldGeneration(seed);
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
     WorldMap(int size) {
         board = new Field[size][size];
@@ -77,5 +79,9 @@ public class WorldMap extends Group {
         }
 
         return new Point(newX,newY);
+    }
+
+    public int getSeed(){
+        return seed;
     }
 }

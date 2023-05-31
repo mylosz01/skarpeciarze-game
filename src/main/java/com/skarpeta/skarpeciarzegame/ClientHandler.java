@@ -23,13 +23,13 @@ public class ClientHandler implements Runnable{
         clientList.add(this);
     }
 
-    public SocketPackage receiveData() throws IOException, ClassNotFoundException {
-        SocketPackage socketPackage = (SocketPackage) inputStream.readObject();
-        System.out.println("#CLIENT HANDLER " + number + " # RECEIVE: " + socketPackage);
-        return socketPackage;
+    public DataPacket receiveData() throws IOException, ClassNotFoundException {
+        DataPacket dataPacket = (DataPacket) inputStream.readObject();
+        System.out.println("#CLIENT HANDLER " + number + " # RECEIVE: " + dataPacket);
+        return dataPacket;
     }
 
-    public void sendData(SocketPackage toSend) throws IOException {
+    public void sendData(DataPacket toSend) throws IOException {
         //SocketPackage data = new SocketPackage(number,6,9);
         outputStream.writeObject(toSend);
     }
@@ -40,12 +40,12 @@ public class ClientHandler implements Runnable{
         clientSocket.close();
     }
 
-    private void sendToAllClients(SocketPackage socketPackage){
+    private void sendToAllClients(DataPacket dataPacket){
         ArrayList<ClientHandler> toRemove = new ArrayList<>();
         for(ClientHandler clientHandler : clientList){
             try {
                 //if(clientHandler != this)
-                    clientHandler.sendData(socketPackage);
+                    clientHandler.sendData(dataPacket);
             } catch (IOException e){
                 toRemove.add(clientHandler);
                 System.out.println("client unreachable");
@@ -59,8 +59,8 @@ public class ClientHandler implements Runnable{
         while(true){
             try {
 
-                SocketPackage socketPackage = receiveData();
-                sendToAllClients(socketPackage);
+                DataPacket dataPacket = receiveData();
+                sendToAllClients(dataPacket);
             }catch (IOException e) {
                 try {
                     closeConnection();

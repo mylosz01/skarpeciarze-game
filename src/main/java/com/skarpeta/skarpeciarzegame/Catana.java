@@ -32,23 +32,11 @@ public class Catana extends Application {
     double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
-    static WorldMap worldMap = new WorldMap(BOARD_SIZE);
+    static WorldMap worldMap;
     static StackPane gameMap;
-    Server server;
 
     @Override
     public void start(Stage katana) throws IOException {
-
-        gameMap = new StackPane(worldMap);
-
-        //sprawdzanie czy serwer istnieje
-        if(!Client.checkServerRunning()){
-            System.out.println("SERVER START");
-            server = new Server(worldMap);
-            Thread serverAccept = new Thread(server);
-            serverAccept.setDaemon(true);
-            serverAccept.start();
-        }
 
         System.out.println("CLIENT START");
         Client clientPlayer = new Client();
@@ -58,6 +46,8 @@ public class Catana extends Application {
 
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
+
+        gameMap = new StackPane(worldMap);
 
         Player player = new Player(worldMap,worldMap.placePlayer());
         PlayerManager.addPlayer(player);
