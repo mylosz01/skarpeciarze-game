@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
@@ -11,6 +12,9 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.Map;
+
 public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
     public static final double WINDOW_SIZE = 1000;
@@ -117,10 +121,14 @@ public class Catana extends Application {
 
     private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
-
-
         VBox playerItemsTable = new VBox();
-        player.playerEq.equipment.forEach((id,item)->playerItemsTable.getChildren().add(item));
+
+        for (Map.Entry<String, Item> entry : player.playerEq.equipment.entrySet()) {
+            String id = entry.getKey();
+            Item item = entry.getValue();
+            playerItemsTable.getChildren().add(new HBox(item, new Label(id), new Label(String.valueOf(item.getAmount()))));
+        }
+
         eqPlayer.getChildren().add(playerItemsTable);
         return eqPlayer;
     }
