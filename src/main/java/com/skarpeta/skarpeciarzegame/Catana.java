@@ -10,7 +10,6 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.Map;
@@ -112,11 +111,11 @@ public class Catana extends Application {
         VBox interactionMenu = new VBox();
         interactionMenu.setBorder(insideBorder);
         interactionMenu.setAlignment(Pos.CENTER);
-        interactionMenu.setSpacing(30);
+        interactionMenu.setSpacing(14);
 
-        Button buildBtn = new Button("Zbuduj");
-        Button destroyBtn = new Button("Zniszcz");
-        Button collectBtn = new Button("Zbierz");
+        MenuButton buildBtn = new MenuButton("exit.png");
+        MenuButton destroyBtn = new MenuButton("exit.png");
+        MenuButton collectBtn = new MenuButton("exit.png");
 
         interactionMenu.getChildren().addAll(buildBtn,destroyBtn,collectBtn);
         return  interactionMenu;
