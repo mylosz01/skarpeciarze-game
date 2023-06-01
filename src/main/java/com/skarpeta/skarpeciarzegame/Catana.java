@@ -33,8 +33,22 @@ public class Catana extends Application {
     static WorldMap worldMap;
     static StackPane gameMap;
     static Stage katana;
+    static Pane eqPane;
+    static VBox playerItemsTable;
 
     Client clientPlayer;
+
+    public static void renderInventory(Player player) {
+        for (Map.Entry<String, Item> entry : player.playerEq.equipment.entrySet()) {
+            String id = entry.getKey();
+            Item item = entry.getValue();
+
+            HBox rowItem = new HBox(item, new Label(id), new Label(String.valueOf(item.getAmount())));
+            rowItem.setAlignment(Pos.CENTER);
+            rowItem.setSpacing(20);
+            playerItemsTable.getChildren().add(rowItem);
+        }
+    }
 
     @Override
     public void start(Stage katana) throws IOException, ClassNotFoundException {
@@ -45,6 +59,7 @@ public class Catana extends Application {
         playerSend.start();
         worldMap = clientPlayer.getWorldMap();
         gameMap = new StackPane(worldMap);
+
 
         setupUI();
     }
@@ -101,13 +116,12 @@ public class Catana extends Application {
         listPlayer.setPadding(new Insets(3));
 
         //eqPlayer (lewy panel)
-        //Pane eqPlayer = createEqPlayerPane();
+        eqPane = createEqPlayerPane();
 
         //dolna czesc UI
         HBox playerUIDown = new HBox();
         playerUIDown.setPrefHeight(1000);
-        playerUIDown.getChildren().addAll(/*eqPlayer,*/listPlayer);
-        //playerUIDown.setBorder(new Border(new BorderStroke(Color.T,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        playerUIDown.getChildren().addAll(eqPane,listPlayer);
 
         AnchorPane.setTopAnchor(playerUIMain,0.0);
         AnchorPane.setRightAnchor(playerUIMain,0.0);
@@ -132,27 +146,16 @@ public class Catana extends Application {
         return  interactionMenu;
     }
 
-    /*private Pane createEqPlayerPane() {
+    private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
-        VBox playerItemsTable = new VBox();
+        playerItemsTable = new VBox();
         playerItemsTable.setSpacing(10);
         playerItemsTable.setAlignment(Pos.CENTER);
-
-        for (Map.Entry<String, Item> entry : player.playerEq.equipment.entrySet()) {
-            String id = entry.getKey();
-            Item item = entry.getValue();
-
-            HBox rowItem = new HBox(item, new Label(id), new Label(String.valueOf(item.getAmount())));
-            rowItem.setAlignment(Pos.CENTER);
-            rowItem.setSpacing(20);
-            playerItemsTable.getChildren().add(rowItem);
-        }
-
         eqPlayer.getChildren().add(playerItemsTable);
-        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
 
         return eqPlayer;
-    }*/
+    }
 
     private void handleRightClick(MouseEvent event) {
         if (event.isSecondaryButtonDown()) {

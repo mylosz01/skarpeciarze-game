@@ -1,11 +1,16 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
 
 import java.net.*;
 import java.io.*;
+import java.util.Map;
 
 public class Client implements Runnable {
 
@@ -56,6 +61,7 @@ public class Client implements Runnable {
             worldMap.setPlayer(player);
             Platform.runLater(()->{
                 worldMap.getChildren().add(player);
+                Catana.renderInventory(player);
             });
         }
     }
