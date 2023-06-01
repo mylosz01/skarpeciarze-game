@@ -35,7 +35,7 @@ public class Field extends Group {
         move(position);
         hexagon.setStrokeType(StrokeType.INSIDE);
         hexagon.setStrokeWidth(fieldSize * 0.05);
-        setOnMouseClicked(this::click);
+        //setOnMouseClicked(this::click);
         getChildren().add(hexagon);
     }
 
@@ -52,14 +52,7 @@ public class Field extends Group {
         hexagon.setFill(color);
     }
 
-    /** Wykrywa przyciśnięcie pola lub leżących na nim obiektów */
-    private void click(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-            //System.out.println("clicked field: "+position);
-            //System.out.println("mosue coords: "+getLayoutX()+", "+getLayoutY());
-            worldMap.selectField(this);
-        }
-    }
+
     /** Dodaje budynek do pola */
     public void addBuilding(Building building) {
         if(hasBuilding())

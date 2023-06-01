@@ -1,5 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.tools.Point;
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -10,22 +12,23 @@ public class ClientHandler implements Runnable{
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
     private final List<ClientHandler> clientList;
-    int number;
+    int playerID;
+    Point position;
 
-    public ClientHandler(int num, Socket cliSocket, List<ClientHandler> clients) throws IOException {
-        number = num;
+    public ClientHandler(int playerID,Point position, Socket cliSocket, List<ClientHandler> clients) throws IOException {
+        this.playerID = playerID;
+        this.position =position;
         clientList = clients;
         clientSocket = cliSocket;
         OutputStream out = cliSocket.getOutputStream();
         outputStream = new ObjectOutputStream(out);
         InputStream in = cliSocket.getInputStream();
         inputStream = new ObjectInputStream(in);
-        clientList.add(this);
     }
 
     public DataPacket receiveData() throws IOException, ClassNotFoundException {
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
-        System.out.println("#CLIENT HANDLER " + number + " # RECEIVE: " + dataPacket);
+        System.out.println("#CLIENT HANDLER " + playerID + " # RECEIVE: " + dataPacket.packetType);
         return dataPacket;
     }
 
@@ -39,16 +42,10 @@ public class ClientHandler implements Runnable{
         clientSocket.close();
     }
 
-    public void sendToAllClients(DataPacket dataPacket){
+    public void sendToAllClients(DataPacket dataPacket) throws IOException {
         ArrayList<ClientHandler> toRemove = new ArrayList<>();
         for(ClientHandler clientHandler : clientList){
-            try {
-                //if(clientHandler != this)
-                    clientHandler.sendData(dataPacket);
-            } catch (IOException e){
-                toRemove.add(clientHandler);
-                System.out.println("client unreachable");
-            }
+            clientHandler.sendData(dataPacket);
         }
         clientList.removeAll(toRemove);
     }
@@ -57,22 +54,18 @@ public class ClientHandler implements Runnable{
     public void run() {
         while(true){
             try {
-
                 DataPacket dataPacket = receiveData();
+
+                if(dataPacket.packetType.equals(PacketType.MOVE) && dataPacket.playerID == playerID)
+                    position = dataPacket.position;
+
                 sendToAllClients(dataPacket);
-            }catch (IOException e) {
-                try {
-                    closeConnection();
-                } catch (IOException ex) {
-                    System.out.println("#CLIENT HANDLER# Connection closed err");
-                }
-                System.out.println("#CLIENT HANDLER# Connection closed");
-                return;
+
+            } catch (IOException e) {
+                System.out.println("blad poalczenia");
             } catch (ClassNotFoundException e) {
-                System.out.println("#CLIENT HANDLER# Class SocketData not found");
-                return;
+                throw new RuntimeException(e); //to sie nigdy nie wykona jak cos
             }
         }
-
     }
 }

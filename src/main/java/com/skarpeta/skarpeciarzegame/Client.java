@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
+import javafx.application.Platform;
 
 import java.net.*;
 import java.io.*;
@@ -14,6 +15,8 @@ public class Client implements Runnable {
     private static final String IP_ADDRESS = "127.0.0.1";
     private static final int PORT_NUMBER = 5555;
     private WorldMap worldMap;
+    public PlayerManager playerList = new PlayerManager();
+    int playerID =-1;
 
     public Client() throws IOException, ClassNotFoundException {
         clientSocket = new Socket(IP_ADDRESS,PORT_NUMBER);
@@ -26,35 +29,46 @@ public class Client implements Runnable {
         receiveData();
     }
 
-    public static void sendData(Point newPosition) throws IOException {
-        DataPacket newDataPacket = new DataPacket(PacketType.MOVE,PlayerMove.MOVE,newPosition);
+    public static void makeMove(int playerID,Point newPosition) throws IOException {
+        DataPacket newDataPacket = new DataPacket(PacketType.MOVE,playerID,newPosition);
         outputStream.writeObject(newDataPacket);
-        System.out.println("#CLIENT# Send: "+ newPosition);
+        System.out.println("#CLIENT# Send: "+ newPosition + playerID);
     }
 
     public void receiveData() throws IOException, ClassNotFoundException {
+
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
-
-        if(dataPacket.packetType == PacketType.INITIAL){
-            worldMap = new WorldMap(dataPacket.sizeMap,dataPacket.seedMap);
+        System.out.println("received packet! + "+dataPacket.packetType);
+        switch (dataPacket.packetType) {
+            case INIT_MAP -> worldMap = new WorldMap(dataPacket.sizeMap, dataPacket.seedMap);
+            case INIT_PLAYER -> initPlayer(dataPacket);
+            case NEW_PLAYER -> newPlayerJoined(dataPacket);
+            case MOVE -> playerList.getPlayer(dataPacket.playerID).moveTo(worldMap.getField(dataPacket.position));
         }
-        else if(dataPacket.packetType == PacketType.NEW_PLAYER){
-            System.out.println("Nowy gracz");
-
-            Player player = new Player(worldMap,dataPacket.playerLocation);
-            PlayerManager.addPlayer(player);
-
-            worldMap.getChildren().add(player);
-
-        }
-
-        System.out.println("#CLIENT# Receive: "+ dataPacket);
     }
 
-    public void closeConnection() throws IOException {
-        inputStream.close();
-        outputStream.close();
-        clientSocket.close();
+    private void initPlayer(DataPacket dataPacket) {
+        if(playerID ==-1){
+            this.playerID = dataPacket.playerID;
+            System.out.println("moje id to "+ playerID);
+            Player player = new Player(worldMap.getField(dataPacket.position), dataPacket.playerID);
+            playerList.addPlayer(playerID, player);
+            worldMap.setPlayer(player);
+            Platform.runLater(()->{
+                worldMap.getChildren().add(player);
+            });
+        }
+    }
+
+    private void newPlayerJoined(DataPacket dataPacket) {
+        {
+            Player player = new Player(worldMap.getField(dataPacket.position), dataPacket.playerID);
+            playerList.addPlayer(dataPacket.playerID, player);
+            System.out.println("nowy gracz dolaczyl "+dataPacket.playerID);
+            Platform.runLater(()->{
+                worldMap.getChildren().add(player);
+            });
+        }
     }
 
     @Override
@@ -91,5 +105,9 @@ public class Client implements Runnable {
 
         return true;
     }
-
+    public void closeConnection() throws IOException {
+        inputStream.close();
+        outputStream.close();
+        clientSocket.close();
+    }
 }

@@ -1,9 +1,10 @@
 package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
-import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
@@ -16,8 +17,12 @@ public class WorldMap extends Group {
     /** Zbiór pól mapy */
     private final Field[][] board;
     private final int BOARD_SIZE;
-
     private final int seed;
+    Player player;
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
     WorldMap(int size,int seed) {
@@ -28,8 +33,16 @@ public class WorldMap extends Group {
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                board[x][y] = worldGeneration.generateField(this,point);
+                Field newField = worldGeneration.generateField(this,point);
+                newField.setOnMouseClicked((e)->click(e,newField));
+                board[x][y] = newField;
             }
+        }
+    }
+
+    void click(MouseEvent mouseEvent, Field field) {
+        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+            selectField(field);
         }
     }
 
@@ -59,7 +72,7 @@ public class WorldMap extends Group {
      */
     public void selectField(Field field) {
         try {
-            PlayerManager.getPlayer().movePlayer(field);
+            player.sendMove(field);
         } catch (InvalidMoveException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {

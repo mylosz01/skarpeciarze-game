@@ -34,26 +34,29 @@ public class Catana extends Application {
 
     static WorldMap worldMap;
     static StackPane gameMap;
+    static Stage katana;
+
+    Client clientPlayer;
 
     @Override
     public void start(Stage katana) throws IOException, ClassNotFoundException {
-
+        this.katana = katana;
         System.out.println("CLIENT START");
-        Client clientPlayer = new Client();
+        clientPlayer = new Client();
         Thread playerSend = new Thread(clientPlayer);
-        playerSend.setDaemon(true);
         playerSend.start();
-
         worldMap = clientPlayer.getWorldMap();
         gameMap = new StackPane(worldMap);
 
+        setupUI();
+    }
+
+    private void setupUI() {
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
-        Player player = new Player(worldMap,worldMap.placePlayer());
-        PlayerManager.addPlayer(player);
-
-        worldMap.getChildren().add(player);
+        //clientPlayer.
+       // worldMap.getChildren().add(player);
 
         AnchorPane gameLayout = new AnchorPane();
         gameLayout.getChildren().addAll(gamePane,playerUIMain);

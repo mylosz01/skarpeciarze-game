@@ -3,7 +3,6 @@ package com.skarpeta.skarpeciarzegame;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
-import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.image.ImageView;
 
 import java.io.IOException;
@@ -13,14 +12,14 @@ import java.io.IOException;
 public class Player extends Asset {
 
     Inventory playerEq;
-    WorldMap worldMap;
+    int playerID;
     public Field playerField;
 
-    Player(WorldMap worldMap, Point point){
+    Player(Field field, int playerID){
         super(new ImageView(ImageManager.getImage("player.png",32,32)));
+        this.playerID = playerID;
         this.playerEq = new Inventory();
-        this.worldMap = worldMap;
-        this.playerField = worldMap.getField(point);
+        this.playerField = field;
         align(playerField);
     }
 
@@ -32,14 +31,18 @@ public class Player extends Asset {
     /** Poruszanie się gracza
      *  gracz porusza się na podane pole Field destination tylko w przypadku gdy ruch jest poprawny (isValidMovePlayer)
      */
-    public void movePlayer(Field destination) throws InvalidMoveException, IOException {
+    public void sendMove(Field destination) throws InvalidMoveException, IOException {
         if(isValidMovePlayer(destination)){
-            this.playerField = destination;
-            Client.sendData(destination.position);
-            align(this.playerField);
+            //this.playerField = destination;
+            Client.makeMove(playerID,destination.position);
+            //align(this.playerField);
         }
     }
 
+    public void moveTo(Field destination){
+        this.playerField = destination;
+        align(this.playerField);
+    }
     /** Walidacja ruchów gracza:
      *  niepoprawnym ruchem jest próba wejścia do wody bez łodzi
      *  oraz próba wejścia na niesąsiadujące pole

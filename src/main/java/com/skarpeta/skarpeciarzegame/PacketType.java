@@ -1,9 +1,9 @@
 package com.skarpeta.skarpeciarzegame;
 
 public enum PacketType {
-    INITIAL,
+    INIT_MAP,
     NEW_PLAYER,
     DISCONNECT,
     MOVE,
-    BUILD
+    INIT_PLAYER, BUILD
 }
