@@ -30,7 +30,7 @@ public class Catana extends Application {
 
     Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5)));
 
-    static WorldMap worldMap = new WorldMap(BOARD_SIZE);
+    static WorldMap worldMap;
     static StackPane gameMap;
     static Stage katana;
 
@@ -50,12 +50,6 @@ public class Catana extends Application {
     }
 
     private void setupUI() {
-        VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
-        Pane gamePane = createGamePane();//okienko gry po lewej
-
-        //clientPlayer.
-       // worldMap.getChildren().add(player);
-
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
@@ -107,12 +101,12 @@ public class Catana extends Application {
         listPlayer.setPadding(new Insets(3));
 
         //eqPlayer (lewy panel)
-        Pane eqPlayer = createEqPlayerPane();
+        //Pane eqPlayer = createEqPlayerPane();
 
         //dolna czesc UI
         HBox playerUIDown = new HBox();
         playerUIDown.setPrefHeight(1000);
-        playerUIDown.getChildren().addAll(eqPlayer,listPlayer);
+        playerUIDown.getChildren().addAll(/*eqPlayer,*/listPlayer);
         //playerUIDown.setBorder(new Border(new BorderStroke(Color.T,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
         AnchorPane.setTopAnchor(playerUIMain,0.0);
@@ -138,7 +132,7 @@ public class Catana extends Application {
         return  interactionMenu;
     }
 
-    private Pane createEqPlayerPane() {
+    /*private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
         VBox playerItemsTable = new VBox();
         playerItemsTable.setSpacing(10);
@@ -158,7 +152,7 @@ public class Catana extends Application {
         eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
 
         return eqPlayer;
-    }
+    }*/
 
     private void handleRightClick(MouseEvent event) {
         if (event.isSecondaryButtonDown()) {
