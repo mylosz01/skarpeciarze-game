@@ -29,23 +29,18 @@ public class Server implements Runnable{
             System.out.println("#SERVER# Waiting for players...");
             try {
                 Socket playerSocket = serverSocket.accept();
-                System.out.println("NEW PLAYER ACCEPTED..." + playerID);
+                System.out.println("PLAYER "+playerID+" JOINED THE GAME");
                 Point playerPos = worldMap.placePlayer();
                 ClientHandler newClient = new ClientHandler(playerID,playerPos,playerSocket, clientList);
 
-
                 //inicjalizacja mapy
                 newClient.sendData(new DataPacket(PacketType.INIT_MAP,MAP_SIZE, MAP_SEED));
-
-                //wysylanie starych graczy do nowego
                 for (ClientHandler clientHandler : clientList) {
-                    newClient.sendData(new DataPacket(PacketType.NEW_PLAYER,clientHandler.playerID,clientHandler.position));
-                }
-                //wysylanie nowego gracza do starych graczy
-                for (ClientHandler clientHandler : clientList) {
-                    clientHandler.sendData(new DataPacket(PacketType.NEW_PLAYER,playerID,playerPos));
+                    newClient.sendData(new DataPacket(PacketType.NEW_PLAYER,clientHandler.playerID,clientHandler.position));//wysylanie starych graczy do nowego
+                    clientHandler.sendData(new DataPacket(PacketType.NEW_PLAYER,playerID,playerPos));                //wysylanie nowego gracza do starych graczy
                 }
                 newClient.sendData(new DataPacket(PacketType.INIT_PLAYER,playerID,playerPos));
+
                 clientList.add(newClient);
 
                 new Thread(newClient).start();

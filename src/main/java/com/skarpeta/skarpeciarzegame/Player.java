@@ -16,7 +16,7 @@ public class Player extends Asset {
     public Field playerField;
 
     Player(Field field, int playerID){
-        super(new ImageView(ImageManager.getImage("player.png",32,32)));
+        super(new ImageView(ImageManager.getImage("player"+playerID+".png",32,32)));
         this.playerID = playerID;
         this.playerEq = new Inventory();
         this.playerField = field;

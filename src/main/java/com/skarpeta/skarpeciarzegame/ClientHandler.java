@@ -28,7 +28,7 @@ public class ClientHandler implements Runnable{
 
     public DataPacket receiveData() throws IOException, ClassNotFoundException {
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
-        System.out.println("#CLIENT HANDLER " + playerID + " # RECEIVE: " + dataPacket.packetType);
+        System.out.println("<-  received " + dataPacket.packetType + " from Player" + playerID);
         return dataPacket;
     }
 

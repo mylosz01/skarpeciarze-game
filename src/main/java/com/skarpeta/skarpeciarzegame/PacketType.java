@@ -5,5 +5,6 @@ public enum PacketType {
     NEW_PLAYER,
     DISCONNECT,
     MOVE,
-    INIT_PLAYER, BUILD
+    INIT_PLAYER,
+    BUILD
 }
