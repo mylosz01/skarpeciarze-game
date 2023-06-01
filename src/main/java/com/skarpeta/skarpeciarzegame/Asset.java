@@ -1,11 +1,12 @@
 package com.skarpeta.skarpeciarzegame;
 
+import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 /** Asset to klasa przechowywujaca teksture obiektów w grze */
-public class Asset extends Pane {
+public class Asset extends Group {
     private final ImageView texture;
 
     public Asset(ImageView texture) {

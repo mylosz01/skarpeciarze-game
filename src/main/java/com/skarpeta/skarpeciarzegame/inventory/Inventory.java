@@ -4,9 +4,13 @@ import com.skarpeta.skarpeciarzegame.CraftingStatus;
 
 import java.util.HashMap;
 
+/** Klasa reprezentująca ekwipunek gracza
+ *
+ */
+
 public class Inventory {
 
-    HashMap<String, Item> equipment;
+    public HashMap<String, Item> equipment;
 
     public Inventory(){
         this.equipment = new HashMap<>();
@@ -51,5 +55,13 @@ public class Inventory {
 
     public HashMap<String, Item> getEquipment() {
         return equipment;
+    }
+
+    public void increaseItemAmount(String itemName, int amount){
+        equipment.get(itemName).increaseAmount(amount);
+    }
+
+    public void decreaseItemAmount(String itemName, int amount){
+        equipment.get(itemName).decreaseAmount(amount);
     }
 }

@@ -1,19 +1,15 @@
 package com.skarpeta.skarpeciarzegame;
 
-import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Application;
-import javafx.beans.property.*;
-import javafx.collections.*;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,7 +28,9 @@ public class Catana extends Application {
     double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
-    static WorldMap worldMap;
+    Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5)));
+
+    static WorldMap worldMap = new WorldMap(BOARD_SIZE);
     static StackPane gameMap;
     static Stage katana;
 
@@ -58,6 +56,10 @@ public class Catana extends Application {
         //clientPlayer.
        // worldMap.getChildren().add(player);
 
+        VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
+        Pane gamePane = createGamePane();//okienko gry po lewej
+
+
         AnchorPane gameLayout = new AnchorPane();
         gameLayout.getChildren().addAll(gamePane,playerUIMain);
 
@@ -73,13 +75,12 @@ public class Catana extends Application {
         katana.setHeight(700);
         katana.show();
 
-        System.out.println("OKI DOKI");
     }
 
     private Pane createGamePane() { //lewy panel okna (gra)
         Pane gamePane = new Pane();
         gamePane.setBackground(new Background(new BackgroundFill(TerrainType.WATER.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
-        gamePane.setBorder(new Border(new BorderStroke(Color.GOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(10))));
+        //gamePane.setBorder(new Border(new BorderStroke(Color.GOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(10))));
 
         AnchorPane.setTopAnchor(gamePane,0.0);
         AnchorPane.setLeftAnchor(gamePane,0.0);
@@ -94,7 +95,7 @@ public class Catana extends Application {
         VBox playerUIMain = new VBox();
         playerUIMain.setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
         playerUIMain.setAlignment(Pos.TOP_CENTER);
-        playerUIMain.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+        playerUIMain.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().darker,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         playerUIMain.setMinWidth(UI_WIDTH);
 
         //ruchy gracza (gorny panel)
@@ -102,7 +103,8 @@ public class Catana extends Application {
 
         //lista graczy (prawy panel)
         Pane listPlayer = new Pane();
-        listPlayer.setBorder(new Border(new BorderStroke(Color.SKYBLUE,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        listPlayer.setBorder(insideBorder);
+        listPlayer.setPadding(new Insets(3));
 
         //eqPlayer (lewy panel)
         Pane eqPlayer = createEqPlayerPane();
@@ -111,7 +113,7 @@ public class Catana extends Application {
         HBox playerUIDown = new HBox();
         playerUIDown.setPrefHeight(1000);
         playerUIDown.getChildren().addAll(eqPlayer,listPlayer);
-        playerUIDown.setBorder(new Border(new BorderStroke(Color.GREENYELLOW,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        //playerUIDown.setBorder(new Border(new BorderStroke(Color.T,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
 
         AnchorPane.setTopAnchor(playerUIMain,0.0);
         AnchorPane.setRightAnchor(playerUIMain,0.0);
@@ -124,13 +126,13 @@ public class Catana extends Application {
     private VBox createInteractionMenu() { //gorny panel z przyciskami
 
         VBox interactionMenu = new VBox();
-        interactionMenu.setBorder(new Border(new BorderStroke(Color.DARKGOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        interactionMenu.setBorder(insideBorder);
         interactionMenu.setAlignment(Pos.CENTER);
-        interactionMenu.setSpacing(30);
+        interactionMenu.setSpacing(14);
 
-        Button buildBtn = new Button("Zbuduj");
-        Button destroyBtn = new Button("Zniszcz");
-        Button collectBtn = new Button("Zbierz");
+        MenuButton buildBtn = new MenuButton("exit.png");
+        MenuButton destroyBtn = new MenuButton("exit.png");
+        MenuButton collectBtn = new MenuButton("exit.png");
 
         interactionMenu.getChildren().addAll(buildBtn,destroyBtn,collectBtn);
         return  interactionMenu;
@@ -138,26 +140,23 @@ public class Catana extends Application {
 
     private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
-        eqPlayer.setBorder(new Border(new BorderStroke(Color.RED,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
-        eqPlayer.setMinWidth(200);
-        //tabela to wyswietlania ekwipunku gracza
-        Inventory playerInventory = new Inventory();
-        Map<String, Item> equipment = playerInventory.getEquipment();
+        VBox playerItemsTable = new VBox();
+        playerItemsTable.setSpacing(10);
+        playerItemsTable.setAlignment(Pos.CENTER);
 
-        TableColumn<Map.Entry<String, Item>, String> nameItemColumn = new TableColumn<>("Nazwa");
-        nameItemColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getKey()));
+        for (Map.Entry<String, Item> entry : player.playerEq.equipment.entrySet()) {
+            String id = entry.getKey();
+            Item item = entry.getValue();
 
-        TableColumn<Map.Entry<String, Item>, String> amountItemColumn = new TableColumn<>("Ilość");
-        amountItemColumn.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getValue().getAmount().toString()));
-
-        ObservableList<Map.Entry<String, Item>> playerItems = FXCollections.observableArrayList(equipment.entrySet());
-        final TableView<Map.Entry<String,Item>> playerItemsTable = new TableView<>(playerItems);
-
-        playerItemsTable.getColumns().setAll(nameItemColumn, amountItemColumn);
-        playerItemsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        playerItemsTable.setPrefWidth(200);
+            HBox rowItem = new HBox(item, new Label(id), new Label(String.valueOf(item.getAmount())));
+            rowItem.setAlignment(Pos.CENTER);
+            rowItem.setSpacing(20);
+            playerItemsTable.getChildren().add(rowItem);
+        }
 
         eqPlayer.getChildren().add(playerItemsTable);
+        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+
         return eqPlayer;
     }
 
