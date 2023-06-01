@@ -78,7 +78,7 @@ public class Catana extends Application {
         scene.setOnMousePressed(this::handleRightClick);
 
         katana.setTitle("Katana");
-        katana.getIcons().add(ImageManager.getImage("logoGame2.png",128,128));
+        katana.getIcons().add(ImageManager.getImage("logoGame.png",128,128));
         katana.setScene(scene);
         katana.setWidth(WINDOW_SIZE);
         katana.setHeight(700);

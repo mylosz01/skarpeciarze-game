@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView;
 public abstract class Item extends Asset {
     private Integer amount;
     Item(int amount, String textureName){
-        super(new ImageView(ImageManager.getImage(textureName+".png",32,32)));
+        super(new ImageView(ImageManager.getImage(textureName+".png",64,64)));
         this.amount = amount;
     }
 

@@ -25,7 +25,7 @@ public class Menu extends Application {
 
         Group logoPane = new Group();
 
-        ImageView logo = new ImageView(ImageManager.getImage("logoGame2.png",128,128));
+        ImageView logo = new ImageView(ImageManager.getImage("logoGame.png",128,128));
         logoPane.getChildren().add(logo);
 
         MenuButton btnStartGame = new MenuButton("start.png");
@@ -51,7 +51,7 @@ public class Menu extends Application {
         menu.setMaxWidth(1000);
         menu.setMaxHeight(700);
 
-        menu.getIcons().add(ImageManager.getImage("logoGame2.png",128,128));
+        menu.getIcons().add(ImageManager.getImage("logoGame.png",128,128));
         menu.setTitle("Sockware game Catan");
         menu.show();
     }
