@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 
 import java.net.*;
@@ -14,28 +15,39 @@ public class Client implements Runnable {
     private static final int PORT_NUMBER = 5555;
     private WorldMap worldMap;
 
-    private int seedMap;
-
     public Client() throws IOException, ClassNotFoundException {
         clientSocket = new Socket(IP_ADDRESS,PORT_NUMBER);
         OutputStream out = clientSocket.getOutputStream();
         outputStream = new ObjectOutputStream(out);
         InputStream in = clientSocket.getInputStream();
         inputStream = new ObjectInputStream(in);
+
+        //otrzymanie pakietu inicjalizacyjnego
         receiveData();
     }
 
     public static void sendData(Point newPosition) throws IOException {
-        DataPacket newDataPacket = new DataPacket(PlayerMove.MOVE_UP,newPosition);
+        DataPacket newDataPacket = new DataPacket(PacketType.MOVE,PlayerMove.MOVE,newPosition);
         outputStream.writeObject(newDataPacket);
         System.out.println("#CLIENT# Send: "+ newPosition);
     }
 
     public void receiveData() throws IOException, ClassNotFoundException {
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
+
         if(dataPacket.packetType == PacketType.INITIAL){
-            worldMap = new WorldMap(5,dataPacket.seedMap);
+            worldMap = new WorldMap(dataPacket.sizeMap,dataPacket.seedMap);
         }
+        else if(dataPacket.packetType == PacketType.NEW_PLAYER){
+            System.out.println("Nowy gracz");
+
+            Player player = new Player(worldMap,dataPacket.playerLocation);
+            PlayerManager.addPlayer(player);
+
+            worldMap.getChildren().add(player);
+
+        }
+
         System.out.println("#CLIENT# Receive: "+ dataPacket);
     }
 
@@ -64,10 +76,6 @@ public class Client implements Runnable {
 
     public WorldMap getWorldMap(){
         return worldMap;
-    }
-
-    public int getSeedMap(){
-        return seedMap;
     }
 
     public static boolean checkServerRunning(){

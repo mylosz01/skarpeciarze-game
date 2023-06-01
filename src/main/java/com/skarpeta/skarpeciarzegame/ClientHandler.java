@@ -39,7 +39,7 @@ public class ClientHandler implements Runnable{
         clientSocket.close();
     }
 
-    private void sendToAllClients(DataPacket dataPacket){
+    public void sendToAllClients(DataPacket dataPacket){
         ArrayList<ClientHandler> toRemove = new ArrayList<>();
         for(ClientHandler clientHandler : clientList){
             try {
