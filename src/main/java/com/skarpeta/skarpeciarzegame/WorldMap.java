@@ -100,4 +100,9 @@ public class WorldMap extends Group {
     public int getSeed(){
         return seed;
     }
+
+    public void generateResources() {
+        WorldGeneration worldGeneration = new WorldGeneration(seed);
+        forEach(worldGeneration::generateResource);
+    }
 }

@@ -14,9 +14,11 @@ public class Server implements Runnable{
     private static final int MAP_SEED = 400;
     private static final int MAP_SIZE = 50;
 
-    public WorldMap worldMap = new WorldMap(MAP_SIZE,MAP_SEED);
+    public WorldMap worldMap;
 
     Server() throws IOException {
+        worldMap = new WorldMap(MAP_SIZE,MAP_SEED);
+        worldMap.generateResources();
         clientList = Collections.synchronizedList(new ArrayList<>());
         serverSocket = new ServerSocket(PORT_NUMBER);
     }

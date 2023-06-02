@@ -77,7 +77,10 @@ public class Client implements Runnable {
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
         System.out.println("received packet! + "+dataPacket.packetType);
         switch (dataPacket.packetType) {
-            case INIT_MAP -> worldMap = new WorldMap(dataPacket.sizeMap, dataPacket.seedMap);
+            case INIT_MAP -> {
+                worldMap = new WorldMap(dataPacket.sizeMap, dataPacket.seedMap);
+                worldMap.generateResources();
+            }
             case INIT_PLAYER -> initPlayer(dataPacket);
             case NEW_PLAYER -> newPlayerJoined(dataPacket);
             case MOVE -> movePlayer(dataPacket);
