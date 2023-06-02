@@ -12,7 +12,7 @@ public class Server implements Runnable{
     private final List<ClientHandler> clientList;
     private static final int PORT_NUMBER = 5555;
     private static final int MAP_SEED = 400;
-    private static final int MAP_SIZE = 10;
+    private static final int MAP_SIZE = 50;
 
     public WorldMap worldMap = new WorldMap(MAP_SIZE,MAP_SEED);
 

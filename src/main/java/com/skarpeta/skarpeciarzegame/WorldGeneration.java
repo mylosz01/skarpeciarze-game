@@ -63,7 +63,7 @@ public class WorldGeneration {
                 field.addResource(new ForestResource());
         }
         if(terrain == TerrainType.MOUNTAINS) {
-            if(new Random(seed).nextInt(7) == 0)
+            if(new Random(seed + point.x + point.y).nextInt(7) == 0)
                 field.addResource(new StoneResource());
         }
         worldMap.getChildren().add(field);
@@ -74,7 +74,7 @@ public class WorldGeneration {
         double calc = (value-0.3)*60;
         if(calc<1)
             calc=1;
-        int random = new Random(seed).nextInt((int) Math.floor(calc));
+        int random = new Random(seed + (long)value).nextInt((int) Math.floor(calc));
         return random == 0;
     }
 

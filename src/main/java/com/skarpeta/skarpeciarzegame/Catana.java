@@ -8,6 +8,7 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -41,7 +42,13 @@ public class Catana extends Application {
             String id = entry.getKey();
             Item item = entry.getValue();
 
-            HBox rowItem = new HBox(item, new Label(id), new Label(String.valueOf(item.getAmount())));
+            Label idLabel = new Label(id);
+            idLabel.setFont(new Font("Arial",20));
+
+            Label amountLabel = new Label(String.valueOf(item.getAmount()));
+            amountLabel.setFont(new Font("Arial",20));
+
+            HBox rowItem = new HBox(item, idLabel, amountLabel);
             rowItem.setAlignment(Pos.CENTER);
             rowItem.setSpacing(20);
             playerItemsTable.getChildren().add(rowItem);

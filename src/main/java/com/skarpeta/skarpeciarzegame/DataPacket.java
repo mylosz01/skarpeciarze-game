@@ -5,6 +5,7 @@ import java.io.*;
 
 public class DataPacket implements Serializable {
 
+    BuildingType buildingType;
     int seedMap;
     int sizeMap;
     PacketType packetType;
@@ -21,10 +22,17 @@ public class DataPacket implements Serializable {
     }
 
     //pakiet ruchu gracza
-    DataPacket(PacketType packetTyp,PlayerMove playMove, Point playerCords){
+    DataPacket(PacketType packetTyp, PlayerMove playMove, Point playerCords){
         this.packetType = packetTyp;
         this.playerMove = playMove;
         this.position = new Point(playerCords);
+    }
+
+    //pakiet do wysylania typu budynku
+    DataPacket(PacketType packetType, BuildingType buildingType, Point position){
+        this.packetType = packetType;
+        this.buildingType = buildingType;
+        this.position = position;
     }
 
     //field position
