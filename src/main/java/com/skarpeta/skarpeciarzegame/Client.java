@@ -4,6 +4,9 @@ import com.skarpeta.skarpeciarzegame.buildings.Building;
 import com.skarpeta.skarpeciarzegame.buildings.Mineshaft;
 import com.skarpeta.skarpeciarzegame.buildings.Quarry;
 import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
+import com.skarpeta.skarpeciarzegame.resources.ForestResource;
+import com.skarpeta.skarpeciarzegame.resources.Resource;
+import com.skarpeta.skarpeciarzegame.resources.StoneResource;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
@@ -77,10 +80,7 @@ public class Client implements Runnable {
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
         System.out.println("received packet! + "+dataPacket.packetType);
         switch (dataPacket.packetType) {
-            case INIT_MAP -> {
-                worldMap = new WorldMap(dataPacket.sizeMap, dataPacket.seedMap);
-                worldMap.generateResources();
-            }
+            case INIT_MAP -> initMap(dataPacket);
             case INIT_PLAYER -> initPlayer(dataPacket);
             case NEW_PLAYER -> newPlayerJoined(dataPacket);
             case MOVE -> movePlayer(dataPacket);
@@ -92,12 +92,34 @@ public class Client implements Runnable {
             Catana.updateButtonUI();
     }
 
+    private void initMap(DataPacket dataPacket) {
+        {
+            worldMap = new WorldMap(dataPacket.sizeMap, dataPacket.seedMap);
+            dataPacket.fieldInfo.forEach(e->{
+                Resource resource = switch (e.resourceType){
+                    case EMPTY -> null;
+                    case FOREST -> new ForestResource();
+                    case STONE -> new StoneResource();
+                };
+                worldMap.getField(e.point).addResource(resource);
+                Building building = switch (e.buildingType){
+                    case EMPTY -> null;
+                    case QUARRY -> new Quarry();
+                    case MINESHAFT -> new Mineshaft();
+                    case SAWMILL -> new Sawmill();
+                };
+                worldMap.getField(e.point).addBuilding(building);
+            });
+        }
+    }
+
     private void movePlayer(DataPacket dataPacket) {
         playerList.getPlayer(dataPacket.playerID).moveTo(worldMap.getField(dataPacket.position));
     }
 
     private void placeBuilding(DataPacket dataPacket){
         Building building = switch (dataPacket.buildingType){
+            case EMPTY -> null;
             case SAWMILL -> new Sawmill();
             case MINESHAFT -> new Mineshaft();
             case QUARRY ->  new Quarry();

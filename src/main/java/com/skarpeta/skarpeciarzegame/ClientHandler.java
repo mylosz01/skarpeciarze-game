@@ -1,7 +1,12 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.buildings.Building;
+import com.skarpeta.skarpeciarzegame.buildings.Mineshaft;
+import com.skarpeta.skarpeciarzegame.buildings.Quarry;
+import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 
+import javax.print.attribute.standard.Severity;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -55,9 +60,24 @@ public class ClientHandler implements Runnable{
         while(true){
             try {
                 DataPacket dataPacket = receiveData();
-
-                if(dataPacket.packetType.equals(PacketType.MOVE) && dataPacket.playerID == playerID)
-                    position = dataPacket.position;
+                switch (dataPacket.packetType)
+                {
+                    case MOVE -> {
+                        if(dataPacket.playerID == playerID)
+                            position = dataPacket.position;
+                    }
+                    case DESTROY_BUILDING -> Server.worldMap.getField(dataPacket.position).destroyBuilding();
+                    case DESTROY_RESOURCE -> Server.worldMap.getField(dataPacket.position).destroyResource();
+                    case BUILD -> {
+                        Building building = switch (dataPacket.buildingType){
+                            case EMPTY -> null;
+                            case SAWMILL -> new Sawmill();
+                            case MINESHAFT -> new Mineshaft();
+                            case QUARRY ->  new Quarry();
+                        };
+                        Server.worldMap.getField(dataPacket.position).addBuilding(building);
+                    }
+                }
 
                 sendToAllClients(dataPacket);
 
