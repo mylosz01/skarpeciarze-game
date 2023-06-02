@@ -17,7 +17,7 @@ public class Client implements Runnable {
     private static final int PORT_NUMBER = 5555;
     private WorldMap worldMap;
     public PlayerManager playerList = new PlayerManager();
-    int playerID =-1;
+    Player player = null;
 
     public Client() throws IOException, ClassNotFoundException {
         clientSocket = new Socket(IP_ADDRESS,PORT_NUMBER);
@@ -49,7 +49,7 @@ public class Client implements Runnable {
 
     public void sendRemoveBuilding(Point fieldPosition){
         try {
-            DataPacket newDataPacket = new DataPacket(PacketType.DESTROY_BUILDING, fieldPosition);
+            DataPacket newDataPacket = new DataPacket(PacketType.DESTROY_BUILDING, player.playerID, fieldPosition);
             outputStream.writeObject(newDataPacket);
             System.out.println("#CLIENT# Send: " + fieldPosition);
         }
@@ -93,15 +93,23 @@ public class Client implements Runnable {
     }
 
     private void removeResource(DataPacket dataPacket) {
-        Platform.runLater(() -> worldMap.getField(dataPacket.position).destroyResource());
+
+        Platform.runLater(() -> {
+
+            System.out.println("running later");
+            if(dataPacket.playerID == player.playerID) {
+                player.collectResource();
+                Catana.renderInventory(this.player);
+            }
+            worldMap.getField(dataPacket.position).destroyResource();
+        });
     }
 
     private void initPlayer(DataPacket dataPacket) {
-        if(playerID ==-1){
-            this.playerID = dataPacket.playerID;
-            System.out.println("moje id to "+ playerID);
-            Player player = new Player(worldMap.getField(dataPacket.position), dataPacket.playerID);
-            playerList.addPlayer(playerID, player);
+        if(this.player == null){
+            this.player = new Player(worldMap.getField(dataPacket.position), dataPacket.playerID);
+            System.out.println("moje id to "+ player.playerID);
+            playerList.addPlayer(player.playerID, player);
             worldMap.setPlayer(player);
             Platform.runLater(()->{
                 worldMap.getChildren().add(player);
