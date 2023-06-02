@@ -149,7 +149,7 @@ public class Catana extends Application {
         return playerUIMain;
     }
     public static void updateButtonUI() {
-        if(clientThread== null)
+        if(clientThread== null || clientThread.player == null)
             return;
         Field field = clientThread.player.playerField;
         Platform.runLater(()->{

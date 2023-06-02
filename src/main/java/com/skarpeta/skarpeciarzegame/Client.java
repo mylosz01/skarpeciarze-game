@@ -41,7 +41,7 @@ public class Client implements Runnable {
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType){
         try {
-            DataPacket newDataPacket = new DataPacket(PacketType.BUILD, buildingType, fieldPosition);
+            DataPacket newDataPacket = new DataPacket(PacketType.BUILD, player.playerID,buildingType, fieldPosition);
             outputStream.writeObject(newDataPacket);
             System.out.println("#CLIENT# Send: " + fieldPosition);
         }
@@ -63,7 +63,7 @@ public class Client implements Runnable {
 
     public void sendRemoveResource(Point position) {
         try {
-            DataPacket newDataPacket = new DataPacket(PacketType.DESTROY_RESOURCE, position);
+            DataPacket newDataPacket = new DataPacket(PacketType.DESTROY_RESOURCE,player.playerID, position);
             outputStream.writeObject(newDataPacket);
             System.out.println("#CLIENT# Send: " + position);
         }
@@ -109,8 +109,6 @@ public class Client implements Runnable {
     private void removeResource(DataPacket dataPacket) {
 
         Platform.runLater(() -> {
-
-            System.out.println("running later");
             if(dataPacket.playerID == player.playerID) {
                 player.collectResource();
                 Catana.renderInventory(this.player);
@@ -137,9 +135,7 @@ public class Client implements Runnable {
             Player player = new Player(worldMap.getField(dataPacket.position), dataPacket.playerID);
             playerList.addPlayer(dataPacket.playerID, player);
             System.out.println("nowy gracz dolaczyl "+dataPacket.playerID);
-            Platform.runLater(()->{
-                worldMap.getChildren().add(player);
-            });
+            Platform.runLater(()-> worldMap.getChildren().add(player));
         }
     }
 

@@ -12,7 +12,6 @@ public class DataPacket implements Serializable {
     public Point position;
     public PlayerMove playerMove;
     public int playerID;
-    public ServerValidMove validiti;
 
     //packiet inicjalizacyjny
     public DataPacket(PacketType packetType, int mapSize, int mapSeed) {
@@ -20,33 +19,20 @@ public class DataPacket implements Serializable {
         this.seedMap=mapSeed;
         this.sizeMap=mapSize;
     }
-
-    //pakiet ruchu gracza
-    DataPacket(PacketType packetTyp, PlayerMove playMove, Point playerCords){
-        this.packetType = packetTyp;
-        this.playerMove = playMove;
-        this.position = new Point(playerCords);
-    }
-
     //pakiet do wysylania typu budynku
-    DataPacket(PacketType packetType, BuildingType buildingType, Point position){
+    public DataPacket(PacketType packetType, int playerID, BuildingType buildingType, Point fieldPosition) {
         this.packetType = packetType;
+        this.playerID = playerID;
         this.buildingType = buildingType;
-        this.position = position;
+        this.position = fieldPosition;
     }
-
-    //field position
-    DataPacket(PacketType packetType, Point resourceCords){
-        this.packetType = packetType;
-        this.position = resourceCords;
-    }
-
-    //dolaczyl nowy gracz
+    //MOVE, DESTROY, INIT_PLAYER
     public DataPacket(PacketType packetType, int playerID, Point playerPos) {
         this.packetType = packetType;
         this.playerID = playerID;
         this.position = playerPos;
     }
+
 
 
     public String toString(){
