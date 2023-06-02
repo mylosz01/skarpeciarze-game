@@ -50,17 +50,17 @@ public class Player extends Asset {
     public void destroyBuilding(){
         if(playerField.hasBuilding()){
             playerField.getChildren().remove(this.playerField.building);
+            this.playerField.building = null;
         }
     }
 
     public void collectResource(){
 
         if(playerField.hasResource()){
-            System.out.println("Zebrano");
             int amountResource =  playerField.resource.getItem();
-           System.out.println("Zebrano " + amountResource);
+           System.out.println("Zebrano: " + playerField.resource.item.getName() + " " + amountResource);
 
-           playerEq.increaseItemAmount("Wood",amountResource);
+           playerEq.increaseItemAmount(playerField.resource.item.getName(),amountResource);
 
            playerField.getChildren().remove(this.playerField.resource);
            this.playerField.resource = null;
