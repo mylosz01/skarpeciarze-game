@@ -9,7 +9,6 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
-import java.util.Random;
 import java.util.function.Consumer;
 
 /** Mapa gry, definiowana przez tablicę pól Field */
@@ -39,6 +38,7 @@ public class WorldMap extends Group {
             }
         }
     }
+
 
     void click(MouseEvent mouseEvent, Field field) {
         if(mouseEvent.getButton() == MouseButton.PRIMARY) {

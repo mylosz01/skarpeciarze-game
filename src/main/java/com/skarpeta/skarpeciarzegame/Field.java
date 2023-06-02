@@ -50,6 +50,16 @@ public class Field extends Group {
     /** Override koloru, nie ma powrotu (debug only!!!!1)*/
     public void setColor(Color color) {
         hexagon.setFill(color);
+
+    }
+
+    /** Wykrywa przyciśnięcie pola lub leżących na nim obiektów */
+    private void click(MouseEvent mouseEvent) {
+        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+            System.out.println("clicked field: "+position);
+            System.out.println("mosue coords: "+getLayoutX()+", "+getLayoutY());
+            worldMap.selectField(this);
+        }
     }
 
 

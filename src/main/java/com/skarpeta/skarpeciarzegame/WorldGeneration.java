@@ -17,7 +17,6 @@ import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 
 import javax.imageio.ImageIO;
-
 /** Generowanie świata, czytanie pliku z perlin noise */
 public class WorldGeneration {
 
@@ -25,6 +24,7 @@ public class WorldGeneration {
     Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
     ArrayList<String > noiseChannels = new ArrayList<>();
     PixelReader pixels;
+
     BufferedImage noise;
 
     int seed;
@@ -44,6 +44,7 @@ public class WorldGeneration {
      *  Ustawia teren oraz generuje losowe materialy do zbierania przez graczy
      */
     public Field generateField(WorldMap worldMap, Point point) {
+
         //double heightChannel = getRandomChannel(0, point);
         //double forestChannel = getRandomChannel(1, point);
 
@@ -63,18 +64,21 @@ public class WorldGeneration {
                 field.addResource(new ForestResource());
         }
         if(terrain == TerrainType.MOUNTAINS) {
+
             if(new Random(seed + point.x + point.y).nextInt(7) == 0)
                 field.addResource(new StoneResource());
         }
         worldMap.getChildren().add(field);
         return field;
     }
+  
     /** Zwraca losową wartość boolean z prawdopodobieństwem zależnym od value */
     private boolean randomBoolean(double value) {
         double calc = (value-0.3)*60;
         if(calc<1)
             calc=1;
         int random = new Random(seed + (long)value).nextInt((int) Math.floor(calc));
+
         return random == 0;
     }
 
