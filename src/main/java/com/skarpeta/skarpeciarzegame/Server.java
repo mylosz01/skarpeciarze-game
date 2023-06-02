@@ -1,7 +1,6 @@
 package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.tools.Point;
-import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 
 import java.net.*;
 import java.io.*;
@@ -11,7 +10,7 @@ public class Server implements Runnable{
 
     private final ServerSocket serverSocket;
     private final List<ClientHandler> clientList;
-    private final List<FieldInfoPacket> fieldInfo;
+    private List<FieldInfoPacket> fieldInfo;
     private static final int PORT_NUMBER = 5555;
     private static final int MAP_SEED = new Random().nextInt();
     private static final int MAP_SIZE = 40;
@@ -22,15 +21,7 @@ public class Server implements Runnable{
         worldMap = new WorldMap(MAP_SIZE,MAP_SEED);
         worldMap.generateResources();
         clientList = Collections.synchronizedList(new ArrayList<>());
-        fieldInfo = Collections.synchronizedList(new ArrayList<>());
-        worldMap.forEach(e->{
-            FieldInfoPacket info = new FieldInfoPacket(e.position);
-            if(e.hasResource())
-                info.resourceType=e.resource.type;
-            if(e.hasBuilding())
-                info.buildingType=e.building.type;
-            fieldInfo.add(info);
-        });
+        fieldInfo = packWorld();
         serverSocket = new ServerSocket(PORT_NUMBER);
     }
 
@@ -44,24 +35,7 @@ public class Server implements Runnable{
                 Socket playerSocket = serverSocket.accept();
                 System.out.println("PLAYER "+playerID+" JOINED THE GAME");
                 Point playerPos = worldMap.placePlayer();
-
-                fieldInfo.clear();
-                worldMap.forEach(e->{
-                    FieldInfoPacket info = new FieldInfoPacket(e.position);
-                    if(e.hasResource())
-                        info.setResourceType(e.resource.type);
-                    else
-                        info.setResourceType(ResourceType.EMPTY);
-
-
-                    if(e.hasBuilding())
-                        info.setBuildingType(e.building.type);
-                    else
-                        info.setBuildingType(BuildingType.EMPTY);
-
-                    fieldInfo.add(info);
-                });
-
+                fieldInfo = packWorld();
                 ClientHandler newClient = new ClientHandler(playerID,playerPos,playerSocket, clientList);
 
                 //inicjalizacja mapy
@@ -80,6 +54,19 @@ public class Server implements Runnable{
                 System.out.println("#SERVER# Error...");
             }
         }
+    }
+
+    private List packWorld() {
+        List list = Collections.synchronizedList(new ArrayList<>());
+        worldMap.forEach(e->{
+            FieldInfoPacket info = new FieldInfoPacket(e.position);
+            if(e.hasResource())
+                info.setResourceType(e.resource.type);
+            if(e.hasBuilding())
+                info.setBuildingType(e.building.type);
+            list.add(info);
+        });
+        return list;
     }
 
     public static void main(String[] args) throws IOException {

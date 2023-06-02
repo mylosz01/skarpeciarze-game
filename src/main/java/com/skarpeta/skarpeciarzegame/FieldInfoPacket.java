@@ -6,8 +6,8 @@ import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import java.io.Serializable;
 
 public class FieldInfoPacket implements Serializable {
-    ResourceType resourceType;
-    BuildingType buildingType;
+    ResourceType resourceType = ResourceType.EMPTY;
+    BuildingType buildingType = BuildingType.EMPTY;
     Point point;
 
     public FieldInfoPacket(Point point) {
