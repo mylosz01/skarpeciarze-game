@@ -5,6 +5,6 @@ import javafx.scene.image.ImageView;
 
 public class Sawmill extends Building {
     public Sawmill() {
-        super(new ImageView(ImageManager.getImage("sawmill.png",128,128)));
+        super("sawmill");
     }
 }

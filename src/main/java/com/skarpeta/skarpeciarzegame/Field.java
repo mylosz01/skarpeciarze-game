@@ -35,7 +35,7 @@ public class Field extends Group {
         move(position);
         hexagon.setStrokeType(StrokeType.INSIDE);
         hexagon.setStrokeWidth(fieldSize * 0.05);
-        setOnMouseClicked(this::click);
+        //setOnMouseClicked(this::click);
         getChildren().add(hexagon);
     }
 
@@ -50,6 +50,7 @@ public class Field extends Group {
     /** Override koloru, nie ma powrotu (debug only!!!!1)*/
     public void setColor(Color color) {
         hexagon.setFill(color);
+
     }
 
     /** Wykrywa przyciśnięcie pola lub leżących na nim obiektów */
@@ -60,6 +61,8 @@ public class Field extends Group {
             worldMap.selectField(this);
         }
     }
+
+
     /** Dodaje budynek do pola */
     public void addBuilding(Building building) {
         if(hasBuilding())
@@ -101,5 +104,19 @@ public class Field extends Group {
         double interpolate = (value)*4;
         hexagon.setFill(color.interpolate(terrain.getColor().darker,interpolate));
         hexagon.setStroke(stroke.interpolate(terrain.getColor().darker,interpolate));
+    }
+
+    public void destroyBuilding() {
+        if(hasBuilding()){
+            getChildren().remove(building);
+            building = null;
+        }
+    }
+
+    public void destroyResource() {
+        if(hasResource()){
+            getChildren().remove(resource);
+            resource = null;
+        }
     }
 }

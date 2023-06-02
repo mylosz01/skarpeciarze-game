@@ -1,24 +1,27 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.buildings.Building;
+import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
-import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.image.ImageView;
+
+import java.io.IOException;
 
 /** Gracz posiada pole Field w którym się znajduje
  */
 public class Player extends Asset {
 
     Inventory playerEq;
-    WorldMap worldMap;
-    Field playerField;
+    int playerID;
+    public Field playerField;
 
-    Player(WorldMap worldMap, Point point){
-        super(new ImageView(ImageManager.getImage("player.png",32,32)));
+    Player(Field field, int playerID){
+        super(new ImageView(ImageManager.getImage("player"+playerID+".png",32,32)));
+        this.playerID = playerID;
         this.playerEq = new Inventory();
-        this.worldMap = worldMap;
-        this.playerField = worldMap.getField(point);
+        this.playerField = field;
         align(playerField);
     }
 
@@ -30,13 +33,44 @@ public class Player extends Asset {
     /** Poruszanie się gracza
      *  gracz porusza się na podane pole Field destination tylko w przypadku gdy ruch jest poprawny (isValidMovePlayer)
      */
-    public void movePlayer(Field destination) throws InvalidMoveException {
+    public void sendMove(Field destination) throws InvalidMoveException, IOException {
         if(isValidMovePlayer(destination)){
-            this.playerField = destination;
-            align(this.playerField);
+            //this.playerField = destination;
+            Client.makeMove(playerID,destination.position);
+            //align(this.playerField);
         }
     }
 
+    public void buildBuilding(){
+        if(!playerField.hasBuilding()){
+            playerField.addBuilding(new Sawmill());
+        }
+    }
+
+    public void destroyBuilding(){
+        if(playerField.hasBuilding()){
+            playerField.getChildren().remove(this.playerField.building);
+            this.playerField.building = null;
+        }
+    }
+
+    public void collectResource(){
+
+        if(playerField.hasResource()){
+            int amountResource =  playerField.resource.getItem();
+           System.out.println("Zebrano: " + playerField.resource.item.getName() + " " + amountResource);
+
+           playerEq.increaseItemAmount(playerField.resource.item.getName(),amountResource);
+
+           playerField.getChildren().remove(this.playerField.resource);
+           this.playerField.resource = null;
+        }
+    }
+
+    public void moveTo(Field destination){
+        this.playerField = destination;
+        align(this.playerField);
+    }
     /** Walidacja ruchów gracza:
      *  niepoprawnym ruchem jest próba wejścia do wody bez łodzi
      *  oraz próba wejścia na niesąsiadujące pole

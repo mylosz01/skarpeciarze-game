@@ -2,18 +2,17 @@ package com.skarpeta.skarpeciarzegame.tools;
 
 import com.skarpeta.skarpeciarzegame.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 /** Przechowywanie graczy po stronie serwera */
 public class PlayerManager {
-    private static List<Player> players = Collections.synchronizedList(new ArrayList<Player>());
+    private Map<Integer,Player> players = Collections.synchronizedMap(new TreeMap<Integer,Player>());
     /** Dodanie gracza który połączył się z serwerem */
-    public static void addPlayer(Player player) {
-        players.add(player);
+    public void addPlayer(int id,Player player) {
+        players.put(id,player);
     }
     /** Zwraca pierwszego gracza z listy */
-    public static Player getPlayer() {
-        return players.get(0);
+    public Player getPlayer(int id) {
+        return players.get(id);
     }
 }

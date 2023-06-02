@@ -5,7 +5,7 @@ package com.skarpeta.skarpeciarzegame.inventory;
  */
 public class BoatItem extends Item {
     BoatItem(){
-        super(0);
+        super(0,"boatItem","Boat");
     }
     @Override
     public boolean boatExists(){

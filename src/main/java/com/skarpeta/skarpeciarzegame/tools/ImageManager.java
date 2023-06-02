@@ -14,7 +14,11 @@ public class ImageManager {
      */
     public static Image getImage(String imageName,double sizeX,double sizeY) {
         if(!images.containsKey(imageName))
-            images.put(imageName, new Image(path + imageName,sizeX,sizeY,true,false));
+            try {
+                images.put(imageName, new Image(path + imageName, sizeX, sizeY, true, false));
+            }catch (RuntimeException e){
+                System.out.println(e.getMessage());
+            }
         return images.get(imageName);
     }
 }
