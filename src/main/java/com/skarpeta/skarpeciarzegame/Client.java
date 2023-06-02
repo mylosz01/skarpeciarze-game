@@ -7,9 +7,11 @@ import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.resources.Resource;
 import com.skarpeta.skarpeciarzegame.resources.StoneResource;
+import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
+import javafx.scene.image.ImageView;
 
 import java.net.*;
 import java.io.*;
@@ -151,6 +153,8 @@ public class Client implements Runnable {
             Platform.runLater(()->{
                 worldMap.getChildren().add(player);
                 Catana.renderInventory(player);
+                Catana.katana.setTitle("Katana - "+"Player"+player.playerID);
+                Catana.katana.getIcons().add(ImageManager.getImage("player"+player.playerID+".png",32,32));
             });
         }
     }
@@ -159,7 +163,7 @@ public class Client implements Runnable {
         {
             Player player = new Player(worldMap.getField(dataPacket.position), dataPacket.playerID);
             playerList.addPlayer(dataPacket.playerID, player);
-            System.out.println("nowy gracz dolaczyl "+dataPacket.playerID);
+            System.out.println("PLAYER"+dataPacket.playerID+" JOINED THE GAME");
             Platform.runLater(()-> worldMap.getChildren().add(player));
         }
     }
