@@ -47,6 +47,18 @@ public class Catana extends Application {
 
     static Client clientThread;
 
+    @Override
+    public void start(Stage katana) throws IOException, ClassNotFoundException {
+        this.katana = katana;
+        System.out.println("CLIENT START");
+        clientThread = new Client();
+        Thread playerSend = new Thread(clientThread);
+        playerSend.start();
+        worldMap = clientThread.getWorldMap();
+        gameMap = new StackPane(worldMap);
+        setupUI();
+    }
+
     public static void renderInventory(Player player) {
 
         playerItemsTable.getChildren().clear();
@@ -68,24 +80,9 @@ public class Catana extends Application {
         }
     }
 
-    @Override
-    public void start(Stage katana) throws IOException, ClassNotFoundException {
-        this.katana = katana;
-        System.out.println("CLIENT START");
-        clientThread = new Client();
-        Thread playerSend = new Thread(clientThread);
-        playerSend.start();
-        worldMap = clientThread.getWorldMap();
-        gameMap = new StackPane(worldMap);
-
-
-        setupUI();
-    }
-
     private void setupUI() {
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
-
 
         AnchorPane gameLayout = new AnchorPane();
         gameLayout.getChildren().addAll(gamePane,playerUIMain);
@@ -96,7 +93,6 @@ public class Catana extends Application {
         scene.setOnMousePressed(this::handleRightClick);
 
         katana.setTitle("Katana");
-        katana.getIcons().add(ImageManager.getImage("logoGame.png",128,128));
         katana.setScene(scene);
         katana.setWidth(WINDOW_SIZE);
         katana.setHeight(700);
