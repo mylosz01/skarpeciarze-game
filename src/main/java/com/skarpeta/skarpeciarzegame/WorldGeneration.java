@@ -20,14 +20,17 @@ public class WorldGeneration {
     /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
     Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
     BufferedImage noise;
+    Random random;
 
     int seed;
 
     /** Konstruktor tworzy nowy plik noise*/
     WorldGeneration(int seed) {
         try {
+            random = new Random(seed);
             this.seed = seed;
-            noise = ImageIO.read(new File("src/main/resources/images/noise/noiseTexture1.png"));
+            int randomNoiseFile = random.nextInt(new File("src/main/resources/images/noise").list().length);
+            noise = ImageIO.read(new File("src/main/resources/images/noise/noiseTexture"+randomNoiseFile+".png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +67,7 @@ public class WorldGeneration {
                     field.addResource(new ForestResource());
             }
             case MOUNTAINS -> {
-                if (new Random(seed + field.position.x + field.position.y).nextInt(7) == 0)
+                if (random.nextInt(7) == 0)
                     field.addResource(new StoneResource());
             }
         }
@@ -75,9 +78,7 @@ public class WorldGeneration {
         double calc = (value-0.3)*60;
         if(calc<1)
             calc=1;
-        int random = new Random(seed + (long)value).nextInt((int) Math.floor(calc));
-
-        return random == 0;
+        return random.nextInt((int) Math.floor(calc)) == 0;
     }
 
     /** Zwraca teren przypisany danej wysokości (wysokości definiowane poprzez threshold[]) */
