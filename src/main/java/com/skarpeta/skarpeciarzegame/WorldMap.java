@@ -83,18 +83,11 @@ public class WorldMap extends Group {
     }
 
     public Point placePlayer(){
-        int newX;
-        int newY;
-        while(true){
-            newX = new Random().nextInt(BOARD_SIZE);
-            newY = new Random().nextInt(BOARD_SIZE);
-
-            if(board[newX][newY].terrain != TerrainType.WATER){
-                break;
-            }
-        }
-
-        return new Point(newX,newY);
+        Point point;
+        do {
+            point = new Point(new Random().nextInt(BOARD_SIZE),new Random().nextInt(BOARD_SIZE));
+        } while(board[point.x][point.y].terrain == TerrainType.WATER);
+        return point;
     }
 
     public int getSeed(){
