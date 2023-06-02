@@ -98,10 +98,10 @@ public class Client implements Runnable {
         return worldMap;
     }
 
-    public static boolean checkServerRunning(){
+    public static boolean checkServerRunning() {
 
-        try{
-            Socket test = new Socket(IP_ADDRESS,PORT_NUMBER);
+        try {
+            Socket test = new Socket(IP_ADDRESS, PORT_NUMBER);
             System.out.println("#SERVER# Is active...");
             test.close();
         } catch (Exception e) {

@@ -12,7 +12,6 @@ public class MenuButton extends Asset{
         super(new ImageView(ImageManager.getImage(imageName,128,128)));
         setOnMouseEntered(e -> getChildren().add(hover_texture));
         setOnMouseExited(e -> getChildren().remove(hover_texture));
-        setOnMouseClicked(e -> System.out.println("CLikcked!!"));
     }
 
     /** Zwracanie grafiki przycisku jako ImageView */

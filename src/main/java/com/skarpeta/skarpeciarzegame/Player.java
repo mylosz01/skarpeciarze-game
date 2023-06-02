@@ -1,5 +1,7 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.buildings.Building;
+import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
@@ -36,6 +38,32 @@ public class Player extends Asset {
             //this.playerField = destination;
             Client.makeMove(playerID,destination.position);
             //align(this.playerField);
+        }
+    }
+
+    public void buildBuilding(){
+        if(!playerField.hasBuilding()){
+            playerField.addBuilding(new Sawmill());
+        }
+    }
+
+    public void destroyBuilding(){
+        if(playerField.hasBuilding()){
+            playerField.getChildren().remove(this.playerField.building);
+        }
+    }
+
+    public void collectResource(){
+
+        if(playerField.hasResource()){
+            System.out.println("Zebrano");
+            int amountResource =  playerField.resource.getItem();
+           System.out.println("Zebrano " + amountResource);
+
+           playerEq.increaseItemAmount("Wood",amountResource);
+
+           playerField.getChildren().remove(this.playerField.resource);
+           this.playerField.resource = null;
         }
     }
 

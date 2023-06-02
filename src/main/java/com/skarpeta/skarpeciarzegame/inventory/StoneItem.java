@@ -1,7 +1,7 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
 public class StoneItem extends Item {
-    StoneItem(int amount){
+    public StoneItem(int amount){
         super(amount,"stoneItem");
     }
 }

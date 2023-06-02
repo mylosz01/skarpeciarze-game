@@ -139,8 +139,22 @@ public class Catana extends Application {
         interactionMenu.setSpacing(14);
 
         MenuButton buildBtn = new MenuButton("exit.png");
+        buildBtn.setOnMouseClicked(e -> {
+            System.out.println("BUILD!!");
+            clientPlayer.playerList.getPlayer(clientPlayer.playerID).buildBuilding();
+        });
+
         MenuButton destroyBtn = new MenuButton("exit.png");
+        destroyBtn.setOnMouseClicked(e -> {
+            System.out.println("DESTROY!!");
+            clientPlayer.playerList.getPlayer(clientPlayer.playerID).destroyBuilding();
+        });
+
         MenuButton collectBtn = new MenuButton("exit.png");
+        collectBtn.setOnMouseClicked(e -> {
+            System.out.println("COLLECT!!");
+            clientPlayer.playerList.getPlayer(clientPlayer.playerID).collectResource();
+        });
 
         interactionMenu.getChildren().addAll(buildBtn,destroyBtn,collectBtn);
         return  interactionMenu;
