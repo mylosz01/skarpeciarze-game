@@ -95,4 +95,18 @@ public class Field extends Group {
         hexagon.setFill(color.interpolate(terrain.getColor().darker,interpolate));
         hexagon.setStroke(stroke.interpolate(terrain.getColor().darker,interpolate));
     }
+
+    public void destroyBuilding() {
+        if(hasBuilding()){
+            getChildren().remove(building);
+            building = null;
+        }
+    }
+
+    public void destroyResource() {
+        if(hasResource()){
+            getChildren().remove(resource);
+            resource = null;
+        }
+    }
 }

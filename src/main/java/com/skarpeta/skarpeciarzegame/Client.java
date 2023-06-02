@@ -1,16 +1,12 @@
 package com.skarpeta.skarpeciarzegame;
 
-import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
 
 import java.net.*;
 import java.io.*;
-import java.util.Map;
 
 public class Client implements Runnable {
 
@@ -40,6 +36,39 @@ public class Client implements Runnable {
         System.out.println("#CLIENT# Send: "+ newPosition + playerID);
     }
 
+    public void sendBuildBuilding(Point fieldPosition){
+        try {
+            DataPacket newDataPacket = new DataPacket(PacketType.BUILD, fieldPosition);
+            outputStream.writeObject(newDataPacket);
+            System.out.println("#CLIENT# Send: " + fieldPosition);
+        }
+        catch (IOException e){
+            System.out.println("Err");
+        }
+    }
+
+    public void sendRemoveBuilding(Point fieldPosition){
+        try {
+            DataPacket newDataPacket = new DataPacket(PacketType.DESTROY_BUILDING, fieldPosition);
+            outputStream.writeObject(newDataPacket);
+            System.out.println("#CLIENT# Send: " + fieldPosition);
+        }
+        catch (IOException e){
+            System.out.println("Err");
+        }
+    }
+
+    public void sendRemoveResource(Point position) {
+        try {
+            DataPacket newDataPacket = new DataPacket(PacketType.DESTROY_RESOURCE, position);
+            outputStream.writeObject(newDataPacket);
+            System.out.println("#CLIENT# Send: " + position);
+        }
+        catch (IOException e){
+            System.out.println("Err");
+        }
+    }
+
     public void receiveData() throws IOException, ClassNotFoundException {
 
         DataPacket dataPacket = (DataPacket) inputStream.readObject();
@@ -49,7 +78,22 @@ public class Client implements Runnable {
             case INIT_PLAYER -> initPlayer(dataPacket);
             case NEW_PLAYER -> newPlayerJoined(dataPacket);
             case MOVE -> playerList.getPlayer(dataPacket.playerID).moveTo(worldMap.getField(dataPacket.position));
+            case BUILD -> placeBuilding(dataPacket);
+            case DESTROY_BUILDING -> destroyBuilding(dataPacket);
+            case DESTROY_RESOURCE -> removeResource(dataPacket);
         }
+    }
+
+    private void placeBuilding(DataPacket dataPacket){
+        Platform.runLater(() -> worldMap.getField(dataPacket.position).addBuilding(new Sawmill()));
+    }
+
+    private void destroyBuilding(DataPacket dataPacket){
+        Platform.runLater(() -> worldMap.getField(dataPacket.position).destroyBuilding());
+    }
+
+    private void removeResource(DataPacket dataPacket) {
+        Platform.runLater(() -> worldMap.getField(dataPacket.position).destroyResource());
     }
 
     private void initPlayer(DataPacket dataPacket) {

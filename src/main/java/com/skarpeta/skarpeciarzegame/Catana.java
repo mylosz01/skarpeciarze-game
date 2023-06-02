@@ -2,8 +2,6 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
-import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
-import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Application;
 import javafx.geometry.*;
 import javafx.scene.*;
@@ -14,9 +12,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Map;
-import java.net.*;
-import java.io.*;
-import java.util.*;
 
 public class Catana extends Application {
     public static final int BOARD_SIZE = 50;
@@ -39,6 +34,9 @@ public class Catana extends Application {
     Client clientPlayer;
 
     public static void renderInventory(Player player) {
+
+        playerItemsTable.getChildren().clear();
+
         for (Map.Entry<String, Item> entry : player.playerEq.equipment.entrySet()) {
             String id = entry.getKey();
             Item item = entry.getValue();
@@ -131,7 +129,7 @@ public class Catana extends Application {
         return playerUIMain;
     }
 
-    private VBox createInteractionMenu() { //gorny panel z przyciskami
+    private VBox createInteractionMenu(){ //gorny panel z przyciskami
 
         VBox interactionMenu = new VBox();
         interactionMenu.setBorder(insideBorder);
@@ -141,19 +139,23 @@ public class Catana extends Application {
         MenuButton buildBtn = new MenuButton("exit.png");
         buildBtn.setOnMouseClicked(e -> {
             System.out.println("BUILD!!");
-            clientPlayer.playerList.getPlayer(clientPlayer.playerID).buildBuilding();
+            //clientPlayer.playerList.getPlayer(clientPlayer.playerID).buildBuilding();
+            clientPlayer.sendBuildBuilding(clientPlayer.playerList.getPlayer(clientPlayer.playerID).playerField.position);
         });
 
         MenuButton destroyBtn = new MenuButton("exit.png");
         destroyBtn.setOnMouseClicked(e -> {
             System.out.println("DESTROY!!");
-            clientPlayer.playerList.getPlayer(clientPlayer.playerID).destroyBuilding();
+            //clientPlayer.playerList.getPlayer(clientPlayer.playerID).destroyBuilding();
+            clientPlayer.sendRemoveBuilding(clientPlayer.playerList.getPlayer(clientPlayer.playerID).playerField.position);
         });
 
         MenuButton collectBtn = new MenuButton("exit.png");
         collectBtn.setOnMouseClicked(e -> {
             System.out.println("COLLECT!!");
             clientPlayer.playerList.getPlayer(clientPlayer.playerID).collectResource();
+            renderInventory(clientPlayer.playerList.getPlayer(clientPlayer.playerID));
+            clientPlayer.sendRemoveResource(clientPlayer.playerList.getPlayer(clientPlayer.playerID).playerField.position);
         });
 
         interactionMenu.getChildren().addAll(buildBtn,destroyBtn,collectBtn);

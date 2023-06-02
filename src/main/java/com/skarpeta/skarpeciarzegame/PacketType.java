@@ -6,5 +6,8 @@ public enum PacketType {
     DISCONNECT,
     MOVE,
     INIT_PLAYER,
-    BUILD
+    BUILD,
+    DESTROY_BUILDING,
+    DESTROY_RESOURCE,
+    COLLECT
 }

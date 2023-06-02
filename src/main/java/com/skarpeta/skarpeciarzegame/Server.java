@@ -37,7 +37,7 @@ public class Server implements Runnable{
                 newClient.sendData(new DataPacket(PacketType.INIT_MAP,MAP_SIZE, MAP_SEED));
                 for (ClientHandler clientHandler : clientList) {
                     newClient.sendData(new DataPacket(PacketType.NEW_PLAYER,clientHandler.playerID,clientHandler.position));//wysylanie starych graczy do nowego
-                    clientHandler.sendData(new DataPacket(PacketType.NEW_PLAYER,playerID,playerPos));                //wysylanie nowego gracza do starych graczy
+                    clientHandler.sendData(new DataPacket(PacketType.NEW_PLAYER,playerID,playerPos));//wysylanie nowego gracza do starych graczy
                 }
                 newClient.sendData(new DataPacket(PacketType.INIT_PLAYER,playerID,playerPos));
 

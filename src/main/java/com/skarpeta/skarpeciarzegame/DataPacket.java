@@ -27,6 +27,12 @@ public class DataPacket implements Serializable {
         this.position = new Point(playerCords);
     }
 
+    //field position
+    DataPacket(PacketType packetType, Point resourceCords){
+        this.packetType = packetType;
+        this.position = resourceCords;
+    }
+
     //dolaczyl nowy gracz
     public DataPacket(PacketType packetType, int playerID, Point playerPos) {
         this.packetType = packetType;
