@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -32,7 +33,19 @@ public class Catana extends Application {
     static Pane eqPane;
     static VBox playerItemsTable;
 
-    Client clientPlayer;
+    //static MenuButton buildBtn;
+    static MenuButton destroyBtn;
+    static MenuButton collectBtn;
+
+    HBox buttonCategoriesPane;
+    static VBox fieldActionPane;
+    static VBox buildActionPane;
+
+    static MenuButton quarryBtn;
+    static MenuButton mineshaftBtn;
+    static MenuButton sawmillBtn;
+
+    static Client clientThread;
 
     public static void renderInventory(Player player) {
 
@@ -59,10 +72,10 @@ public class Catana extends Application {
     public void start(Stage katana) throws IOException, ClassNotFoundException {
         this.katana = katana;
         System.out.println("CLIENT START");
-        clientPlayer = new Client();
-        Thread playerSend = new Thread(clientPlayer);
+        clientThread = new Client();
+        Thread playerSend = new Thread(clientThread);
         playerSend.start();
-        worldMap = clientPlayer.getWorldMap();
+        worldMap = clientThread.getWorldMap();
         gameMap = new StackPane(worldMap);
 
 
@@ -113,7 +126,7 @@ public class Catana extends Application {
         playerUIMain.setMinWidth(UI_WIDTH);
 
         //ruchy gracza (gorny panel)
-        VBox btnLayout = createInteractionMenu();
+        HBox btnLayout = createInteractionMenu();
 
         //lista graczy (prawy panel)
         Pane listPlayer = new Pane();
@@ -135,25 +148,56 @@ public class Catana extends Application {
         playerUIMain.getChildren().addAll(btnLayout,playerUIDown);
         return playerUIMain;
     }
+    public static void updateButtonUI() {
+        if(clientThread== null)
+            return;
+        Field field = clientThread.player.playerField;
+        Platform.runLater(()->{
+            fieldActionPane.getChildren().clear();
+            buildActionPane.getChildren().clear();
+            if(field.hasResource())
+                fieldActionPane.getChildren().add(collectBtn);
+            if(field.hasBuilding())
+                fieldActionPane.getChildren().add(destroyBtn);
+            else {
+                switch (field.terrain) {
+                    case MOUNTAINS -> buildActionPane.getChildren().addAll(quarryBtn, mineshaftBtn);
+                    case GRASS_LAND -> buildActionPane.getChildren().add(sawmillBtn);
+                }
+            }
+        });
+    }
 
-    private VBox createInteractionMenu(){ //gorny panel z przyciskami
+    private HBox createInteractionMenu(){ //gorny panel z przyciskami
+        buttonCategoriesPane = new HBox();
+        buttonCategoriesPane.setBorder(insideBorder);
+        buttonCategoriesPane.setAlignment(Pos.CENTER);
+        buttonCategoriesPane.setMinHeight(200);
 
-        VBox interactionMenu = new VBox();
-        interactionMenu.setBorder(insideBorder);
-        interactionMenu.setAlignment(Pos.CENTER);
-        interactionMenu.setSpacing(14);
+        fieldActionPane = new VBox();
+        fieldActionPane.setAlignment(Pos.CENTER);
+        fieldActionPane.setSpacing(14);
+        fieldActionPane.setMinWidth(150);
 
-        MenuButton buildBtn = new MenuButton("exit.png");
-        buildBtn.setOnMouseClicked(e -> clientPlayer.sendBuildBuilding(clientPlayer.player.playerField.position));
+        destroyBtn = new MenuButton("break.png");
+        destroyBtn.setOnMouseClicked(e -> clientThread.sendRemoveBuilding(clientThread.player.playerField.position));
+        collectBtn = new MenuButton("get.png");
+        collectBtn.setOnMouseClicked(e -> clientThread.sendRemoveResource(clientThread.player.playerField.position));
 
-        MenuButton destroyBtn = new MenuButton("exit.png");
-        destroyBtn.setOnMouseClicked(e -> clientPlayer.sendRemoveBuilding(clientPlayer.player.playerField.position));
+        buildActionPane = new VBox();
+        buildActionPane.setAlignment(Pos.CENTER);
+        buildActionPane.setSpacing(14);
+        buildActionPane.setMinWidth(150);
 
-        MenuButton collectBtn = new MenuButton("exit.png");
-        collectBtn.setOnMouseClicked(e -> clientPlayer.sendRemoveResource(clientPlayer.player.playerField.position));
+        quarryBtn = new MenuButton("buildQuarry.png");
+        quarryBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.player.playerField.position,BuildingType.QUARRY));
+        mineshaftBtn = new MenuButton("buildMineshaft.png");
+        mineshaftBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.player.playerField.position,BuildingType.MINESHAFT));
+        sawmillBtn = new MenuButton("buildSawmill.png");
+        sawmillBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.player.playerField.position,BuildingType.SAWMILL));
 
-        interactionMenu.getChildren().addAll(buildBtn,destroyBtn,collectBtn);
-        return  interactionMenu;
+        buttonCategoriesPane.getChildren().addAll(fieldActionPane, buildActionPane);
+        return buttonCategoriesPane;
     }
 
     private Pane createEqPlayerPane() {

@@ -37,7 +37,6 @@ public class Player extends Asset {
         if(isValidMovePlayer(destination)){
             //this.playerField = destination;
             Client.makeMove(playerID,destination.position);
-            //align(this.playerField);
         }
     }
 

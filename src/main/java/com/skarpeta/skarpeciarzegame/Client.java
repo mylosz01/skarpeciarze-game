@@ -1,5 +1,8 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.buildings.Building;
+import com.skarpeta.skarpeciarzegame.buildings.Mineshaft;
+import com.skarpeta.skarpeciarzegame.buildings.Quarry;
 import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
@@ -36,9 +39,9 @@ public class Client implements Runnable {
         System.out.println("#CLIENT# Send: "+ newPosition + playerID);
     }
 
-    public void sendBuildBuilding(Point fieldPosition){
+    public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType){
         try {
-            DataPacket newDataPacket = new DataPacket(PacketType.BUILD, fieldPosition);
+            DataPacket newDataPacket = new DataPacket(PacketType.BUILD, buildingType, fieldPosition);
             outputStream.writeObject(newDataPacket);
             System.out.println("#CLIENT# Send: " + fieldPosition);
         }
@@ -77,15 +80,26 @@ public class Client implements Runnable {
             case INIT_MAP -> worldMap = new WorldMap(dataPacket.sizeMap, dataPacket.seedMap);
             case INIT_PLAYER -> initPlayer(dataPacket);
             case NEW_PLAYER -> newPlayerJoined(dataPacket);
-            case MOVE -> playerList.getPlayer(dataPacket.playerID).moveTo(worldMap.getField(dataPacket.position));
+            case MOVE -> movePlayer(dataPacket);
             case BUILD -> placeBuilding(dataPacket);
             case DESTROY_BUILDING -> destroyBuilding(dataPacket);
             case DESTROY_RESOURCE -> removeResource(dataPacket);
         }
+        if(dataPacket.packetType != PacketType.INIT_PLAYER)
+            Catana.updateButtonUI();
+    }
+
+    private void movePlayer(DataPacket dataPacket) {
+        playerList.getPlayer(dataPacket.playerID).moveTo(worldMap.getField(dataPacket.position));
     }
 
     private void placeBuilding(DataPacket dataPacket){
-        Platform.runLater(() -> worldMap.getField(dataPacket.position).addBuilding(new Sawmill()));
+        Building building = switch (dataPacket.buildingType){
+            case SAWMILL -> new Sawmill();
+            case MINESHAFT -> new Mineshaft();
+            case QUARRY ->  new Quarry();
+        };
+        Platform.runLater(() -> worldMap.getField(dataPacket.position).addBuilding(building));
     }
 
     private void destroyBuilding(DataPacket dataPacket){
