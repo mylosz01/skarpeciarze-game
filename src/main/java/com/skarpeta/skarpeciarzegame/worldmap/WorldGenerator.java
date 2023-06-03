@@ -13,7 +13,7 @@ import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 
 import javax.imageio.ImageIO;
 /** Generowanie świata, czytanie pliku z perlin noise */
-public class WorldGeneration {
+public class WorldGenerator {
 
     /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
     Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
@@ -23,7 +23,7 @@ public class WorldGeneration {
     int seed;
 
     /** Konstruktor tworzy nowy plik noise*/
-    WorldGeneration(int seed) {
+    WorldGenerator(int seed) {
         try {
             random = new Random(seed);
             this.seed = seed;

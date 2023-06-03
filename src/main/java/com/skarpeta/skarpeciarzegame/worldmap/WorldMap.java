@@ -28,13 +28,13 @@ public class WorldMap extends Group {
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
     public WorldMap(int size, int seed) {
         this.seed = seed;
-        WorldGeneration worldGeneration = new WorldGeneration(seed);
+        WorldGenerator worldGenerator = new WorldGenerator(seed);
         board = new Field[size][size];
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                Field newField = worldGeneration.generateField(this,point);
+                Field newField = worldGenerator.generateField(this,point);
                 newField.setOnMouseClicked((e)->click(e,newField));
                 board[x][y] = newField;
             }
@@ -96,7 +96,7 @@ public class WorldMap extends Group {
     }
 
     public void generateResources() {
-        WorldGeneration worldGeneration = new WorldGeneration(seed);
-        forEach(worldGeneration::generateResource);
+        WorldGenerator worldGenerator = new WorldGenerator(seed);
+        forEach(worldGenerator::generateResource);
     }
 }
