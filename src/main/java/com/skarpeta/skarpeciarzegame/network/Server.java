@@ -11,7 +11,7 @@ import java.util.*;
 public class Server implements Runnable{
 
     private final ServerSocket serverSocket;
-    private static List<ClientHandler> clientList;
+    static Map<Integer,ClientHandler> clientList;
     private List<FieldInfoPacket> fieldInfo;
     private static final int PORT_NUMBER = 5555;
     private static final int MAP_SEED = new Random().nextInt();
@@ -22,7 +22,7 @@ public class Server implements Runnable{
     Server() throws IOException {
         worldMap = new WorldMap(MAP_SIZE,MAP_SEED);
         worldMap.generateResources();
-        clientList = Collections.synchronizedList(new ArrayList<>());
+        clientList =  Collections.synchronizedMap(new TreeMap<>());
         fieldInfo = packWorld();
         serverSocket = new ServerSocket(PORT_NUMBER);
     }
@@ -54,12 +54,13 @@ public class Server implements Runnable{
                 //inicjalizacja mapy
                 newClient.sendData(new Packet(PacketType.INIT_MAP,MAP_SIZE, MAP_SEED, fieldInfo));
                 newClient.sendData(new Packet(PacketType.INIT_PLAYER,playerID,playerPos));
-                for (ClientHandler clientHandler : clientList) {
+                for (Map.Entry<Integer, ClientHandler> entry : clientList.entrySet()) {
+                    ClientHandler clientHandler = entry.getValue();
                     newClient.sendData(new Packet(PacketType.NEW_PLAYER,clientHandler.playerID,clientHandler.position));//wysylanie starych graczy do nowego
                     clientHandler.sendData(new Packet(PacketType.NEW_PLAYER,playerID,playerPos));//wysylanie nowego gracza do starych graczy
                 }
 
-                clientList.add(newClient);
+                clientList.put(playerID,newClient);
 
                 new Thread(newClient).start();
                 playerID++;
@@ -83,8 +84,8 @@ public class Server implements Runnable{
     }
 
     public static void sendToAllClients(Packet packet) throws IOException {
-        for(ClientHandler clientHandler : clientList){
-            clientHandler.sendData(packet);
+        for(Map.Entry<Integer, ClientHandler> entry : clientList.entrySet()){
+            entry.getValue().sendData(packet);
         }
     }
 }

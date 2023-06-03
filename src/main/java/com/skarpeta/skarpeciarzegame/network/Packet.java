@@ -39,6 +39,11 @@ public class Packet implements Serializable {
         this.position = playerPos;
     }
 
+    public Packet(PacketType disconnect, int playerID) {
+        this.packetType = disconnect;
+        this.playerID = playerID;
+    }
+
 
     public String toString(){
         return "\nPlayer location: " + position + "\n" +

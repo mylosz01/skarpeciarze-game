@@ -38,7 +38,7 @@ public class Client implements Runnable {
     public static void makeMove(int playerID,Point newPosition) throws IOException {
         Packet newPacket = new Packet(PacketType.MOVE,playerID,newPosition);
         outputStream.writeObject(newPacket);
-        System.out.println("#CLIENT# Send: "+ newPosition + playerID);
+        System.out.println(" -> sent "+ newPosition);
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType){
@@ -86,6 +86,7 @@ public class Client implements Runnable {
             case BUILD -> placeBuilding(packet);
             case DESTROY_BUILDING -> destroyBuilding(packet);
             case DESTROY_RESOURCE -> removeResource(packet);
+            case DISCONNECT -> playerLeft(packet);
         }
         if(packet.packetType != PacketType.INIT_PLAYER)
             Catana.updateButtonUI();
@@ -160,9 +161,16 @@ public class Client implements Runnable {
         {
             Player player = new Player(worldMap.getField(packet.position), packet.playerID);
             playerList.addPlayer(packet.playerID, player);
-            System.out.println("PLAYER"+ packet.playerID+" JOINED THE GAME");
+            System.out.println("Player"+ packet.playerID+" JOINED THE GAME");
             Platform.runLater(()-> worldMap.getChildren().add(player));
         }
+    }
+
+    private void playerLeft(Packet packet) {
+        Player player = playerList.getPlayer(packet.playerID);
+        playerList.removePlayer(packet.playerID);
+        System.out.println("Player"+ packet.playerID+" LEFT THE GAME");
+        Platform.runLater(()-> worldMap.getChildren().remove(player));
     }
 
     @Override
