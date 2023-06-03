@@ -50,8 +50,8 @@ public class Catana extends Application {
     static Client clientThread;
 
     public Catana(String ipAddress, int portNumber) {
-        this.ipAddress = ipAddress;
-        this.portNumber = portNumber;
+        Catana.ipAddress = ipAddress;
+        Catana.portNumber = portNumber;
     }
 
     @Override
@@ -247,6 +247,6 @@ public class Catana extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        Platform.runLater(()->new Catana(ipAddress,portNumber).start(new Stage()));
     }
 }

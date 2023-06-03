@@ -3,8 +3,6 @@ package com.skarpeta.skarpeciarzegame.network;
 import com.skarpeta.skarpeciarzegame.FieldInfoPacket;
 import com.skarpeta.skarpeciarzegame.WorldMap;
 import com.skarpeta.skarpeciarzegame.tools.Point;
-import javafx.event.EventHandler;
-import javafx.stage.WindowEvent;
 
 import java.net.*;
 import java.io.*;
@@ -39,7 +37,6 @@ public class Server implements Runnable {
         Scanner scan = new Scanner(System.in);
         while (scan.nextLine().equalsIgnoreCase("q")) ;
     }
-
 
     public void connectClients() {
         int playerID = 1;
@@ -89,5 +86,13 @@ public class Server implements Runnable {
     }
 
     public void stop() { //todo
+    }
+
+    public static void main(String[] args) {
+        try {
+            new Thread(new Server(portNumber)).start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

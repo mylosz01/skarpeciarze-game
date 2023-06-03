@@ -90,11 +90,10 @@ public class Menu extends Application {
             System.out.println("Connecting to " + ipAddress + " on port " + portNumber);
             new Catana(ipAddress,portNumber).start(new Stage());
             joinMenu.close();
+            window.close();
         });
         joinMenu.show();
 
-        //new Catana().start(new Stage());
-        //window.close();
     }
 
     public static void main(String[] args)  {
