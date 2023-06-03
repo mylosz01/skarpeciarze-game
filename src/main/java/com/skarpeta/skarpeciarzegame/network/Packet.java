@@ -53,4 +53,9 @@ public class Packet implements Serializable {
                 "Seed map: " + seedMap + "\n" +
                 "Size map: " + sizeMap;
     }
+
+    public void sendTo(ObjectOutputStream outputStream) throws IOException {
+        outputStream.writeObject(this);
+        System.out.println(" -> sent " + this.packetType);
+    }
 }

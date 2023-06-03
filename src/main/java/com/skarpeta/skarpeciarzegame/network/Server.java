@@ -52,12 +52,12 @@ public class Server implements Runnable{
                 ClientHandler newClient = new ClientHandler(playerID,playerPos,playerSocket);
 
                 //inicjalizacja mapy
-                newClient.sendData(new Packet(PacketType.INIT_MAP,MAP_SIZE, MAP_SEED, fieldInfo));
-                newClient.sendData(new Packet(PacketType.INIT_PLAYER,playerID,playerPos));
+                new Packet(PacketType.INIT_MAP,MAP_SIZE, MAP_SEED, fieldInfo).sendTo(newClient.getOutputStream());
+                new Packet(PacketType.INIT_PLAYER,playerID,playerPos).sendTo(newClient.getOutputStream());
                 for (Map.Entry<Integer, ClientHandler> entry : clientList.entrySet()) {
                     ClientHandler clientHandler = entry.getValue();
-                    newClient.sendData(new Packet(PacketType.NEW_PLAYER,clientHandler.playerID,clientHandler.position));//wysylanie starych graczy do nowego
-                    clientHandler.sendData(new Packet(PacketType.NEW_PLAYER,playerID,playerPos));//wysylanie nowego gracza do starych graczy
+                    new Packet(PacketType.NEW_PLAYER,clientHandler.playerID,clientHandler.position).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
+                    new Packet(PacketType.NEW_PLAYER,playerID,playerPos).sendTo(clientHandler.getOutputStream());//wysylanie nowego gracza do starych graczy
                 }
 
                 clientList.put(playerID,newClient);
@@ -85,7 +85,7 @@ public class Server implements Runnable{
 
     public static void sendToAllClients(Packet packet) throws IOException {
         for(Map.Entry<Integer, ClientHandler> entry : clientList.entrySet()){
-            entry.getValue().sendData(packet);
+            packet.sendTo(entry.getValue().getOutputStream());
         }
     }
 }

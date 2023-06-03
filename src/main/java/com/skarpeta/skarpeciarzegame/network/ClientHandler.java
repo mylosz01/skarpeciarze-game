@@ -64,14 +64,13 @@ public class ClientHandler implements Runnable {
         System.out.println("<-  received " + packet.packetType + " from Player" + playerID);
         return packet;
     }
-
-    public void sendData(Packet toSend) throws IOException {
-        outputStream.writeObject(toSend);
-    }
-
     public void closeConnection() throws IOException {
         inputStream.close();
         outputStream.close();
         clientSocket.close();
+    }
+
+    public ObjectOutputStream getOutputStream() {
+        return outputStream;
     }
 }

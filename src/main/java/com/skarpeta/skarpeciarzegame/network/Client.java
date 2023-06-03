@@ -54,9 +54,7 @@ public class Client implements Runnable {
 
     public void sendRemoveBuilding(Point fieldPosition){
         try {
-            Packet newPacket = new Packet(PacketType.DESTROY_BUILDING, player.playerID, fieldPosition);
-            outputStream.writeObject(newPacket);
-            System.out.println("#CLIENT# Send: " + fieldPosition);
+            new Packet(PacketType.DESTROY_BUILDING, player.playerID, fieldPosition).sendTo(outputStream);
         }
         catch (IOException e){
             System.out.println("Err");
