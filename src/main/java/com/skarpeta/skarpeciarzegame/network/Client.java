@@ -126,7 +126,6 @@ public class Client implements Runnable {
             this.player = new Player(worldMap.getField(packet.position), packet.playerID);
             System.out.println("Joined as Player" + player.playerID);
             playerList.addPlayer(player.playerID, player);
-            worldMap.setPlayer(player);
             Platform.runLater(() -> {
                 worldMap.getChildren().add(player);
                 Catana.renderInventory(player);

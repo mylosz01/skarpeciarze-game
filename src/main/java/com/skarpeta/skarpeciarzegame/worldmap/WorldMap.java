@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame.worldmap;
 
+import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
@@ -19,11 +20,6 @@ public class WorldMap extends Group {
     private final Field[][] board;
     private final int BOARD_SIZE;
     private final int seed;
-    Player player;
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
     public WorldMap(int size, int seed) {
@@ -74,7 +70,7 @@ public class WorldMap extends Group {
      */
     public void selectField(Field field) {
         try {
-            player.sendMove(field);
+            Catana.getClientThread().getPlayer().sendMove(field);
         } catch (InvalidMoveException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {

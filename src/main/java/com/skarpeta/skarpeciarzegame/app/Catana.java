@@ -39,18 +39,18 @@ public class Catana extends Application {
     static VBox playerItemsTable;
 
     //static MenuButton buildBtn;
-    static com.skarpeta.skarpeciarzegame.app.MenuButton destroyBtn;
-    static com.skarpeta.skarpeciarzegame.app.MenuButton collectBtn;
+    static MenuButton destroyBtn;
+    static MenuButton collectBtn;
 
     HBox buttonCategoriesPane;
     static VBox fieldActionPane;
     static VBox buildActionPane;
 
-    static com.skarpeta.skarpeciarzegame.app.MenuButton quarryBtn;
-    static com.skarpeta.skarpeciarzegame.app.MenuButton mineshaftBtn;
-    static com.skarpeta.skarpeciarzegame.app.MenuButton sawmillBtn;
+    static MenuButton quarryBtn;
+    static MenuButton mineshaftBtn;
+    static MenuButton sawmillBtn;
 
-    static Client clientThread;
+    private static Client clientThread;
 
     public Catana(String ipAddress, int portNumber) {
         Catana.ipAddress = ipAddress;
@@ -183,9 +183,9 @@ public class Catana extends Application {
         fieldActionPane.setSpacing(14);
         fieldActionPane.setMinWidth(150);
 
-        destroyBtn = new com.skarpeta.skarpeciarzegame.app.MenuButton("break.png");
+        destroyBtn = new MenuButton("break.png");
         destroyBtn.setOnMouseClicked(e -> clientThread.sendRemoveBuilding(clientThread.getPlayer().playerField.position));
-        collectBtn = new com.skarpeta.skarpeciarzegame.app.MenuButton("get.png");
+        collectBtn = new MenuButton("get.png");
         collectBtn.setOnMouseClicked(e -> clientThread.sendRemoveResource(clientThread.getPlayer().playerField.position));
 
         buildActionPane = new VBox();
@@ -193,9 +193,9 @@ public class Catana extends Application {
         buildActionPane.setSpacing(14);
         buildActionPane.setMinWidth(150);
 
-        quarryBtn = new com.skarpeta.skarpeciarzegame.app.MenuButton("buildQuarry.png");
+        quarryBtn = new MenuButton("buildQuarry.png");
         quarryBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.getPlayer().playerField.position, BuildingType.QUARRY));
-        mineshaftBtn = new com.skarpeta.skarpeciarzegame.app.MenuButton("buildMineshaft.png");
+        mineshaftBtn = new MenuButton("buildMineshaft.png");
         mineshaftBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.getPlayer().playerField.position,BuildingType.MINESHAFT));
         sawmillBtn = new MenuButton("buildSawmill.png");
         sawmillBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.getPlayer().playerField.position,BuildingType.SAWMILL));
@@ -246,6 +246,10 @@ public class Catana extends Application {
         gameMap.setTranslateX((gameMap.getTranslateX() + offsetX) * zoomFactor);
         gameMap.setTranslateY((gameMap.getTranslateY() + offsetY) * zoomFactor);
         currentScale *= zoomFactor;
+    }
+
+    public static Client getClientThread() {
+        return clientThread;
     }
 
     public static void main(String[] args) {
