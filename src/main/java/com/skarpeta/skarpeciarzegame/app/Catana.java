@@ -9,6 +9,7 @@ import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -33,7 +34,8 @@ public class Catana extends Application {
     Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5)));
 
     static WorldMap worldMap;
-    static StackPane gameMap;
+    public static Pane gameMap;
+    public static Group playersGroup = new Group();
     public static Stage katana;
     static Pane eqPane;
     static VBox playerItemsTable;
@@ -57,6 +59,12 @@ public class Catana extends Application {
         Catana.portNumber = portNumber;
     }
 
+    public static void renderPlayer(Player player) {
+        playersGroup.getChildren().add(player);
+        player.scaleXProperty().bind(Bindings.divide(2, Catana.gameMap.scaleXProperty()));
+        player.scaleYProperty().bind(Bindings.divide(2, Catana.gameMap.scaleYProperty()));
+    }
+
     @Override
     public void start(Stage katana)  {
         this.katana = katana;
@@ -64,7 +72,7 @@ public class Catana extends Application {
         Thread playerSend = new Thread(clientThread);
         playerSend.start();
         worldMap = clientThread.getWorldMap();
-        gameMap = new StackPane(worldMap);
+        gameMap = new Pane(worldMap,playersGroup);
         setupStage();
     }
 

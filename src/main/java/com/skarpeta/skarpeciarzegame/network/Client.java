@@ -5,7 +5,6 @@ import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.*;
-import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
@@ -127,28 +126,26 @@ public class Client implements Runnable {
             System.out.println("Joined as Player" + player.playerID);
             playerList.addPlayer(player.playerID, player);
             Platform.runLater(() -> {
-                worldMap.getChildren().add(player);
+                Catana.renderPlayer(player);
                 Catana.renderInventory(player);
                 Catana.katana.setTitle("Katana - Player" + player.playerID);
-                Catana.katana.getIcons().add(ImageManager.getImage("player" + player.playerID + ".png", 32, 32));
+                Catana.katana.getIcons().add(player.getTexture().getImage());
             });
         }
     }
 
     private void newPlayerJoined(Packet packet) {
-        {
-            Player player = new Player(worldMap.getField(packet.position), packet.playerID);
-            playerList.addPlayer(packet.playerID, player);
-            System.out.println("Player" + packet.playerID + " JOINED THE GAME");
-            Platform.runLater(() -> worldMap.getChildren().add(player));
-        }
+        Player player = new Player(worldMap.getField(packet.position), packet.playerID);
+        playerList.addPlayer(packet.playerID, player);
+        System.out.println("Player" + packet.playerID + " JOINED THE GAME");
+        Platform.runLater(() -> Catana.renderPlayer(player));
     }
 
     private void playerLeft(Packet packet) {
         Player player = playerList.getPlayer(packet.playerID);
         playerList.removePlayer(packet.playerID);
         System.out.println("Player" + packet.playerID + " LEFT THE GAME");
-        Platform.runLater(() -> worldMap.getChildren().remove(player));
+        Platform.runLater(() -> Catana.playersGroup.getChildren().remove(player));
     }
 
     @Override
