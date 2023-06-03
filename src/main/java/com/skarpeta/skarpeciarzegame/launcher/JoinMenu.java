@@ -1,4 +1,4 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.launcher;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class joinServerMenu extends Stage {
+public class JoinMenu extends Stage {
     private Button connectButton;
     private TextField ipField;
     private TextField portField;
@@ -25,7 +25,7 @@ public class joinServerMenu extends Stage {
         return portField;
     }
 
-    public joinServerMenu() {
+    public JoinMenu() {
         setTitle("IP and Port Menu");
 
         GridPane gridPane = new GridPane();

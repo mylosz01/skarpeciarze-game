@@ -14,14 +14,16 @@ public class Server implements Runnable {
     static Map<Integer, ClientThread> clientList;
     private List<FieldInfoPacket> fieldInfo;
     private static int portNumber = 5555;
-    private static final int MAP_SEED = new Random().nextInt();
-    private static final int MAP_SIZE = 40;
+    private static int seed = new Random().nextInt();
+    private static int mapSize = 40;
 
     public static WorldMap worldMap;
 
-    public Server(int portNumber) throws IOException {
+    public Server(int portNumber, int mapSize, int seed) throws IOException {
         this.portNumber = portNumber;
-        worldMap = new WorldMap(MAP_SIZE, MAP_SEED);
+        this.mapSize = mapSize;
+        this.seed = seed;
+        worldMap = new WorldMap(mapSize, seed);
         worldMap.generateResources();
         clientList = Collections.synchronizedMap(new TreeMap<>());
         fieldInfo = packWorld();
@@ -50,7 +52,7 @@ public class Server implements Runnable {
                 ClientThread newClient = new ClientThread(playerID, playerPos, playerSocket);
 
                 //inicjalizacja mapy
-                new Packet(PacketType.INIT_MAP, MAP_SIZE, MAP_SEED, fieldInfo).sendTo(newClient.getOutputStream());
+                new Packet(PacketType.INIT_MAP, mapSize, seed, fieldInfo).sendTo(newClient.getOutputStream());
                 new Packet(PacketType.INIT_PLAYER, playerID, playerPos).sendTo(newClient.getOutputStream());
                 for (Map.Entry<Integer, ClientThread> entry : clientList.entrySet()) {
                     ClientThread clientThread = entry.getValue();
@@ -90,7 +92,7 @@ public class Server implements Runnable {
 
     public static void main(String[] args) {
         try {
-            new Thread(new Server(portNumber)).start();
+            new Thread(new Server(portNumber,mapSize,seed)).start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
