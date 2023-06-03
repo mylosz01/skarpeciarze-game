@@ -31,51 +31,33 @@ public class Client implements Runnable {
         InputStream in = clientSocket.getInputStream();
         inputStream = new ObjectInputStream(in);
 
+
+        Catana.katana.setOnCloseRequest(e->new Packet(PacketType.DISCONNECT).sendTo(outputStream));
+
         //otrzymanie pakietu inicjalizacyjnego
         receiveData();
     }
 
-    public static void makeMove(int playerID,Point newPosition) throws IOException {
-        Packet newPacket = new Packet(PacketType.MOVE,playerID,newPosition);
-        outputStream.writeObject(newPacket);
-        System.out.println(" -> sent "+ newPosition);
+    public static void makeMove(int playerID,Point newPosition){
+        new Packet(PacketType.MOVE,playerID,newPosition).sendTo(outputStream);
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType){
-        try {
-            Packet newPacket = new Packet(PacketType.BUILD, player.playerID,buildingType, fieldPosition);
-            outputStream.writeObject(newPacket);
-            System.out.println("#CLIENT# Send: " + fieldPosition);
-        }
-        catch (IOException e){
-            System.out.println("Err");
-        }
+        new Packet(PacketType.BUILD, player.playerID,buildingType, fieldPosition).sendTo(outputStream);
     }
 
     public void sendRemoveBuilding(Point fieldPosition){
-        try {
-            new Packet(PacketType.DESTROY_BUILDING, player.playerID, fieldPosition).sendTo(outputStream);
-        }
-        catch (IOException e){
-            System.out.println("Err");
-        }
+        new Packet(PacketType.DESTROY_BUILDING, player.playerID, fieldPosition).sendTo(outputStream);
     }
 
     public void sendRemoveResource(Point position) {
-        try {
-            Packet newPacket = new Packet(PacketType.DESTROY_RESOURCE,player.playerID, position);
-            outputStream.writeObject(newPacket);
-            System.out.println("#CLIENT# Send: " + position);
-        }
-        catch (IOException e){
-            System.out.println("Err");
-        }
+        new Packet(PacketType.DESTROY_RESOURCE,player.playerID, position).sendTo(outputStream);
     }
 
     public void receiveData() throws IOException, ClassNotFoundException {
 
         Packet packet = (Packet) inputStream.readObject();
-        System.out.println("received packet! + "+ packet.packetType);
+        System.out.println("<-  received "+ packet.packetType);
         switch (packet.packetType) {
             case INIT_MAP -> initMap(packet);
             case INIT_PLAYER -> initPlayer(packet);
@@ -91,24 +73,22 @@ public class Client implements Runnable {
     }
 
     private void initMap(Packet packet) {
-        {
-            worldMap = new WorldMap(packet.sizeMap, packet.seedMap);
-            packet.fieldInfo.forEach(e->{
-                Resource resource = switch (e.resourceType){
-                    case EMPTY -> null;
-                    case FOREST -> new ForestResource();
-                    case STONE -> new StoneResource();
-                };
-                worldMap.getField(e.point).addResource(resource);
-                Building building = switch (e.buildingType){
-                    case EMPTY -> null;
-                    case QUARRY -> new Quarry();
-                    case MINESHAFT -> new Mineshaft();
-                    case SAWMILL -> new Sawmill();
-                };
-                worldMap.getField(e.point).addBuilding(building);
-            });
-        }
+        worldMap = new WorldMap(packet.sizeMap, packet.seedMap);
+        packet.fieldInfo.forEach(e->{
+            Resource resource = switch (e.resourceType){
+                case EMPTY -> null;
+                case FOREST -> new ForestResource();
+                case STONE -> new StoneResource();
+            };
+            Building building = switch (e.buildingType){
+                case EMPTY -> null;
+                case QUARRY -> new Quarry();
+                case MINESHAFT -> new Mineshaft();
+                case SAWMILL -> new Sawmill();
+            };
+            worldMap.getField(e.point).addResource(resource);
+            worldMap.getField(e.point).addBuilding(building);
+        });
     }
 
     private void movePlayer(Packet packet) {
@@ -130,7 +110,6 @@ public class Client implements Runnable {
     }
 
     private void removeResource(Packet packet) {
-
         Platform.runLater(() -> {
             if(packet.playerID == player.playerID) {
                 player.collectResource();
@@ -143,13 +122,13 @@ public class Client implements Runnable {
     private void initPlayer(Packet packet) {
         if(this.player == null){
             this.player = new Player(worldMap.getField(packet.position), packet.playerID);
-            System.out.println("moje id to "+ player.playerID);
+            System.out.println("Joined as Player"+ player.playerID);
             playerList.addPlayer(player.playerID, player);
             worldMap.setPlayer(player);
             Platform.runLater(()->{
                 worldMap.getChildren().add(player);
                 Catana.renderInventory(player);
-                Catana.katana.setTitle("Katana - "+"Player"+player.playerID);
+                Catana.katana.setTitle("Katana - Player"+player.playerID);
                 Catana.katana.getIcons().add(ImageManager.getImage("player"+player.playerID+".png",32,32));
             });
         }
@@ -180,10 +159,8 @@ public class Client implements Runnable {
                 receiveData();
             } catch (IOException e) {
                 System.out.println("#CLIENT# Receive error");
-                break;
             } catch (ClassNotFoundException e) {
                 System.out.println("#CLIENT# SocketData class not found");
-                break;
             }
         }
     }

@@ -19,11 +19,11 @@ public class Packet implements Serializable {
     public int playerID;
 
     //packiet inicjalizacyjny
-    public Packet(PacketType packetType, int mapSize, int mapSeed, List<FieldInfoPacket> fieldInfo) {
-        this.packetType=packetType;
-        this.seedMap=mapSeed;
-        this.sizeMap=mapSize;
-        this.fieldInfo=fieldInfo;
+    public Packet(PacketType init, int mapSize, int mapSeed, List<FieldInfoPacket> fieldInfo) {
+        this.packetType = init;
+        this.seedMap = mapSeed;
+        this.sizeMap = mapSize;
+        this.fieldInfo = fieldInfo;
     }
     //pakiet do wysylania typu budynku
     public Packet(PacketType packetType, int playerID, BuildingType buildingType, Point fieldPosition) {
@@ -39,9 +39,13 @@ public class Packet implements Serializable {
         this.position = playerPos;
     }
 
-    public Packet(PacketType disconnect, int playerID) {
-        this.packetType = disconnect;
+    public Packet(PacketType playerLeft, int playerID) {
+        this.packetType = playerLeft;
         this.playerID = playerID;
+    }
+
+    public Packet(PacketType leaveServer) {
+        this.packetType = leaveServer;
     }
 
 
@@ -54,8 +58,12 @@ public class Packet implements Serializable {
                 "Size map: " + sizeMap;
     }
 
-    public void sendTo(ObjectOutputStream outputStream) throws IOException {
-        outputStream.writeObject(this);
-        System.out.println(" -> sent " + this.packetType);
+    public void sendTo(ObjectOutputStream outputStream) {
+        try {
+            outputStream.writeObject(this);
+            System.out.println(" -> sent " + this.packetType);
+        } catch (IOException e) {
+            System.out.println("Could not sent packet. " + e.getMessage());
+        }
     }
 }

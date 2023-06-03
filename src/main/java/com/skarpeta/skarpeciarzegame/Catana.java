@@ -2,6 +2,8 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Client;
+import com.skarpeta.skarpeciarzegame.network.Packet;
+import com.skarpeta.skarpeciarzegame.network.PacketType;
 import com.skarpeta.skarpeciarzegame.network.Player;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -57,7 +59,7 @@ public class Catana extends Application {
         playerSend.start();
         worldMap = clientThread.getWorldMap();
         gameMap = new StackPane(worldMap);
-        setupUI();
+        setupStage();
     }
 
     public static void renderInventory(Player player) {
@@ -81,7 +83,7 @@ public class Catana extends Application {
         }
     }
 
-    private void setupUI() {
+    private void setupStage() {
         VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 

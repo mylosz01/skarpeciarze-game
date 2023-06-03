@@ -28,35 +28,33 @@ public class ClientHandler implements Runnable {
             while (true) {
                 Packet packet = receiveData();
                 switch (packet.packetType) {
-                    case MOVE -> {
-                        if (packet.playerID == playerID)
-                            position = packet.position;
-                    }
+                    case MOVE -> {if (packet.playerID == playerID) position = packet.position;}
                     case DESTROY_BUILDING -> Server.worldMap.getField(packet.position).destroyBuilding();
                     case DESTROY_RESOURCE -> Server.worldMap.getField(packet.position).destroyResource();
-                    case BUILD -> {
-                        Building building = switch (packet.buildingType) {
-                            case EMPTY -> null;
-                            case SAWMILL -> new Sawmill();
-                            case MINESHAFT -> new Mineshaft();
-                            case QUARRY -> new Quarry();
-                        };
-                        Server.worldMap.getField(packet.position).addBuilding(building);
-                    }
+                    case BUILD -> addBuilding(packet);
+                    case DISCONNECT -> throw new IOException("Player left the game");
                 }
                 Server.sendToAllClients(packet);
             }
         } catch (IOException e) {
-            System.out.println("Utracono polaczenie z Player"+playerID);
+            System.out.println("Lost connection with Player"+playerID +". "+e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e); //to sie nigdy nie wykona jak cos
-        }
-        try {
+        } finally {
             Server.clientList.remove(playerID);
             Server.sendToAllClients(new Packet(PacketType.DISCONNECT,playerID));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            closeConnection();
         }
+    }
+
+    private void addBuilding(Packet packet) {
+        Building building = switch (packet.buildingType) {
+            case EMPTY -> null;
+            case SAWMILL -> new Sawmill();
+            case MINESHAFT -> new Mineshaft();
+            case QUARRY -> new Quarry();
+        };
+        Server.worldMap.getField(packet.position).addBuilding(building);
     }
 
     public Packet receiveData() throws IOException, ClassNotFoundException {
@@ -64,10 +62,13 @@ public class ClientHandler implements Runnable {
         System.out.println("<-  received " + packet.packetType + " from Player" + playerID);
         return packet;
     }
-    public void closeConnection() throws IOException {
-        inputStream.close();
-        outputStream.close();
-        clientSocket.close();
+
+    public void closeConnection()  {
+        try {
+            inputStream.close();
+            outputStream.close();
+            clientSocket.close();
+        } catch (IOException ignore){}
     }
 
     public ObjectOutputStream getOutputStream() {
