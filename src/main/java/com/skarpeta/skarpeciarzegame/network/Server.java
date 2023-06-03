@@ -19,18 +19,17 @@ public class Server implements Runnable {
 
     public static WorldMap worldMap;
 
-    Server() throws IOException {
+    public Server() throws IOException {
         worldMap = new WorldMap(MAP_SIZE, MAP_SEED);
         worldMap.generateResources();
         clientList = Collections.synchronizedMap(new TreeMap<>());
         fieldInfo = packWorld();
         serverSocket = new ServerSocket(PORT_NUMBER);
     }
-
-    public static void main(String[] args) throws IOException {
+    @Override
+    public void run() {
         System.out.println("SERVER START");
-        Server server = new Server();
-        Thread serverAccept = new Thread(server);
+        Thread serverAccept = new Thread(this::connectClients);
         serverAccept.setDaemon(true);
         serverAccept.start();
 
@@ -38,8 +37,8 @@ public class Server implements Runnable {
         while (scan.nextLine().equalsIgnoreCase("q")) ;
     }
 
-    @Override
-    public void run() {
+
+    public void connectClients() {
         int playerID = 1;
         System.out.println("Server ready");
         while (true) {

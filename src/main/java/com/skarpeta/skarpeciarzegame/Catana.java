@@ -2,8 +2,6 @@ package com.skarpeta.skarpeciarzegame;
 
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Client;
-import com.skarpeta.skarpeciarzegame.network.Packet;
-import com.skarpeta.skarpeciarzegame.network.PacketType;
 import com.skarpeta.skarpeciarzegame.network.Player;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,8 +12,6 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 import java.util.Map;
 
 public class Catana extends Application {
@@ -51,7 +47,7 @@ public class Catana extends Application {
     static Client clientThread;
 
     @Override
-    public void start(Stage katana) throws IOException, ClassNotFoundException {
+    public void start(Stage katana)  {
         this.katana = katana;
         System.out.println("CLIENT START");
         clientThread = new Client();

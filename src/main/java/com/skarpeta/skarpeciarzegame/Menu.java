@@ -1,4 +1,5 @@
 package com.skarpeta.skarpeciarzegame;
+import com.skarpeta.skarpeciarzegame.network.Server;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 
 import javafx.application.*;
@@ -9,16 +10,16 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 
+import java.io.IOException;
+
 public class Menu extends Application {
 
     Scene menuScene;
-    Scene gameScene;
     Stage window;
 
     @Override
-    public void start(Stage menu) throws Exception {
+    public void start(Stage menu) {
         window = menu;
-
         VBox layoutMenu = new VBox();
         layoutMenu.setAlignment(Pos.CENTER);
         layoutMenu.setSpacing(40);
@@ -29,8 +30,13 @@ public class Menu extends Application {
         logoPane.getChildren().add(logo);
 
         MenuButton btnStartGame = new MenuButton("start.png");
+        btnStartGame.setOnMouseClicked(e-> launchServer());
+
         MenuButton btnJoinGame = new MenuButton("join.png");
+        btnJoinGame.setOnMouseClicked(e-> launchGame());
+
         MenuButton btnExit = new MenuButton("exit.png");
+        btnExit.setOnMouseClicked(e-> quitGame());
 
         VBox btnLayout = new VBox();
         btnLayout.setSpacing(10);
@@ -56,7 +62,27 @@ public class Menu extends Application {
         menu.show();
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    private void launchServer() {
+        try {
+            new Thread(new Server()).start();
+            launchGame();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void quitGame() {
+        window.close();
+        Platform.exit();
+    }
+
+    private void launchGame() {
+        new Catana().start(new Stage());
+        window.close();
+    }
+
+    public static void main(String[] args)  {
         launch();
     }
 
