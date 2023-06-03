@@ -5,56 +5,24 @@ import com.skarpeta.skarpeciarzegame.buildings.Mineshaft;
 import com.skarpeta.skarpeciarzegame.buildings.Quarry;
 import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.tools.Point;
-
-import javax.print.attribute.standard.Severity;
 import java.net.*;
 import java.io.*;
-import java.util.*;
 
 public class ClientHandler implements Runnable{
 
     private final Socket clientSocket;
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
-    private final List<ClientHandler> clientList;
     int playerID;
     Point position;
 
-    public ClientHandler(int playerID,Point position, Socket cliSocket, List<ClientHandler> clients) throws IOException {
+    public ClientHandler(int playerID,Point position, Socket clientSocket) throws IOException {
         this.playerID = playerID;
-        this.position =position;
-        clientList = clients;
-        clientSocket = cliSocket;
-        OutputStream out = cliSocket.getOutputStream();
-        outputStream = new ObjectOutputStream(out);
-        InputStream in = cliSocket.getInputStream();
-        inputStream = new ObjectInputStream(in);
+        this.position = position;
+        this.clientSocket = clientSocket;
+        outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+        inputStream = new ObjectInputStream(clientSocket.getInputStream());
     }
-
-    public DataPacket receiveData() throws IOException, ClassNotFoundException {
-        DataPacket dataPacket = (DataPacket) inputStream.readObject();
-        System.out.println("<-  received " + dataPacket.packetType + " from Player" + playerID);
-        return dataPacket;
-    }
-
-    public void sendData(DataPacket toSend) throws IOException {
-        outputStream.writeObject(toSend);
-    }
-
-    public void closeConnection() throws IOException {
-        inputStream.close();
-        outputStream.close();
-        clientSocket.close();
-    }
-
-    public void sendToAllClients(DataPacket dataPacket) throws IOException {
-        ArrayList<ClientHandler> toRemove = new ArrayList<>();
-        for(ClientHandler clientHandler : clientList){
-            clientHandler.sendData(dataPacket);
-        }
-        clientList.removeAll(toRemove);
-    }
-
     @Override
     public void run() {
         while(true){
@@ -78,8 +46,7 @@ public class ClientHandler implements Runnable{
                         Server.worldMap.getField(dataPacket.position).addBuilding(building);
                     }
                 }
-
-                sendToAllClients(dataPacket);
+                Server.sendToAllClients(dataPacket);
 
             } catch (IOException e) {
                 System.out.println("blad poalczenia");
@@ -87,5 +54,21 @@ public class ClientHandler implements Runnable{
                 throw new RuntimeException(e); //to sie nigdy nie wykona jak cos
             }
         }
+    }
+
+    public DataPacket receiveData() throws IOException, ClassNotFoundException {
+        DataPacket dataPacket = (DataPacket) inputStream.readObject();
+        System.out.println("<-  received " + dataPacket.packetType + " from Player" + playerID);
+        return dataPacket;
+    }
+
+    public void sendData(DataPacket toSend) throws IOException {
+        outputStream.writeObject(toSend);
+    }
+
+    public void closeConnection() throws IOException {
+        inputStream.close();
+        outputStream.close();
+        clientSocket.close();
     }
 }

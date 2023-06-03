@@ -9,7 +9,7 @@ import java.util.*;
 public class Server implements Runnable{
 
     private final ServerSocket serverSocket;
-    private final List<ClientHandler> clientList;
+    private static List<ClientHandler> clientList;
     private List<FieldInfoPacket> fieldInfo;
     private static final int PORT_NUMBER = 5555;
     private static final int MAP_SEED = new Random().nextInt();
@@ -25,6 +25,17 @@ public class Server implements Runnable{
         serverSocket = new ServerSocket(PORT_NUMBER);
     }
 
+    public static void main(String[] args) throws IOException {
+        System.out.println("SERVER START");
+        Server server = new Server();
+        Thread serverAccept = new Thread(server);
+        serverAccept.setDaemon(true);
+        serverAccept.start();
+
+        Scanner scan = new Scanner(System.in);
+        while(scan.nextLine().equals("q"));
+
+    }
     @Override
     public void run() {
 
@@ -36,7 +47,7 @@ public class Server implements Runnable{
                 System.out.println("PLAYER "+playerID+" JOINED THE GAME");
                 Point playerPos = worldMap.placePlayer();
                 fieldInfo = packWorld();
-                ClientHandler newClient = new ClientHandler(playerID,playerPos,playerSocket, clientList);
+                ClientHandler newClient = new ClientHandler(playerID,playerPos,playerSocket);
 
                 //inicjalizacja mapy
                 newClient.sendData(new DataPacket(PacketType.INIT_MAP,MAP_SIZE, MAP_SEED, fieldInfo));
@@ -69,15 +80,9 @@ public class Server implements Runnable{
         return list;
     }
 
-    public static void main(String[] args) throws IOException {
-        System.out.println("SERVER START");
-        Server server = new Server();
-        Thread serverAccept = new Thread(server);
-        serverAccept.setDaemon(true);
-        serverAccept.start();
-
-        Scanner scan = new Scanner(System.in);
-        while(scan.nextLine().equals("q"));
-
+    public static void sendToAllClients(DataPacket dataPacket) throws IOException {
+        for(ClientHandler clientHandler : clientList){
+            clientHandler.sendData(dataPacket);
+        }
     }
 }
