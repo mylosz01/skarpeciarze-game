@@ -42,7 +42,7 @@ public class Menu extends Application {
 
         menuScene = new Scene(layoutMenu);
 
-        menuScene.setCursor(new ImageCursor(ImageManager.getImage("kursor.png",16,16)));
+        menuScene.setCursor(new ImageCursor(ImageManager.getImage("cursor.png",16,16),6,0));
 
         menu.setScene(menuScene);
         menu.setMinWidth(700);
