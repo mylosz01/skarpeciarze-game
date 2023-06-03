@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 public class Catana extends Application {
-    public static final int BOARD_SIZE = 50;
     public static final double WINDOW_SIZE = 1000;
     public static final double FIELD_WIDTH = 50;
     public static final double UI_WIDTH = 300;
@@ -98,7 +97,6 @@ public class Catana extends Application {
         scene.setOnMouseDragged(this::handleDrag);
         scene.setOnMousePressed(this::handleRightClick);
 
-        katana.setTitle("Katana");
         katana.setScene(scene);
         katana.setWidth(WINDOW_SIZE);
         katana.setHeight(700);

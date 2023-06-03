@@ -11,7 +11,7 @@ import java.util.*;
 public class Server implements Runnable {
 
     private final ServerSocket serverSocket;
-    static Map<Integer, ClientHandler> clientList;
+    static Map<Integer, ClientThread> clientList;
     private List<FieldInfoPacket> fieldInfo;
     private static int portNumber = 5555;
     private static final int MAP_SEED = new Random().nextInt();
@@ -47,15 +47,15 @@ public class Server implements Runnable {
                 System.out.println("Player" + playerID + " joined the game");
                 Point playerPos = worldMap.placePlayer();
                 fieldInfo = packWorld();
-                ClientHandler newClient = new ClientHandler(playerID, playerPos, playerSocket);
+                ClientThread newClient = new ClientThread(playerID, playerPos, playerSocket);
 
                 //inicjalizacja mapy
                 new Packet(PacketType.INIT_MAP, MAP_SIZE, MAP_SEED, fieldInfo).sendTo(newClient.getOutputStream());
                 new Packet(PacketType.INIT_PLAYER, playerID, playerPos).sendTo(newClient.getOutputStream());
-                for (Map.Entry<Integer, ClientHandler> entry : clientList.entrySet()) {
-                    ClientHandler clientHandler = entry.getValue();
-                    new Packet(PacketType.NEW_PLAYER, clientHandler.playerID, clientHandler.position).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
-                    new Packet(PacketType.NEW_PLAYER, playerID, playerPos).sendTo(clientHandler.getOutputStream());//wysylanie nowego gracza do starych graczy
+                for (Map.Entry<Integer, ClientThread> entry : clientList.entrySet()) {
+                    ClientThread clientThread = entry.getValue();
+                    new Packet(PacketType.NEW_PLAYER, clientThread.playerID, clientThread.position).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
+                    new Packet(PacketType.NEW_PLAYER, playerID, playerPos).sendTo(clientThread.getOutputStream());//wysylanie nowego gracza do starych graczy
                 }
                 clientList.put(playerID++, newClient);
                 new Thread(newClient).start();
@@ -80,7 +80,7 @@ public class Server implements Runnable {
     }
 
     public static void sendToAllClients(Packet packet) {
-        for (Map.Entry<Integer, ClientHandler> entry : clientList.entrySet()) {
+        for (Map.Entry<Integer, ClientThread> entry : clientList.entrySet()) {
             packet.sendTo(entry.getValue().getOutputStream());
         }
     }

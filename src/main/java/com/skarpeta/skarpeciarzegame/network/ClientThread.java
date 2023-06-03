@@ -6,7 +6,7 @@ import com.skarpeta.skarpeciarzegame.tools.Point;
 import java.net.*;
 import java.io.*;
 
-public class ClientHandler implements Runnable {
+public class ClientThread implements Runnable {
 
     private final Socket clientSocket;
     private final ObjectOutputStream outputStream;
@@ -14,7 +14,7 @@ public class ClientHandler implements Runnable {
     int playerID;
     Point position;
 
-    public ClientHandler(int playerID, Point position, Socket clientSocket) throws IOException {
+    public ClientThread(int playerID, Point position, Socket clientSocket) throws IOException {
         this.playerID = playerID;
         this.position = position;
         this.clientSocket = clientSocket;
