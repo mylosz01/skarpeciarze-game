@@ -1,12 +1,10 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.buildings.Building;
-import com.skarpeta.skarpeciarzegame.buildings.Mineshaft;
-import com.skarpeta.skarpeciarzegame.buildings.Quarry;
-import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
-import com.skarpeta.skarpeciarzegame.resources.ForestResource;
-import com.skarpeta.skarpeciarzegame.resources.Resource;
-import com.skarpeta.skarpeciarzegame.resources.StoneResource;
+import com.skarpeta.skarpeciarzegame.BuildingType;
+import com.skarpeta.skarpeciarzegame.Catana;
+import com.skarpeta.skarpeciarzegame.WorldMap;
+import com.skarpeta.skarpeciarzegame.buildings.*;
+import com.skarpeta.skarpeciarzegame.resources.*;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
@@ -205,5 +203,9 @@ public class Client implements Runnable {
         inputStream.close();
         outputStream.close();
         clientSocket.close();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

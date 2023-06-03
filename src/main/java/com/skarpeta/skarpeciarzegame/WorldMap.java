@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame;
 
+import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
@@ -25,7 +26,7 @@ public class WorldMap extends Group {
     }
 
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
-    WorldMap(int size,int seed) {
+    public WorldMap(int size, int seed) {
         this.seed = seed;
         WorldGeneration worldGeneration = new WorldGeneration(seed);
         board = new Field[size][size];

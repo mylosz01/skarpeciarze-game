@@ -21,4 +21,6 @@ module com.skarpeta.skarpeciarzegame {
     opens com.skarpeta.skarpeciarzegame.inventory to javafx.fxml;
     exports com.skarpeta.skarpeciarzegame.tools;
     opens com.skarpeta.skarpeciarzegame.tools to javafx.fxml;
+    exports com.skarpeta.skarpeciarzegame.network;
+    opens com.skarpeta.skarpeciarzegame.network to javafx.fxml;
 }

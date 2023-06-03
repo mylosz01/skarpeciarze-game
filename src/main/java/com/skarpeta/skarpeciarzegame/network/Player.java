@@ -1,7 +1,8 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.buildings.Building;
-import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
+import com.skarpeta.skarpeciarzegame.Asset;
+import com.skarpeta.skarpeciarzegame.Field;
+import com.skarpeta.skarpeciarzegame.TerrainType;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
@@ -13,14 +14,14 @@ import java.io.IOException;
  */
 public class Player extends Asset {
 
-    Inventory playerEq;
+    private final Inventory inventory;
     int playerID;
     public Field playerField;
 
     Player(Field field, int playerID){
         super(new ImageView(ImageManager.getImage("player"+playerID % 5+".png",32,32)));
         this.playerID = playerID;
-        this.playerEq = new Inventory();
+        this.inventory = new Inventory();
         this.playerField = field;
         align(playerField);
     }
@@ -45,7 +46,7 @@ public class Player extends Asset {
            int itemAmount =  playerField.resource.getItem().getAmount();
            System.out.println("Zebrano: " + playerField.resource.item.getName() + " " + itemAmount);
 
-           playerEq.increaseItemAmount(playerField.resource.item.getName(),itemAmount);
+           inventory.increaseItemAmount(playerField.resource.item.getName(),itemAmount);
            this.playerField.destroyResource();
         }
     }
@@ -59,10 +60,14 @@ public class Player extends Asset {
      *  oraz próba wejścia na niesąsiadujące pole
      */
     public boolean isValidMovePlayer(Field destination) throws InvalidMoveException {
-        if(destination.terrain.equals(TerrainType.WATER) && playerEq.getAmount("Boat") == 0)
+        if(destination.terrain.equals(TerrainType.WATER) && inventory.getAmount("Boat") == 0)
             throw new InvalidMoveException("nie posiadasz lodki!!!");
         if(!destination.position.isTouchingHexagonal(this.playerField.position))
             throw new InvalidMoveException("to pole jest poza zasiegiem");
         return true;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 }

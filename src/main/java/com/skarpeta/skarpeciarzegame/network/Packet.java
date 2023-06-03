@@ -1,5 +1,8 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.network;
 
+import com.skarpeta.skarpeciarzegame.BuildingType;
+import com.skarpeta.skarpeciarzegame.FieldInfoPacket;
+import com.skarpeta.skarpeciarzegame.PlayerMove;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import java.io.*;
 import java.util.List;
