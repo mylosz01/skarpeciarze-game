@@ -1,7 +1,5 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
-import com.skarpeta.skarpeciarzegame.CraftingStatus;
-
 import java.util.HashMap;
 
 /** Klasa reprezentująca ekwipunek gracza

@@ -1,17 +1,15 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.resources.StoneResource;
 import com.skarpeta.skarpeciarzegame.tools.Point;
-import javafx.scene.image.PixelReader;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Random;
 
-import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
+import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 
 import javax.imageio.ImageIO;
 /** Generowanie świata, czytanie pliku z perlin noise */

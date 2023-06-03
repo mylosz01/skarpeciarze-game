@@ -1,4 +1,4 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;

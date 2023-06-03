@@ -1,8 +1,8 @@
 package com.skarpeta.skarpeciarzegame.network;
 
 import com.skarpeta.skarpeciarzegame.Asset;
-import com.skarpeta.skarpeciarzegame.Field;
-import com.skarpeta.skarpeciarzegame.TerrainType;
+import com.skarpeta.skarpeciarzegame.worldmap.Field;
+import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;

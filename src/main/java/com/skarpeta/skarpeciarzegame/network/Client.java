@@ -1,8 +1,8 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.BuildingType;
-import com.skarpeta.skarpeciarzegame.Catana;
-import com.skarpeta.skarpeciarzegame.WorldMap;
+import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
+import com.skarpeta.skarpeciarzegame.app.Catana;
+import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.*;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;

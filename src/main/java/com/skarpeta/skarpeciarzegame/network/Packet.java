@@ -1,8 +1,6 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.BuildingType;
-import com.skarpeta.skarpeciarzegame.FieldInfoPacket;
-import com.skarpeta.skarpeciarzegame.PlayerMove;
+import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import java.io.*;
 import java.util.List;
@@ -15,7 +13,6 @@ public class Packet implements Serializable {
     int sizeMap;
     PacketType packetType;
     public Point position;
-    public PlayerMove playerMove;
     public int playerID;
 
     //packiet inicjalizacyjny
@@ -46,16 +43,6 @@ public class Packet implements Serializable {
 
     public Packet(PacketType leaveServer) {
         this.packetType = leaveServer;
-    }
-
-
-    public String toString(){
-        return "\nPlayer location: " + position + "\n" +
-                "Player move: "+playerMove + "\n"+
-                "Player Num: " + playerID + "\n"+
-                "Packet type: " + packetType + "\n" +
-                "Seed map: " + seedMap + "\n" +
-                "Size map: " + sizeMap;
     }
 
     public void sendTo(ObjectOutputStream outputStream) {

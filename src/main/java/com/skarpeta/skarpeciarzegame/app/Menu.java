@@ -1,7 +1,5 @@
-package com.skarpeta.skarpeciarzegame.launcher;
+package com.skarpeta.skarpeciarzegame.app;
 
-import com.skarpeta.skarpeciarzegame.Catana;
-import com.skarpeta.skarpeciarzegame.MenuButton;
 import com.skarpeta.skarpeciarzegame.network.Server;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 

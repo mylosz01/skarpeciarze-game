@@ -1,4 +1,4 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.worldmap;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;

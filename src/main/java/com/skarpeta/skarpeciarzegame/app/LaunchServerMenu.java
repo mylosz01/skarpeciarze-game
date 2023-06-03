@@ -1,4 +1,4 @@
-package com.skarpeta.skarpeciarzegame.launcher;
+package com.skarpeta.skarpeciarzegame.app;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;

@@ -1,7 +1,6 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.FieldInfoPacket;
-import com.skarpeta.skarpeciarzegame.WorldMap;
+import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 
 import java.net.*;

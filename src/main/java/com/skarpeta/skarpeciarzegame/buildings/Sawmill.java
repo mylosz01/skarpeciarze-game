@@ -1,8 +1,6 @@
 package com.skarpeta.skarpeciarzegame.buildings;
 
-import com.skarpeta.skarpeciarzegame.BuildingType;
-import com.skarpeta.skarpeciarzegame.tools.ImageManager;
-import javafx.scene.image.ImageView;
+import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
 public class Sawmill extends Building {
     public Sawmill() {

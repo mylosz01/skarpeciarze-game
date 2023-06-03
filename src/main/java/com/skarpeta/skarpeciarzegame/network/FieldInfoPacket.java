@@ -1,7 +1,8 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.network;
 
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import com.skarpeta.skarpeciarzegame.tools.ResourceType;
+import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
 import java.io.Serializable;
 

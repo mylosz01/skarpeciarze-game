@@ -1,7 +1,7 @@
 package com.skarpeta.skarpeciarzegame.buildings;
 
 import com.skarpeta.skarpeciarzegame.Asset;
-import com.skarpeta.skarpeciarzegame.BuildingType;
+import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import javafx.scene.image.ImageView;
 /** Building definiuje budynki budowane przez graczy */
