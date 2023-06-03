@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class LaunchServerMenu extends Stage {
+public class ServerMenu extends Stage {
     private Button launchButton;
     private TextField mapSizeField;
     private TextField portField;
@@ -32,7 +32,7 @@ public class LaunchServerMenu extends Stage {
         return portField;
     }
 
-    public LaunchServerMenu() {
+    public ServerMenu() {
         setTitle("Server config");
 
         GridPane gridPane = new GridPane();

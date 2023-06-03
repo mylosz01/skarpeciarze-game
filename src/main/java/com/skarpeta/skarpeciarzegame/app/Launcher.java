@@ -13,7 +13,7 @@ import javafx.stage.*;
 
 import java.io.IOException;
 
-public class Menu extends Application {
+public class Launcher extends Application {
 
     Scene menuScene;
     Stage window;
@@ -73,7 +73,7 @@ public class Menu extends Application {
         window.close();
 */
 
-        LaunchServerMenu serverMenu = new LaunchServerMenu();
+        ServerMenu serverMenu = new ServerMenu();
         serverMenu.getLaunchButton().setOnAction(e -> {
             try {
                 int mapSize = Integer.parseInt(serverMenu.getMapSizeField().getText());
