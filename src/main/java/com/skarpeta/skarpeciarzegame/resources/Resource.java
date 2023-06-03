@@ -16,8 +16,8 @@ public abstract class Resource extends Asset {
         align();
     }
 
-    public int getItem(){
-       return this.item.getAmount();
+    public Item getItem(){
+       return this.item;
     }
 
     /** align() służy materiałom do przyjęcia pozycji w lewym dolnym rogu pola Field w którym się znajduje*/

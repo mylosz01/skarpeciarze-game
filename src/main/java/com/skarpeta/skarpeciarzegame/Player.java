@@ -56,13 +56,11 @@ public class Player extends Asset {
     public void collectResource(){
 
         if(playerField.hasResource()){
-            int amountResource =  playerField.resource.getItem();
-           System.out.println("Zebrano: " + playerField.resource.item.getName() + " " + amountResource);
+           int itemAmount =  playerField.resource.getItem().getAmount();
+           System.out.println("Zebrano: " + playerField.resource.item.getName() + " " + itemAmount);
 
-           playerEq.increaseItemAmount(playerField.resource.item.getName(),amountResource);
-
-           playerField.getChildren().remove(this.playerField.resource);
-           this.playerField.resource = null;
+           playerEq.increaseItemAmount(playerField.resource.item.getName(),itemAmount);
+           this.playerField.destroyResource();
         }
     }
 

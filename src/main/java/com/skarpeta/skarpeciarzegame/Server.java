@@ -51,11 +51,11 @@ public class Server implements Runnable{
 
                 //inicjalizacja mapy
                 newClient.sendData(new Packet(PacketType.INIT_MAP,MAP_SIZE, MAP_SEED, fieldInfo));
+                newClient.sendData(new Packet(PacketType.INIT_PLAYER,playerID,playerPos));
                 for (ClientHandler clientHandler : clientList) {
                     newClient.sendData(new Packet(PacketType.NEW_PLAYER,clientHandler.playerID,clientHandler.position));//wysylanie starych graczy do nowego
                     clientHandler.sendData(new Packet(PacketType.NEW_PLAYER,playerID,playerPos));//wysylanie nowego gracza do starych graczy
                 }
-                newClient.sendData(new Packet(PacketType.INIT_PLAYER,playerID,playerPos));
 
                 clientList.add(newClient);
 
