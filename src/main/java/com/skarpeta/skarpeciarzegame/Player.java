@@ -35,21 +35,7 @@ public class Player extends Asset {
      */
     public void sendMove(Field destination) throws InvalidMoveException, IOException {
         if(isValidMovePlayer(destination)){
-            //this.playerField = destination;
             Client.makeMove(playerID,destination.position);
-        }
-    }
-
-    public void buildBuilding(){
-        if(!playerField.hasBuilding()){
-            playerField.addBuilding(new Sawmill());
-        }
-    }
-
-    public void destroyBuilding(){
-        if(playerField.hasBuilding()){
-            playerField.getChildren().remove(this.playerField.building);
-            this.playerField.building = null;
         }
     }
 
@@ -73,7 +59,7 @@ public class Player extends Asset {
      *  oraz próba wejścia na niesąsiadujące pole
      */
     public boolean isValidMovePlayer(Field destination) throws InvalidMoveException {
-        if(destination.terrain.equals(TerrainType.WATER))
+        if(destination.terrain.equals(TerrainType.WATER) && playerEq.getAmount("Boat") == 0)
             throw new InvalidMoveException("nie posiadasz lodki!!!");
         if(!destination.position.isTouchingHexagonal(this.playerField.position))
             throw new InvalidMoveException("to pole jest poza zasiegiem");
