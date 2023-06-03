@@ -3,6 +3,8 @@ package com.skarpeta.skarpeciarzegame.network;
 import com.skarpeta.skarpeciarzegame.FieldInfoPacket;
 import com.skarpeta.skarpeciarzegame.WorldMap;
 import com.skarpeta.skarpeciarzegame.tools.Point;
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 
 import java.net.*;
 import java.io.*;
@@ -13,18 +15,19 @@ public class Server implements Runnable {
     private final ServerSocket serverSocket;
     static Map<Integer, ClientHandler> clientList;
     private List<FieldInfoPacket> fieldInfo;
-    private static final int PORT_NUMBER = 5555;
+    private static int portNumber = 5555;
     private static final int MAP_SEED = new Random().nextInt();
     private static final int MAP_SIZE = 40;
 
     public static WorldMap worldMap;
 
-    public Server() throws IOException {
+    public Server(int portNumber) throws IOException {
+        this.portNumber = portNumber;
         worldMap = new WorldMap(MAP_SIZE, MAP_SEED);
         worldMap.generateResources();
         clientList = Collections.synchronizedMap(new TreeMap<>());
         fieldInfo = packWorld();
-        serverSocket = new ServerSocket(PORT_NUMBER);
+        serverSocket = new ServerSocket(portNumber);
     }
     @Override
     public void run() {
@@ -40,7 +43,7 @@ public class Server implements Runnable {
 
     public void connectClients() {
         int playerID = 1;
-        System.out.println("Server ready");
+        System.out.println(" ============ SERVER OPEN AT PORT " + portNumber + " ============");
         while (true) {
             try {
                 Socket playerSocket = serverSocket.accept();
@@ -83,5 +86,8 @@ public class Server implements Runnable {
         for (Map.Entry<Integer, ClientHandler> entry : clientList.entrySet()) {
             packet.sendTo(entry.getValue().getOutputStream());
         }
+    }
+
+    public void stop() { //todo
     }
 }

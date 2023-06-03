@@ -33,7 +33,7 @@ public class Menu extends Application {
         btnStartGame.setOnMouseClicked(e-> launchServer());
 
         MenuButton btnJoinGame = new MenuButton("join.png");
-        btnJoinGame.setOnMouseClicked(e-> launchGame());
+        btnJoinGame.setOnMouseClicked(e-> joinServer());
 
         MenuButton btnExit = new MenuButton("exit.png");
         btnExit.setOnMouseClicked(e-> quitGame());
@@ -64,12 +64,17 @@ public class Menu extends Application {
 
     private void launchServer() {
         try {
-            new Thread(new Server()).start();
-            launchGame();
+            int port = 5555;
+            Server server = new Server(port);
+            new Thread(server).start();
+            Catana catana = new Catana("127.0.0.1",port);
+            catana.start(new Stage());
+            catana.katana.setOnCloseRequest(e->server.stop());
+            window.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void quitGame() {
@@ -77,9 +82,19 @@ public class Menu extends Application {
         Platform.exit();
     }
 
-    private void launchGame() {
-        new Catana().start(new Stage());
-        window.close();
+    private void joinServer() {
+        joinServerMenu joinMenu = new joinServerMenu();
+        joinMenu.getConnectButton().setOnAction(e -> {
+            String ipAddress = joinMenu.getIpField().getText();
+            int portNumber = Integer.parseInt(joinMenu.getPortField().getText());
+            System.out.println("Connecting to " + ipAddress + " on port " + portNumber);
+            new Catana(ipAddress,portNumber).start(new Stage());
+            joinMenu.close();
+        });
+        joinMenu.show();
+
+        //new Catana().start(new Stage());
+        //window.close();
     }
 
     public static void main(String[] args)  {

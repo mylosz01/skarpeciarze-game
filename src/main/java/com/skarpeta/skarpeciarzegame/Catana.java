@@ -24,6 +24,9 @@ public class Catana extends Application {
     double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
+    public static String ipAddress = "127.0.0.1";
+    public static int portNumber = 5555;
+
     Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5)));
 
     static WorldMap worldMap;
@@ -46,10 +49,14 @@ public class Catana extends Application {
 
     static Client clientThread;
 
+    public Catana(String ipAddress, int portNumber) {
+        this.ipAddress = ipAddress;
+        this.portNumber = portNumber;
+    }
+
     @Override
     public void start(Stage katana)  {
         this.katana = katana;
-        System.out.println("CLIENT START");
         clientThread = new Client();
         Thread playerSend = new Thread(clientThread);
         playerSend.start();
