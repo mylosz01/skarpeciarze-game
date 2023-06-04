@@ -86,7 +86,7 @@ public class Server implements Runnable {
         }
     }
 
-    public void stop() { //todo
+    public void stop() { //todo STOP SERVER
     }
 
     public static void main(String[] args) {

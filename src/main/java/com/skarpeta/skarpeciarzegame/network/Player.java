@@ -6,10 +6,17 @@ import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+
+import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 
 /** Gracz posiada pole Field w którym się znajduje
  */
@@ -25,14 +32,12 @@ public class Player extends Asset {
         this.playerID = playerID;
         this.inventory = new Inventory();
         this.playerField = field;
-        align(playerField);
+        getTexture().setFitWidth(FIELD_WIDTH * 0.5);
+        getTexture().setFitHeight(FIELD_WIDTH * 0.5);
+        relocate(field.getLayoutX(),field.getLayoutY());
+        moveTo(field);
     }
 
-    /** ustawianie pozycji gracza na ekranie, uzywajac pozycji pola */
-    public void align(Field field) {
-        relocate(field.getLayoutX(),field.getLayoutY());
-        super.align(this.getTexture().getFitWidth() * -0.5,0);
-    }
     /** Poruszanie się gracza
      *  gracz porusza się na podane pole Field destination tylko w przypadku gdy ruch jest poprawny (isValidMovePlayer)
      */
@@ -55,7 +60,13 @@ public class Player extends Asset {
 
     public void moveTo(Field destination){
         this.playerField = destination;
-        align(this.playerField);
+        Timeline timeline = new Timeline();
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.2),
+                new KeyValue(layoutXProperty(), destination.getLayoutX() - getTexture().getFitWidth() * 0.5, Interpolator.EASE_OUT),
+                new KeyValue(layoutYProperty(), destination.getLayoutY(), Interpolator.EASE_OUT)
+        );
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
     }
     /** Walidacja ruchów gracza:
      *  niepoprawnym ruchem jest próba wejścia do wody bez łodzi
