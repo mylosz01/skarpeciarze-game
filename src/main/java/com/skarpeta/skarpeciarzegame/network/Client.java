@@ -69,8 +69,8 @@ public class Client implements Runnable {
             case DESTROY_RESOURCE -> removeResource(packet);
             case DISCONNECT -> playerLeft(packet);
         }
-        if (packet.packetType != PacketType.INIT_PLAYER)
-            Catana.updateButtonUI();
+        if (Catana.playerUI!=null)
+            Catana.playerUI.updateButtonUI();
     }
 
     private void initMap(Packet packet) {
@@ -114,7 +114,7 @@ public class Client implements Runnable {
         Platform.runLater(() -> {
             if (packet.playerID == player.playerID) {
                 player.collectResource();
-                Catana.renderInventory(this.player);
+                Catana.playerUI.renderInventory(this.player);
             }
             worldMap.getField(packet.position).destroyResource();
         });
@@ -127,7 +127,7 @@ public class Client implements Runnable {
             playerList.addPlayer(player.playerID, player);
             Platform.runLater(() -> {
                 Catana.renderPlayer(player);
-                Catana.renderInventory(player);
+                Catana.playerUI.renderInventory(player);
                 Catana.katana.setTitle("Katana - Player" + player.playerID);
                 Catana.katana.getIcons().add(player.getTexture().getImage());
             });

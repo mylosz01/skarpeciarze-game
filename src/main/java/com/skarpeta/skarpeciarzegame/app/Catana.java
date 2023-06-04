@@ -31,27 +31,12 @@ public class Catana extends Application {
     public static String ipAddress = "127.0.0.1";
     public static int portNumber = 5555;
 
-    Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5)));
-
     static WorldMap worldMap;
     public static Pane gameMap;
     public static Group playersGroup = new Group();
     public static Stage katana;
-    static Pane eqPane;
-    static VBox playerItemsTable;
 
-    //static MenuButton buildBtn;
-    static MenuButton destroyBtn;
-    static MenuButton collectBtn;
-
-    HBox buttonCategoriesPane;
-    static VBox fieldActionPane;
-    static VBox buildActionPane;
-
-    static MenuButton quarryBtn;
-    static MenuButton mineshaftBtn;
-    static MenuButton sawmillBtn;
-
+    public static PlayerUI playerUI;
     private static Client clientThread;
 
     public Catana(String ipAddress, int portNumber) {
@@ -76,33 +61,12 @@ public class Catana extends Application {
         setupStage();
     }
 
-    public static void renderInventory(Player player) {
-
-        playerItemsTable.getChildren().clear();
-
-        for (Map.Entry<String, Item> entry : player.getInventory().equipment.entrySet()) {
-            String id = entry.getKey();
-            Item item = entry.getValue();
-
-            Label idLabel = new Label(id);
-            idLabel.setFont(new Font("Arial",20));
-
-            Label amountLabel = new Label(String.valueOf(item.getAmount()));
-            amountLabel.setFont(new Font("Arial",20));
-
-            HBox rowItem = new HBox(item, idLabel, amountLabel);
-            rowItem.setAlignment(Pos.CENTER);
-            rowItem.setSpacing(20);
-            playerItemsTable.getChildren().add(rowItem);
-        }
-    }
-
     private void setupStage() {
-        VBox playerUIMain = createplayerUIMain(); //okienko z ui itp po prawej
+        playerUI = new PlayerUI(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
         AnchorPane gameLayout = new AnchorPane();
-        gameLayout.getChildren().addAll(gamePane,playerUIMain);
+        gameLayout.getChildren().addAll(gamePane,playerUI);
 
         Scene scene = new Scene(gameLayout);
         scene.setOnScroll(this::handleScroll);
@@ -113,13 +77,11 @@ public class Catana extends Application {
         katana.setWidth(WINDOW_SIZE);
         katana.setHeight(700);
         katana.show();
-
     }
 
     private Pane createGamePane() { //lewy panel okna (gra)
         Pane gamePane = new Pane();
         gamePane.setBackground(new Background(new BackgroundFill(TerrainType.WATER.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
-        //gamePane.setBorder(new Border(new BorderStroke(Color.GOLDENROD,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(10))));
 
         AnchorPane.setTopAnchor(gamePane,0.0);
         AnchorPane.setLeftAnchor(gamePane,0.0);
@@ -128,99 +90,6 @@ public class Catana extends Application {
 
         gamePane.getChildren().add(gameMap);
         return gamePane;
-    }
-
-    private VBox createplayerUIMain() { //prawy panel okna (ui)
-        VBox playerUIMain = new VBox();
-        playerUIMain.setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
-        playerUIMain.setAlignment(Pos.TOP_CENTER);
-        playerUIMain.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().darker,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
-        playerUIMain.setMinWidth(UI_WIDTH);
-
-        //ruchy gracza (gorny panel)
-        HBox btnLayout = createInteractionMenu();
-
-        //lista graczy (prawy panel)
-        Pane listPlayer = new Pane();
-        listPlayer.setBorder(insideBorder);
-        listPlayer.setPadding(new Insets(3));
-
-        //eqPlayer (lewy panel)
-        eqPane = createEqPlayerPane();
-
-        //dolna czesc UI
-        HBox playerUIDown = new HBox();
-        playerUIDown.setPrefHeight(1000);
-        playerUIDown.getChildren().addAll(eqPane,listPlayer);
-
-        AnchorPane.setTopAnchor(playerUIMain,0.0);
-        AnchorPane.setRightAnchor(playerUIMain,0.0);
-        AnchorPane.setBottomAnchor(playerUIMain,0.0);
-
-        playerUIMain.getChildren().addAll(btnLayout,playerUIDown);
-        return playerUIMain;
-    }
-    public static void updateButtonUI() {
-        if(clientThread== null || clientThread.getPlayer() == null)
-            return;
-        Field field = clientThread.getPlayer().playerField;
-        Platform.runLater(()->{
-            fieldActionPane.getChildren().clear();
-            buildActionPane.getChildren().clear();
-            if(field.hasResource())
-                fieldActionPane.getChildren().add(collectBtn);
-            if(field.hasBuilding())
-                fieldActionPane.getChildren().add(destroyBtn);
-            else {
-                switch (field.terrain) {
-                    case MOUNTAINS -> buildActionPane.getChildren().addAll(quarryBtn, mineshaftBtn);
-                    case GRASS_LAND -> buildActionPane.getChildren().add(sawmillBtn);
-                }
-            }
-        });
-    }
-
-    private HBox createInteractionMenu(){ //gorny panel z przyciskami
-        buttonCategoriesPane = new HBox();
-        buttonCategoriesPane.setBorder(insideBorder);
-        buttonCategoriesPane.setAlignment(Pos.CENTER);
-        buttonCategoriesPane.setMinHeight(200);
-
-        fieldActionPane = new VBox();
-        fieldActionPane.setAlignment(Pos.CENTER);
-        fieldActionPane.setSpacing(14);
-        fieldActionPane.setMinWidth(150);
-
-        destroyBtn = new MenuButton("break.png");
-        destroyBtn.setOnMouseClicked(e -> clientThread.sendRemoveBuilding(clientThread.getPlayer().playerField.position));
-        collectBtn = new MenuButton("get.png");
-        collectBtn.setOnMouseClicked(e -> clientThread.sendRemoveResource(clientThread.getPlayer().playerField.position));
-
-        buildActionPane = new VBox();
-        buildActionPane.setAlignment(Pos.CENTER);
-        buildActionPane.setSpacing(14);
-        buildActionPane.setMinWidth(150);
-
-        quarryBtn = new MenuButton("buildQuarry.png");
-        quarryBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.getPlayer().playerField.position, BuildingType.QUARRY));
-        mineshaftBtn = new MenuButton("buildMineshaft.png");
-        mineshaftBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.getPlayer().playerField.position,BuildingType.MINESHAFT));
-        sawmillBtn = new MenuButton("buildSawmill.png");
-        sawmillBtn.setOnMouseClicked(e -> clientThread.sendBuildBuilding(clientThread.getPlayer().playerField.position,BuildingType.SAWMILL));
-
-        buttonCategoriesPane.getChildren().addAll(fieldActionPane, buildActionPane);
-        return buttonCategoriesPane;
-    }
-
-    private Pane createEqPlayerPane() {
-        Pane eqPlayer = new Pane();
-        playerItemsTable = new VBox();
-        playerItemsTable.setSpacing(10);
-        playerItemsTable.setAlignment(Pos.CENTER);
-        eqPlayer.getChildren().add(playerItemsTable);
-        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
-
-        return eqPlayer;
     }
 
     private void handleRightClick(MouseEvent event) {
@@ -242,7 +111,6 @@ public class Catana extends Application {
             initialPositionY = event.getY();
         }
     }
-
 
     private void handleScroll(ScrollEvent event) {
         double zoomFactor = (event.getDeltaY() > 0) ? ZOOM_FACTOR : (1 / ZOOM_FACTOR);
