@@ -28,7 +28,7 @@ public class Launcher extends Application {
 
         Group logoPane = new Group();
 
-        ImageView logo = new ImageView(ImageManager.getImage("logoGame", 128, 128));
+        ImageView logo = new ImageView(ImageManager.getImage("logoGame.png", 128, 128));
         logoPane.getChildren().add(logo);
 
         MenuButton btnStartGame = new MenuButton("start");

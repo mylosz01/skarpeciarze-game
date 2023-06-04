@@ -150,6 +150,9 @@ public class Catana extends Application {
     }
 
     private void handleScroll(ScrollEvent event) {
+        if(timeline != null)
+            timeline.stop();
+
         double zoomFactor = (event.getDeltaY() > 0) ? ZOOM_FACTOR : (1 / ZOOM_FACTOR);
         double offsetX = (event.getX() - gameMap.getWidth() / 2) * (1 - zoomFactor);
         double offsetY = (event.getY() - gameMap.getHeight() / 2) * (1 - zoomFactor);
