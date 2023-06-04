@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 public abstract class Building extends Asset {
     public BuildingType type;
     public Building(String textureName) {
-        super(new ImageView(ImageManager.getImage(textureName+".png",128,128)));
+        super(new ImageView(ImageManager.getImage("mapasset/"+textureName+".png",128,128)));
         align();
     }
     /** align() służy budynkom do przyjęcia pozycji w prawym górnym rogu pola Field w którym się znajduje*/

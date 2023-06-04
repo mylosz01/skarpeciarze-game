@@ -8,6 +8,7 @@ import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import javafx.scene.image.ImageView;
 
+import java.io.File;
 import java.io.IOException;
 
 /** Gracz posiada pole Field w którym się znajduje
@@ -19,7 +20,8 @@ public class Player extends Asset {
     public Field playerField;
 
     Player(Field field, int playerID){
-        super(new ImageView(ImageManager.getImage("player"+playerID % 5+".png",32,32)));
+        super(new ImageView(ImageManager.getImage("player/player" +
+                playerID % new File("src/main/resources/images/player").list().length+".png",128,128)));
         this.playerID = playerID;
         this.inventory = new Inventory();
         this.playerField = field;

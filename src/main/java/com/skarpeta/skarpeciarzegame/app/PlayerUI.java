@@ -75,9 +75,9 @@ public class PlayerUI extends VBox {
         fieldActionPane.setSpacing(14);
         fieldActionPane.setMinWidth(150);
 
-        destroyButton = new MenuButton("break.png");
+        destroyButton = new MenuButton("break");
         destroyButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveBuilding(Catana.getClientThread().getPlayer().playerField.position));
-        collectButton = new MenuButton("get.png");
+        collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.position));
 
         buildActionPane = new VBox();
@@ -85,11 +85,11 @@ public class PlayerUI extends VBox {
         buildActionPane.setSpacing(14);
         buildActionPane.setMinWidth(150);
 
-        quarryBtn = new MenuButton("buildQuarry.png");
+        quarryBtn = new MenuButton("buildQuarry");
         quarryBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.QUARRY));
-        mineshaftBtn = new MenuButton("buildMineshaft.png");
+        mineshaftBtn = new MenuButton("buildMineshaft");
         mineshaftBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.MINESHAFT));
-        sawmillBtn = new MenuButton("buildSawmill.png");
+        sawmillBtn = new MenuButton("buildSawmill");
         sawmillBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.SAWMILL));
 
         buttonCategoriesPane.getChildren().addAll(fieldActionPane, buildActionPane);

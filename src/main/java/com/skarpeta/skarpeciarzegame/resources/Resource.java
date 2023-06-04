@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame.resources;
 
 import com.skarpeta.skarpeciarzegame.Asset;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import javafx.scene.image.ImageView;
 /** Losowo generowane materiały do zebrania przez gracza */
@@ -11,8 +12,8 @@ public abstract class Resource extends Asset {
     protected int maxResourceRange = 100;
     public ResourceType type;
 
-    public Resource(ImageView texture) {
-        super(texture);
+    public Resource(String textureName) {
+        super(new ImageView(ImageManager.getImage("mapasset/"+textureName+".png",128,128)));
         align();
     }
 

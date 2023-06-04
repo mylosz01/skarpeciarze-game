@@ -28,16 +28,16 @@ public class Launcher extends Application {
 
         Group logoPane = new Group();
 
-        ImageView logo = new ImageView(ImageManager.getImage("logoGame.png", 128, 128));
+        ImageView logo = new ImageView(ImageManager.getImage("logoGame", 128, 128));
         logoPane.getChildren().add(logo);
 
-        MenuButton btnStartGame = new MenuButton("start.png");
+        MenuButton btnStartGame = new MenuButton("start");
         btnStartGame.setOnMouseClicked(e -> launchServer());
 
-        MenuButton btnJoinGame = new MenuButton("join.png");
+        MenuButton btnJoinGame = new MenuButton("join");
         btnJoinGame.setOnMouseClicked(e -> joinServer());
 
-        MenuButton btnExit = new MenuButton("exit.png");
+        MenuButton btnExit = new MenuButton("exit");
         btnExit.setOnMouseClicked(e -> quitGame());
 
         VBox btnLayout = new VBox();
