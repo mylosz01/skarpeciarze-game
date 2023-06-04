@@ -7,6 +7,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ServerMenu extends Stage {
@@ -14,23 +15,15 @@ public class ServerMenu extends Stage {
     private TextField mapSizeField;
     private TextField portField;
     private TextField seedField;
-    private CheckBox localhostCheckBox;
 
-    public TextField getSeedField() {
-        return seedField;
-    }
+    private Label exceptionLabel;
+    private CheckBox randomSeedCheckbox;
 
-    public Button getLaunchButton() {
-        return launchButton;
-    }
-
-    public TextField getMapSizeField() {
-        return mapSizeField;
-    }
-
-    public TextField getPortField() {
-        return portField;
-    }
+    public Label getExceptionLabel() {return exceptionLabel;}
+    public TextField getSeedField() {return seedField;}
+    public Button getLaunchButton() {return launchButton;}
+    public TextField getMapSizeField() {return mapSizeField;}
+    public TextField getPortField() {return portField;}
 
     public ServerMenu() {
         setTitle("Server config");
@@ -51,10 +44,10 @@ public class ServerMenu extends Stage {
         gridPane.add(seedLabel, 0, 1);
         gridPane.add(seedField, 1, 1);
 
-        localhostCheckBox = new CheckBox("random seed");
-        localhostCheckBox.setOnAction(e -> clickCheckBox());
+        randomSeedCheckbox = new CheckBox("random seed");
+        randomSeedCheckbox.setOnAction(e -> clickCheckBox());
         setRandomSeed(true);
-        gridPane.add(localhostCheckBox, 2, 1);
+        gridPane.add(randomSeedCheckbox, 2, 1);
 
         Label portLabel = new Label("Port Number:");
         portField = new TextField();
@@ -63,8 +56,11 @@ public class ServerMenu extends Stage {
         gridPane.add(portField, 1, 2);
 
         launchButton = new Button("Launch server");
-
         gridPane.add(launchButton, 2,2);
+
+        exceptionLabel = new Label();
+        exceptionLabel.setTextFill(Color.RED);
+        gridPane.add(exceptionLabel,0,3,3,3);
 
         Scene scene = new Scene(gridPane, 300, 150);
         setScene(scene);
@@ -72,13 +68,16 @@ public class ServerMenu extends Stage {
     }
 
     private void clickCheckBox() {
-        setRandomSeed(localhostCheckBox.isSelected());
+        setRandomSeed(randomSeedCheckbox.isSelected());
     }
 
     private void setRandomSeed(boolean b) {
         String text = b ? "randomized" : "";
         seedField.setText(text);
         seedField.setDisable(b);
-        localhostCheckBox.setSelected(b);
+        randomSeedCheckbox.setSelected(b);
+    }
+    public boolean isSeedRandom(){
+        return randomSeedCheckbox.isSelected();
     }
 }

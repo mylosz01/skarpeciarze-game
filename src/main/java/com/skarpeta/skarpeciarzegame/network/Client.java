@@ -21,7 +21,7 @@ public class Client implements Runnable {
     public PlayerManager playerList = new PlayerManager();
     Player player = null;
 
-    public Client() {
+    public Client() throws IOException {
         try {
             clientSocket = new Socket(Catana.ipAddress, Catana.portNumber);
             OutputStream out = clientSocket.getOutputStream();
@@ -32,8 +32,6 @@ public class Client implements Runnable {
             Catana.katana.setOnCloseRequest(e -> new Packet(PacketType.DISCONNECT).sendTo(outputStream));
 
             receiveData();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

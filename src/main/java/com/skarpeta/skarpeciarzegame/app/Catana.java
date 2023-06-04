@@ -1,10 +1,7 @@
 package com.skarpeta.skarpeciarzegame.app;
 
-import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Client;
 import com.skarpeta.skarpeciarzegame.network.Player;
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
-import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import javafx.application.Application;
@@ -12,12 +9,11 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.*;
 import javafx.scene.*;
-import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import java.util.Map;
+
+import java.io.IOException;
 
 public class Catana extends Application {
     public static final double WINDOW_SIZE = 1000;
@@ -51,7 +47,7 @@ public class Catana extends Application {
     }
 
     @Override
-    public void start(Stage katana)  {
+    public void start(Stage katana) throws IOException {
         this.katana = katana;
         clientThread = new Client();
         Thread playerSend = new Thread(clientThread);
@@ -129,6 +125,12 @@ public class Catana extends Application {
     }
 
     public static void main(String[] args) {
-        Platform.runLater(()->new Catana(ipAddress,portNumber).start(new Stage()));
+        Platform.runLater(()-> {
+            try {
+                new Catana(ipAddress,portNumber).start(new Stage());
+            } catch (IOException e) {
+                System.out.println("Could not connect to "+ipAddress+":"+portNumber);
+            }
+        });
     }
 }

@@ -6,24 +6,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class JoinMenu extends Stage {
+    private Label exceptionLabel;
     private Button connectButton;
     private TextField ipField;
     private TextField portField;
 
-    public Button getConnectButton() {
-        return connectButton;
-    }
-
-    public TextField getIpField() {
-        return ipField;
-    }
-
-    public TextField getPortField() {
-        return portField;
-    }
+    public Label getExceptionLabel() {return exceptionLabel;}
+    public Button getConnectButton() {return connectButton;}
+    public TextField getIpField() {return ipField;}
+    public TextField getPortField() {return portField;}
 
     public JoinMenu() {
         setTitle("IP and Port Menu");
@@ -46,8 +41,11 @@ public class JoinMenu extends Stage {
         gridPane.add(portField, 1, 1);
 
         connectButton = new Button("Connect");
-
         gridPane.add(connectButton, 0, 2, 2, 1);
+
+        exceptionLabel = new Label();
+        exceptionLabel.setTextFill(Color.RED);
+        gridPane.add(exceptionLabel,0,3,2,3);
 
         Scene scene = new Scene(gridPane, 300, 150);
         setScene(scene);

@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class Launcher extends Application {
 
@@ -64,30 +65,28 @@ public class Launcher extends Application {
     }
 
     private void launchServer() {
-        /*int port = 5555;
-        Server server = new Server(port);
-        new Thread(server).start();
-        Catana catana = new Catana("127.0.0.1",port);
-        catana.start(new Stage());
-        catana.katana.setOnCloseRequest(e->server.stop());
-        window.close();
-*/
-
         ServerMenu serverMenu = new ServerMenu();
-        serverMenu.getLaunchButton().setOnAction(e -> {
+        serverMenu.show();
+        serverMenu.getLaunchButton().setOnAction(event -> {
             try {
                 int mapSize = Integer.parseInt(serverMenu.getMapSizeField().getText());
                 int portNumber = Integer.parseInt(serverMenu.getPortField().getText());
+                int seed = serverMenu.isSeedRandom() ? new Random().nextInt() : Integer.parseInt(serverMenu.getSeedField().getText());
+
+                if(mapSize <= 0)
+                    throw new IllegalArgumentException("Invalid map size.");
+
                 System.out.println("Booting server on port " + portNumber+"...");
-                new Thread(new Server(portNumber,mapSize,500)).start();
+                new Thread(new Server(portNumber,mapSize,seed)).start();
                 new Catana("127.0.0.1", portNumber).start(new Stage());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                serverMenu.close();
+                window.close();
+            } catch (IllegalArgumentException e) {
+                serverMenu.getExceptionLabel().textProperty().set("Incorrect input. " + e.getMessage());
+            } catch (IOException e) {
+                serverMenu.getExceptionLabel().textProperty().set("Could not start the server. " + e.getMessage());
             }
-            serverMenu.close();
-            window.close();
         });
-        serverMenu.show();
     }
 
     private void quitGame() {
@@ -97,13 +96,19 @@ public class Launcher extends Application {
 
     private void joinServer() {
         JoinMenu joinMenu = new JoinMenu();
-        joinMenu.getConnectButton().setOnAction(e -> {
-            String ipAddress = joinMenu.getIpField().getText();
-            int portNumber = Integer.parseInt(joinMenu.getPortField().getText());
-            System.out.println("Connecting to " + ipAddress + " on port " + portNumber);
-            new Catana(ipAddress, portNumber).start(new Stage());
-            joinMenu.close();
-            window.close();
+        joinMenu.getConnectButton().setOnAction(event -> {
+            try {
+                String ipAddress = joinMenu.getIpField().getText();
+                int portNumber = Integer.parseInt(joinMenu.getPortField().getText());
+                System.out.println("Connecting to " + ipAddress + " on port " + portNumber);
+                new Catana(ipAddress, portNumber).start(new Stage());
+                joinMenu.close();
+                window.close();
+            } catch (IllegalArgumentException e) {
+                joinMenu.getExceptionLabel().textProperty().set("Incorrect input. "+e.getMessage());
+            } catch (IOException e) {
+                joinMenu.getExceptionLabel().textProperty().set("Could not connect to server. "+e.getMessage());
+            }
         });
         joinMenu.show();
 
