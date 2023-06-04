@@ -4,14 +4,16 @@ import com.skarpeta.skarpeciarzegame.network.Client;
 import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -34,6 +36,7 @@ public class Catana extends Application {
 
     public static PlayerUI playerUI;
     private static Client clientThread;
+    Timeline timeline;
 
     public Catana(String ipAddress, int portNumber) {
         Catana.ipAddress = ipAddress;
@@ -63,15 +66,22 @@ public class Catana extends Application {
         playerSend.start();
         worldMap = clientThread.getWorldMap();
         gameMap = new Pane(worldMap,playersGroup);
+        playersGroup.setMouseTransparent(true);
         setupStage();
+        panTo(clientThread.getPlayer(),0);
     }
 
     private void setupStage() {
         playerUI = new PlayerUI(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
+        MenuButton recenterButton = new MenuButton("center","centerHover",64,64);
+        recenterButton.setOnMouseClicked(e -> panTo(clientThread.getPlayer(),1));
+
+        AnchorPane.setBottomAnchor(recenterButton,0.0);
+        AnchorPane.setRightAnchor(recenterButton,UI_WIDTH*1.1);
 
         AnchorPane gameLayout = new AnchorPane();
-        gameLayout.getChildren().addAll(gamePane,playerUI);
+        gameLayout.getChildren().addAll(gamePane,playerUI,recenterButton);
 
         Scene scene = new Scene(gameLayout);
         scene.setOnScroll(this::handleScroll);
@@ -82,6 +92,25 @@ public class Catana extends Application {
         katana.setWidth(WINDOW_SIZE);
         katana.setHeight(700);
         katana.show();
+    }
+    /** Porusza kamera aby na srodku ekranu byl dany obiekt*/
+    private void panTo(Node node, double durationInSeconds) {
+        if(timeline != null)
+            timeline.stop();
+        if(durationInSeconds<=0)
+            durationInSeconds = 0.0001;
+        currentScale = 1;
+        timeline = new Timeline();
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(durationInSeconds),
+                new KeyValue(gameMap.layoutXProperty(), -node.getLayoutX() + katana.getWidth() * 0.5 - UI_WIDTH * 0.5,Interpolator.EASE_BOTH),
+                new KeyValue(gameMap.layoutYProperty(), -node.getLayoutY() + katana.getHeight() * 0.5,Interpolator.EASE_BOTH),
+                new KeyValue(gameMap.scaleXProperty(), currentScale,Interpolator.EASE_BOTH),
+                new KeyValue(gameMap.scaleYProperty(), currentScale,Interpolator.EASE_BOTH)
+        );
+
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.setOnFinished(e->timeline = null);
+        timeline.play();
     }
 
     private Pane createGamePane() { //lewy panel okna (gra)
@@ -106,11 +135,14 @@ public class Catana extends Application {
 
     private void handleDrag(MouseEvent event) {
         if (event.isSecondaryButtonDown()) {
+            if(timeline != null)
+                timeline.stop();
+
             double distanceX = event.getX() - initialPositionX;
             double distanceY = event.getY() - initialPositionY;
 
-            gameMap.setTranslateX(gameMap.getTranslateX() + distanceX);
-            gameMap.setTranslateY(gameMap.getTranslateY() + distanceY);
+            gameMap.setLayoutX(gameMap.getLayoutX() + distanceX);
+            gameMap.setLayoutY(gameMap.getLayoutY() + distanceY);
 
             initialPositionX = event.getX();
             initialPositionY = event.getY();
@@ -124,8 +156,8 @@ public class Catana extends Application {
 
         gameMap.setScaleX(currentScale*zoomFactor);
         gameMap.setScaleY(currentScale*zoomFactor);
-        gameMap.setTranslateX((gameMap.getTranslateX() + offsetX) * zoomFactor);
-        gameMap.setTranslateY((gameMap.getTranslateY() + offsetY) * zoomFactor);
+        gameMap.setLayoutX((gameMap.getLayoutX() + offsetX) * zoomFactor);
+        gameMap.setLayoutY((gameMap.getLayoutY() + offsetY) * zoomFactor);
         currentScale *= zoomFactor;
     }
 
