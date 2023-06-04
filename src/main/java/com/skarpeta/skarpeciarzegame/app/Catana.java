@@ -42,8 +42,17 @@ public class Catana extends Application {
 
     public static void renderPlayer(Player player) {
         playersGroup.getChildren().add(player);
-        player.scaleXProperty().bind(Bindings.divide(2, Catana.gameMap.scaleXProperty()));
-        player.scaleYProperty().bind(Bindings.divide(2, Catana.gameMap.scaleYProperty()));
+        player.scaleXProperty().bind(
+                Bindings.when(Catana.gameMap.scaleXProperty().greaterThan(2))
+                        .then(1)
+                        .otherwise(Bindings.divide(2, Catana.gameMap.scaleXProperty()))
+        );
+
+        player.scaleYProperty().bind(
+                Bindings.when(Catana.gameMap.scaleYProperty().greaterThan(2))
+                        .then(1)
+                        .otherwise(Bindings.divide(2, Catana.gameMap.scaleYProperty()))
+        );
     }
 
     @Override
