@@ -1,5 +1,7 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.worldmap;
 
+import com.skarpeta.skarpeciarzegame.app.Catana;
+import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
@@ -9,6 +11,7 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.function.Consumer;
 
 /** Mapa gry, definiowana przez tablicę pól Field */
@@ -17,22 +20,17 @@ public class WorldMap extends Group {
     private final Field[][] board;
     private final int BOARD_SIZE;
     private final int seed;
-    Player player;
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
-    WorldMap(int size,int seed) {
+    public WorldMap(int size, int seed) {
         this.seed = seed;
-        WorldGeneration worldGeneration = new WorldGeneration(seed);
+        WorldGenerator worldGenerator = new WorldGenerator(seed);
         board = new Field[size][size];
         BOARD_SIZE = size;
         for(int y = 0; y< BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 Point point = new Point(x,y);
-                Field newField = worldGeneration.generateField(this,point);
+                Field newField = worldGenerator.generateField(this,point);
                 newField.setOnMouseClicked((e)->click(e,newField));
                 board[x][y] = newField;
             }
@@ -72,7 +70,7 @@ public class WorldMap extends Group {
      */
     public void selectField(Field field) {
         try {
-            player.sendMove(field);
+            Catana.getClientThread().getPlayer().sendMove(field);
         } catch (InvalidMoveException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {
@@ -82,21 +80,19 @@ public class WorldMap extends Group {
     }
 
     public Point placePlayer(){
-        int newX;
-        int newY;
-        while(true){
-            newX = new Random().nextInt(BOARD_SIZE);
-            newY = new Random().nextInt(BOARD_SIZE);
-
-            if(board[newX][newY].terrain != TerrainType.WATER){
-                break;
-            }
-        }
-
-        return new Point(newX,newY);
+        Point point;
+        do {
+            point = new Point(new Random().nextInt(BOARD_SIZE),new Random().nextInt(BOARD_SIZE));
+        } while(board[point.x][point.y].terrain == TerrainType.WATER);
+        return point;
     }
 
     public int getSeed(){
         return seed;
+    }
+
+    public void generateResources() {
+        WorldGenerator worldGenerator = new WorldGenerator(seed);
+        forEach(worldGenerator::generateResource);
     }
 }

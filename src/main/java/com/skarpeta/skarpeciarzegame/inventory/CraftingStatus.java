@@ -1,4 +1,4 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.inventory;
 
 public enum CraftingStatus {
     DONE,

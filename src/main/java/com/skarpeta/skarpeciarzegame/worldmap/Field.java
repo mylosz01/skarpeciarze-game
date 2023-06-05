@@ -1,4 +1,4 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.Resource;
@@ -65,14 +65,14 @@ public class Field extends Group {
 
     /** Dodaje budynek do pola */
     public void addBuilding(Building building) {
-        if(hasBuilding())
+        if(hasBuilding() || building==null)
             return;
         this.building = building;
         getChildren().add(building);
     }
     /** Dodaje materiały do pola, gotowe do zebrania przez gracza */
     public void addResource(Resource resource) {
-        if(hasResource())
+        if(hasResource() || resource==null)
             return;
         this.resource = resource;
         getChildren().add(resource);

@@ -1,4 +1,4 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.network;
 
 public enum PacketType {
     INIT_MAP,
@@ -8,6 +8,5 @@ public enum PacketType {
     INIT_PLAYER,
     BUILD,
     DESTROY_BUILDING,
-    DESTROY_RESOURCE,
-    COLLECT
+    DESTROY_RESOURCE
 }

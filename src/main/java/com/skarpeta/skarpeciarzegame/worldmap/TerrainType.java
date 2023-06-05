@@ -1,11 +1,11 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.tools.ColorShades;
 
 /** Przechowywanie informacji o terenie pól Field
  *  Teren jest definiowany poprzez ColorShades - zbiór kolorów
  */
-enum TerrainType {
+public enum TerrainType {
     WATER(0, new ColorShades("#488BD4", "#3C67D3", "#68ABF4")),
     DESERT(1,new ColorShades("#FFCF8E", "#E7B36F", "#FFE2A3")),
     GRASS_LAND(2, new ColorShades("#28c074", "#10908E", "#48e094")),

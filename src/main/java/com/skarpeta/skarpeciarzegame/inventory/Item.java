@@ -4,8 +4,6 @@ import com.skarpeta.skarpeciarzegame.Asset;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import javafx.scene.image.ImageView;
 
-import java.security.SecureRandom;
-
 /** Przedmioty przechowywane przez gracza w ekwipunku
  *  (wraz z jego ilością)
  * */
@@ -14,7 +12,7 @@ public abstract class Item extends Asset {
     private String name;
 
     Item(int amount, String textureName, String name){
-        super(new ImageView(ImageManager.getImage(textureName+".png",64,64)));
+        super(new ImageView(ImageManager.getImage("item/"+textureName+".png",64,64)));
         this.amount = amount;
         this.name = name;
     }

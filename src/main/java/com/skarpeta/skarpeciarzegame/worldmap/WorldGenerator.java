@@ -1,40 +1,34 @@
-package com.skarpeta.skarpeciarzegame;
+package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.resources.StoneResource;
 import com.skarpeta.skarpeciarzegame.tools.Point;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
-import static com.skarpeta.skarpeciarzegame.Catana.FIELD_WIDTH;
-import com.skarpeta.skarpeciarzegame.tools.ImageManager;
+import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 
 import javax.imageio.ImageIO;
 /** Generowanie świata, czytanie pliku z perlin noise */
-public class WorldGeneration {
+public class WorldGenerator {
 
     /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
     Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
-    ArrayList<String > noiseChannels = new ArrayList<>();
-    PixelReader pixels;
-
     BufferedImage noise;
+    Random random;
 
     int seed;
 
     /** Konstruktor tworzy nowy plik noise*/
-    WorldGeneration(int seed) {
+    WorldGenerator(int seed) {
         try {
+            random = new Random(seed);
             this.seed = seed;
-            File file = new File("src/main/resources/images/noise/noiseTexture1.png");
-            noise = ImageIO.read(file);
+            int randomNoiseFile = random.nextInt(new File("src/main/resources/images/noise").list().length);
+            noise = ImageIO.read(new File("src/main/resources/images/noise/noiseTexture"+randomNoiseFile+".png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -45,31 +39,36 @@ public class WorldGeneration {
      */
     public Field generateField(WorldMap worldMap, Point point) {
 
-        //double heightChannel = getRandomChannel(0, point);
-        //double forestChannel = getRandomChannel(1, point);
-
         int rgb = noise.getRGB(point.x, point.y);
-
         double heightChannel = ((rgb >> 16) & 0xFF)/255.0;
         double forestChannel = ((rgb >> 8) & 0xFF)/255.0;
-        //int blue = rgb & 0xFF;
-        //double thirdChannel = getRandomChannel(2, point); //reserved
 
         TerrainType terrain = thresholdedTerrain(heightChannel);
         Field field = new Field(worldMap,point, FIELD_WIDTH,terrain,heightChannel);
 
-        if(terrain == TerrainType.GRASS_LAND) {
+        if(terrain == TerrainType.GRASS_LAND)
             field.darken(1-(forestChannel)-threshold[terrain.getIndex()-1]);
-            if(randomBoolean(forestChannel))
-                field.addResource(new ForestResource());
-        }
-        if(terrain == TerrainType.MOUNTAINS) {
 
-            if(new Random(seed + point.x + point.y).nextInt(7) == 0)
-                field.addResource(new StoneResource());
-        }
         worldMap.getChildren().add(field);
         return field;
+    }
+
+    public void generateResource(Field field) {
+
+        int rgb = noise.getRGB(field.position.x, field.position.y);
+
+        double forestChannel = ((rgb >> 8) & 0xFF)/255.0;
+
+        switch (field.terrain) {
+            case GRASS_LAND -> {
+                if (randomBoolean(forestChannel))
+                    field.addResource(new ForestResource());
+            }
+            case MOUNTAINS -> {
+                if (random.nextInt(7) == 0)
+                    field.addResource(new StoneResource());
+            }
+        }
     }
   
     /** Zwraca losową wartość boolean z prawdopodobieństwem zależnym od value */
@@ -77,9 +76,7 @@ public class WorldGeneration {
         double calc = (value-0.3)*60;
         if(calc<1)
             calc=1;
-        int random = new Random(seed + (long)value).nextInt((int) Math.floor(calc));
-
-        return random == 0;
+        return random.nextInt((int) Math.floor(calc)) == 0;
     }
 
     /** Zwraca teren przypisany danej wysokości (wysokości definiowane poprzez threshold[]) */
