@@ -12,8 +12,7 @@ public class Sawmill extends Building {
 
     static {
         buildingCost = new ArrayList<>();
-        buildingCost.add(new WoodItem(5));
-        buildingCost.add(new StoneItem(2));
+        buildingCost.add(new WoodItem(50));
     }
 
     public Sawmill(Point position) {
