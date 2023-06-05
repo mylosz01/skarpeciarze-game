@@ -49,7 +49,7 @@ public abstract class Item extends Asset {
     }
 
     public String toString(){
-        return Integer.toString(amount);
+        return getName() + " - " + amount;
     }
 
     public boolean boatExists(){

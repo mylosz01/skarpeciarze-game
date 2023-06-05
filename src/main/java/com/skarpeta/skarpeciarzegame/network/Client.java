@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame.network;
 
+import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
@@ -44,7 +45,9 @@ public class Client implements Runnable {
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
-        if (player.getInventory().checkBuildStatus(buildingType)) {
+        if (player.getInventory().hasEnoughMaterials(buildingType)) {
+            Item cost = buildingType.getCost();
+            player.getInventory().decreaseItemAmount(cost.getName(), cost.getAmount());
             Catana.playerUI.renderInventory(this.player);
             new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
         }
@@ -177,7 +180,7 @@ public class Client implements Runnable {
         while (true){
             try {
                 Thread.sleep(1000);
-                playerBuildingList.forEach((value) -> player.getInventory().increaseItemAmount(value.item.getName(),value.item.getAmount()));
+                playerBuildingList.forEach((value) -> player.getInventory().increaseItemAmount(value.producedItem.getName(),value.producedItem.getAmount()));
                 Platform.runLater(() -> Catana.playerUI.renderInventory(player));
             }catch (InterruptedException e) {
                 System.out.println("Err");

@@ -1,10 +1,8 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
-import com.skarpeta.skarpeciarzegame.buildings.Mineshaft;
-import com.skarpeta.skarpeciarzegame.buildings.Quarry;
-import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 /** Klasa reprezentująca ekwipunek gracza
@@ -23,30 +21,9 @@ public class Inventory {
         this.equipment.put("Boat",new BoatItem());
     }
 
-    public boolean checkBuildStatus(BuildingType buildingType){
-
-        switch (buildingType){
-            case MINESHAFT -> {
-                if (Mineshaft.itemCost.getAmount() <= equipment.get(Mineshaft.itemCost.getName()).getAmount()) {
-                    decreaseItemAmount(Mineshaft.itemCost.getName(), Mineshaft.itemCost.getAmount());
-                    return true;
-                }
-            }
-            case QUARRY -> {
-                if (Quarry.itemCost.getAmount() <= equipment.get(Quarry.itemCost.getName()).getAmount()) {
-                    decreaseItemAmount(Quarry.itemCost.getName(), Quarry.itemCost.getAmount());
-                    return true;
-                }
-            }
-            case SAWMILL -> {
-                if (Sawmill.itemCost.getAmount() <= equipment.get(Sawmill.itemCost.getName()).getAmount()) {
-                    decreaseItemAmount(Sawmill.itemCost.getName(), Sawmill.itemCost.getAmount());
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    public boolean hasEnoughMaterials(BuildingType buildingType) {
+        Item cost = buildingType.getCost();
+        return cost.getAmount() <= equipment.get(cost.getName()).getAmount();
     }
 
     public CraftingStatus checkAmount(int goldAmount, int stoneAmount, int woodAmount){
