@@ -19,6 +19,8 @@ public class Launcher extends Application {
     Scene menuScene;
     Stage window;
 
+    public static Cursor arrow = new ImageCursor(ImageManager.getImage("cursor.png", 16, 16), 6, 0);
+
     @Override
     public void start(Stage menu) {
         window = menu;
@@ -50,7 +52,7 @@ public class Launcher extends Application {
 
         menuScene = new Scene(layoutMenu);
 
-        menuScene.setCursor(new ImageCursor(ImageManager.getImage("cursor.png", 16, 16), 6, 0));
+        menuScene.setCursor(arrow);
 
         menu.setScene(menuScene);
         menu.setMinWidth(700);

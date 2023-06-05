@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame.app;
 
 import com.skarpeta.skarpeciarzegame.network.Client;
 import com.skarpeta.skarpeciarzegame.network.Player;
+import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import javafx.animation.*;
@@ -26,8 +27,8 @@ public class Catana extends Application {
     double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
-    public static String ipAddress = "127.0.0.1";
-    public static int portNumber = 5555;
+    public static String ipAddress;
+    public static int portNumber;
 
     static WorldMap worldMap;
     public static Pane gameMap;
@@ -37,6 +38,8 @@ public class Catana extends Application {
     public static PlayerUI playerUI;
     private static Client clientThread;
     Timeline timeline;
+
+    public Catana() {}
 
     public Catana(String ipAddress, int portNumber) {
         Catana.ipAddress = ipAddress;
@@ -57,7 +60,6 @@ public class Catana extends Application {
                         .otherwise(Bindings.divide(2, Catana.gameMap.scaleYProperty()))
         );
     }
-
     @Override
     public void start(Stage katana) throws IOException {
         this.katana = katana;
@@ -74,9 +76,9 @@ public class Catana extends Application {
     private void setupStage() {
         playerUI = new PlayerUI(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
+
         MenuButton recenterButton = new MenuButton("center","centerHover",64,64);
         recenterButton.setOnMouseClicked(e -> panTo(clientThread.getPlayer(),1));
-
         AnchorPane.setBottomAnchor(recenterButton,0.0);
         AnchorPane.setRightAnchor(recenterButton,UI_WIDTH*1.1);
 
@@ -87,6 +89,7 @@ public class Catana extends Application {
         scene.setOnScroll(this::handleScroll);
         scene.setOnMouseDragged(this::handleDrag);
         scene.setOnMousePressed(this::handleRightClick);
+        scene.setCursor(new ImageCursor(ImageManager.getImage("cursor.png", 16, 16), 6, 0));
 
         katana.setScene(scene);
         katana.setWidth(WINDOW_SIZE);
@@ -169,6 +172,8 @@ public class Catana extends Application {
     }
 
     public static void main(String[] args) {
+        ipAddress = "127.0.0.1";
+        portNumber = 5555;
         Platform.runLater(()-> {
             try {
                 new Catana(ipAddress,portNumber).start(new Stage());

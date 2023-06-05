@@ -2,6 +2,8 @@ package com.skarpeta.skarpeciarzegame.app;
 
 import com.skarpeta.skarpeciarzegame.Asset;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.image.*;
 
 
@@ -23,6 +25,7 @@ public class MenuButton extends Asset {
         setHoverImage(hoverTextureName);
         setOnMouseEntered(e -> getChildren().add(hoverTexture));
         setOnMouseExited(e -> getChildren().remove(hoverTexture));
+        setCursor(new ImageCursor(ImageManager.getImage("hand.png", 16, 16), 6, 0));
     }
 
     public void setHoverImage(String hoverTextureName) {
