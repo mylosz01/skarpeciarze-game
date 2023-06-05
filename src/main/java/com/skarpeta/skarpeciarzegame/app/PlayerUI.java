@@ -75,6 +75,7 @@ public class PlayerUI extends VBox {
         AnchorPane.setBottomAnchor(this,0.0);
 
         getChildren().addAll(btnLayout,playerUIDown);
+        updateButtonUI();
     }
 
 
@@ -183,6 +184,7 @@ public class PlayerUI extends VBox {
             rowItem.setSpacing(15);
             playerItemsTable.getChildren().add(rowItem);
         }
+        updateButtonUI();
     }
 
 }

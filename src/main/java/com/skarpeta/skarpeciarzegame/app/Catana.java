@@ -75,7 +75,6 @@ public class Catana extends Application {
 
     private void setupStage() {
         playerUI = new PlayerUI(); //okienko z ui itp po prawej
-        playerUI.updateButtonUI();
         Pane gamePane = createGamePane();//okienko gry po lewej
 
         MenuButton recenterButton = new MenuButton("center","centerHover",64,64);
