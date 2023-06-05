@@ -46,9 +46,6 @@ public class Client implements Runnable {
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
         if (player.getInventory().hasEnoughMaterials(buildingType)) {
-            Item cost = buildingType.getCost();
-            player.getInventory().decreaseItemAmount(cost.getName(), cost.getAmount());
-            Catana.playerUI.renderInventory(this.player);
             new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
         }
     }
@@ -110,7 +107,11 @@ public class Client implements Runnable {
             case QUARRY -> new Quarry(packet.position);
         };
         if(packet.playerID == player.playerID){
+
+            Item cost = packet.buildingType.getCost();
+            player.getInventory().decreaseItemAmount(cost.getName(), cost.getAmount());
             playerBuildingList.add(building);
+            Platform.runLater(() -> Catana.playerUI.renderInventory(this.player));
         }
         Platform.runLater(() -> worldMap.getField(packet.position).addBuilding(building));
     }
