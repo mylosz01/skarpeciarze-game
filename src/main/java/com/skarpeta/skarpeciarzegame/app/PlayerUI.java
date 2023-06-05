@@ -10,9 +10,11 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 import java.util.Map;
 
@@ -87,23 +89,9 @@ public class PlayerUI extends VBox {
         collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.position));
 
-        HBox quarryBox = new HBox();
-        quarryBtn = new MenuButton("plusButton","plusButtonHover",56,56);
-        quarryBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.QUARRY));
-        quarryBox.getChildren().addAll(quarryBtn,new ImageView(ImageManager.getImage("button/quarryButton.png",64,64)));
-        quarryBox.setAlignment(Pos.CENTER);
-
-        HBox mineshaftBox = new HBox();
-        mineshaftBtn = new MenuButton("plusButton","plusButtonHover",56,56);
-        mineshaftBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.MINESHAFT));
-        mineshaftBox.getChildren().addAll(mineshaftBtn,new ImageView(ImageManager.getImage("button/mineshaftButton.png",64,64)));
-        mineshaftBox.setAlignment(Pos.CENTER);
-
-        HBox sawmillBox = new HBox();
-        sawmillBtn = new MenuButton("plusButton","plusButtonHover",56,56);
-        sawmillBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.SAWMILL));
-        sawmillBox.getChildren().addAll(sawmillBtn,new ImageView(ImageManager.getImage("button/sawmillButton.png",64,64)));
-        sawmillBox.setAlignment(Pos.CENTER);
+        HBox quarryBox = createBuildingButton(BuildingType.QUARRY, "button/quarryButton.png");
+        HBox mineshaftBox = createBuildingButton(BuildingType.MINESHAFT, "button/mineshaftButton.png");
+        HBox sawmillBox = createBuildingButton(BuildingType.SAWMILL, "button/sawmillButton.png");
 
         fieldActionPane = new VBox();
         fieldActionPane.setAlignment(Pos.CENTER);
@@ -113,12 +101,33 @@ public class PlayerUI extends VBox {
 
         buildActionPane = new VBox();
         buildActionPane.setAlignment(Pos.CENTER);
-        //buildActionPane.setSpacing(14);
-        //buildActionPane.setMinWidth(150);
+        buildActionPane.setSpacing(0);
+        buildActionPane.setMinWidth(150);
         buildActionPane.getChildren().addAll(quarryBox, mineshaftBox, sawmillBox);
 
         buttonCategoriesPane.getChildren().addAll(fieldActionPane, buildActionPane);
         return buttonCategoriesPane;
+    }
+
+    private HBox createBuildingButton(BuildingType buildingType, String buttonImage) {
+        HBox buildingBox = new HBox();
+        MenuButton buildingBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
+        buildingBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, buildingType));
+        buildingBox.getChildren().addAll(buildingBtn, new ImageView(ImageManager.getImage(buttonImage, 64, 64)));
+        buildingBox.setAlignment(Pos.CENTER);
+
+        Tooltip costTooltip = new Tooltip();
+        HBox buildingCost = new HBox();
+        buildingType.getCost().forEach(e -> {
+            Label label = new Label(Integer.toString(e.getAmount()));
+            label.setFont(customFont);
+            buildingCost.getChildren().addAll(e, label);
+        });
+        costTooltip.setGraphic(buildingCost);
+        costTooltip.setShowDelay(new Duration(250));
+        Tooltip.install(buildingBox, costTooltip);
+
+        return buildingBox;
     }
 
 

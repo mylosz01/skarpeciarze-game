@@ -32,14 +32,11 @@ public class MenuButton extends Asset {
                 this.getTexture().getImage().getWidth(), this.getTexture().getImage().getHeight()));
     }
 
-    public void setEnabled(boolean b) {
-        setMouseTransparent(!b);
+    public void setEnabled(boolean state) {
+        setMouseTransparent(!state);
         ColorAdjust grayscale = new ColorAdjust();
         grayscale.setSaturation(-0.2);
         grayscale.setBrightness(-0.7);
-        if(!b)
-            getTexture().setEffect(grayscale);
-        else
-            getTexture().setEffect(null);
+        getTexture().setEffect(!state ? grayscale : null);
     }
 }
