@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame.app;
 
+import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
@@ -42,6 +43,7 @@ public class PlayerUI extends VBox {
 
     public PlayerUI() {
         super();
+
         setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
         setSpacing(spacing);
 
@@ -52,7 +54,6 @@ public class PlayerUI extends VBox {
         //ruchy gracza (gorny panel)
         HBox btnLayout = createInteractionMenu();
         btnLayout.setSpacing(spacing);
-
 
         //lista graczy (prawy panel)
         Pane listPlayer = new Pane();
@@ -72,7 +73,6 @@ public class PlayerUI extends VBox {
         AnchorPane.setTopAnchor(this,0.0);
         AnchorPane.setRightAnchor(this,0.0);
         AnchorPane.setBottomAnchor(this,0.0);
-
 
         getChildren().addAll(btnLayout,playerUIDown);
     }
@@ -152,12 +152,13 @@ public class PlayerUI extends VBox {
         if(Catana.getClientThread()== null || Catana.getClientThread().getPlayer() == null)
             return;
         Field field = Catana.getClientThread().getPlayer().playerField;
+        Inventory inventory = Catana.getClientThread().getPlayer().getInventory();
         Platform.runLater(()->{
             collectButton.setEnabled(field.hasResource());
             destroyButton.setEnabled(field.hasBuilding());
-            sawmillBtn.setEnabled(field.terrain == TerrainType.GRASS_LAND);
-            quarryBtn.setEnabled(field.terrain == TerrainType.MOUNTAINS);
-            mineshaftBtn.setEnabled(field.terrain == TerrainType.MOUNTAINS);
+            sawmillBtn.setEnabled(field.terrain == TerrainType.GRASS_LAND && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.SAWMILL));
+            quarryBtn.setEnabled(field.terrain == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.QUARRY));
+            mineshaftBtn.setEnabled(field.terrain == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.MINESHAFT));
         });
     }
 

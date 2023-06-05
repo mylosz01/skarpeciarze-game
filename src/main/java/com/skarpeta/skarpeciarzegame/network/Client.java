@@ -45,7 +45,7 @@ public class Client implements Runnable {
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
-        if (player.getInventory().hasEnoughMaterials(buildingType)) {
+        if (!worldMap.getField(fieldPosition).hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType)) {
             new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
         }
     }
