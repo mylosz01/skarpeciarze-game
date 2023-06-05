@@ -20,7 +20,7 @@ public class Mineshaft extends Building {
     public Mineshaft(Point position) {
         super("mineshaft",position);
         this.type = BuildingType.MINESHAFT;
-        this.producedItem = new GoldItem(100);
+        this.producedItem = new GoldItem(1);
     }
 
     public static ArrayList<Item> getBuildingCost() {

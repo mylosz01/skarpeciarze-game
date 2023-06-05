@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame.app;
 
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Player;
+import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
@@ -9,6 +10,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
@@ -80,27 +82,40 @@ public class PlayerUI extends VBox {
         buttonCategoriesPane.setAlignment(Pos.CENTER);
         buttonCategoriesPane.setMinHeight(200);
 
-        fieldActionPane = new VBox();
-        fieldActionPane.setAlignment(Pos.CENTER);
-        fieldActionPane.setSpacing(14);
-        fieldActionPane.setMinWidth(150);
-
         destroyButton = new MenuButton("break");
         destroyButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveBuilding(Catana.getClientThread().getPlayer().playerField.position));
         collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.position));
 
+        HBox quarryBox = new HBox();
+        quarryBtn = new MenuButton("plusButton","plusButtonHover",56,56);
+        quarryBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.QUARRY));
+        quarryBox.getChildren().addAll(quarryBtn,new ImageView(ImageManager.getImage("button/quarryButton.png",64,64)));
+        quarryBox.setAlignment(Pos.CENTER);
+
+        HBox mineshaftBox = new HBox();
+        mineshaftBtn = new MenuButton("plusButton","plusButtonHover",56,56);
+        mineshaftBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.MINESHAFT));
+        mineshaftBox.getChildren().addAll(mineshaftBtn,new ImageView(ImageManager.getImage("button/mineshaftButton.png",64,64)));
+        mineshaftBox.setAlignment(Pos.CENTER);
+
+        HBox sawmillBox = new HBox();
+        sawmillBtn = new MenuButton("plusButton","plusButtonHover",56,56);
+        sawmillBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.SAWMILL));
+        sawmillBox.getChildren().addAll(sawmillBtn,new ImageView(ImageManager.getImage("button/sawmillButton.png",64,64)));
+        sawmillBox.setAlignment(Pos.CENTER);
+
+        fieldActionPane = new VBox();
+        fieldActionPane.setAlignment(Pos.CENTER);
+        fieldActionPane.setSpacing(0);
+        fieldActionPane.setMinWidth(150);
+        fieldActionPane.getChildren().addAll(collectButton, destroyButton);
+
         buildActionPane = new VBox();
         buildActionPane.setAlignment(Pos.CENTER);
-        buildActionPane.setSpacing(14);
-        buildActionPane.setMinWidth(150);
-
-        quarryBtn = new MenuButton("buildQuarry");
-        quarryBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.QUARRY));
-        mineshaftBtn = new MenuButton("buildMineshaft");
-        mineshaftBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.MINESHAFT));
-        sawmillBtn = new MenuButton("buildSawmill");
-        sawmillBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position,BuildingType.SAWMILL));
+        //buildActionPane.setSpacing(14);
+        //buildActionPane.setMinWidth(150);
+        buildActionPane.getChildren().addAll(quarryBox, mineshaftBox, sawmillBox);
 
         buttonCategoriesPane.getChildren().addAll(fieldActionPane, buildActionPane);
         return buttonCategoriesPane;
@@ -124,18 +139,11 @@ public class PlayerUI extends VBox {
             return;
         Field field = Catana.getClientThread().getPlayer().playerField;
         Platform.runLater(()->{
-            fieldActionPane.getChildren().clear();
-            buildActionPane.getChildren().clear();
-            if(field.hasResource())
-                fieldActionPane.getChildren().add(collectButton);
-            if(field.hasBuilding())
-                fieldActionPane.getChildren().add(destroyButton);
-            else {
-                switch (field.terrain) {
-                    case MOUNTAINS -> buildActionPane.getChildren().addAll(quarryBtn, mineshaftBtn);
-                    case GRASS_LAND -> buildActionPane.getChildren().add(sawmillBtn);
-                }
-            }
+            collectButton.setEnabled(field.hasResource());
+            destroyButton.setEnabled(field.hasBuilding());
+            sawmillBtn.setEnabled(field.terrain == TerrainType.GRASS_LAND);
+            quarryBtn.setEnabled(field.terrain == TerrainType.MOUNTAINS);
+            mineshaftBtn.setEnabled(field.terrain == TerrainType.MOUNTAINS);
         });
     }
 

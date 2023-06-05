@@ -19,7 +19,7 @@ public class Sawmill extends Building {
     public Sawmill(Point position) {
         super("sawmill",position);
         this.type = BuildingType.SAWMILL;
-        this.producedItem = new WoodItem(100);
+        this.producedItem = new WoodItem(1);
     }
 
     public static ArrayList<Item> getBuildingCost() {

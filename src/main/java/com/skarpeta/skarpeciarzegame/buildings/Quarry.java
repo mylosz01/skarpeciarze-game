@@ -19,7 +19,7 @@ public class Quarry extends Building {
     public Quarry(Point position) {
         super("quarry",position);
         this.type = BuildingType.QUARRY;
-        this.producedItem = new StoneItem(100);
+        this.producedItem = new StoneItem(1);
     }
 
     public static ArrayList<Item> getBuildingCost() {

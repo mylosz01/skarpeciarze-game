@@ -2,8 +2,8 @@ package com.skarpeta.skarpeciarzegame.app;
 
 import com.skarpeta.skarpeciarzegame.Asset;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
-import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 
 
@@ -12,7 +12,6 @@ import javafx.scene.image.*;
  */
 public class MenuButton extends Asset {
     ImageView hoverTexture;
-
     /**
      * Tworzenie przycisku z grafiką o nazwie pliku textureName (wraz z rozszerzeniem)
      */
@@ -31,5 +30,16 @@ public class MenuButton extends Asset {
     public void setHoverImage(String hoverTextureName) {
         this.hoverTexture = new ImageView(ImageManager.getImage("button/" + hoverTextureName + ".png",
                 this.getTexture().getImage().getWidth(), this.getTexture().getImage().getHeight()));
+    }
+
+    public void setEnabled(boolean b) {
+        setMouseTransparent(!b);
+        ColorAdjust grayscale = new ColorAdjust();
+        grayscale.setSaturation(-0.2);
+        grayscale.setBrightness(-0.7);
+        if(!b)
+            getTexture().setEffect(grayscale);
+        else
+            getTexture().setEffect(null);
     }
 }
