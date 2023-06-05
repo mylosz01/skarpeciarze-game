@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame.inventory;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /** Klasa reprezentująca ekwipunek gracza
@@ -22,8 +23,11 @@ public class Inventory {
     }
 
     public boolean hasEnoughMaterials(BuildingType buildingType) {
-        Item cost = buildingType.getCost();
-        return cost.getAmount() <= equipment.get(cost.getName()).getAmount();
+        for (Item item : buildingType.getCost()) {
+            if (item.getAmount() > equipment.get(item.getName()).getAmount())
+                return false;
+        }
+        return true;
     }
 
     public CraftingStatus checkAmount(int goldAmount, int stoneAmount, int woodAmount){
@@ -69,5 +73,11 @@ public class Inventory {
 
     public void decreaseItemAmount(String itemName, int amount){
         equipment.get(itemName).decreaseAmount(amount);
+    }
+
+    public void decrease(ArrayList<Item> cost) {
+        for (Item item : cost) {
+            decreaseItemAmount(item.getName(),item.getAmount());
+        }
     }
 }

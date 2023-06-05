@@ -5,17 +5,19 @@ import com.skarpeta.skarpeciarzegame.buildings.Quarry;
 import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 
+import java.util.ArrayList;
+
 public enum BuildingType {
     EMPTY(null),
     MINESHAFT(Mineshaft.getBuildingCost()),
     SAWMILL(Sawmill.getBuildingCost()),
     QUARRY(Quarry.getBuildingCost());
-    private final Item cost;
+    private final ArrayList<Item> cost;
 
-    BuildingType(Item cost) {
+    BuildingType(ArrayList<Item> cost) {
         this.cost = cost;
     }
-    public Item getCost(){
+    public ArrayList<Item> getCost(){
         return cost;
     }
 }

@@ -1,14 +1,19 @@
 package com.skarpeta.skarpeciarzegame.buildings;
 
 import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.inventory.StoneItem;
 import com.skarpeta.skarpeciarzegame.inventory.WoodItem;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
+import java.util.ArrayList;
+
 public class Sawmill extends Building {
 
     static {
-        buildingCost = new WoodItem(1);
+        buildingCost = new ArrayList<>();
+        buildingCost.add(new WoodItem(5));
+        buildingCost.add(new StoneItem(2));
     }
 
     public Sawmill(Point position) {
@@ -17,7 +22,7 @@ public class Sawmill extends Building {
         this.producedItem = new WoodItem(100);
     }
 
-    public static Item getBuildingCost() {
+    public static ArrayList<Item> getBuildingCost() {
         return buildingCost;
     }
 }

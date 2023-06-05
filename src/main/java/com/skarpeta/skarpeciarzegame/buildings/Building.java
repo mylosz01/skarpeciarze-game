@@ -6,12 +6,15 @@ import com.skarpeta.skarpeciarzegame.tools.Point;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import javafx.scene.image.ImageView;
+
+import java.util.ArrayList;
+
 /** Building definiuje budynki budowane przez graczy */
 public abstract class Building extends Asset {
     public Point position;
     public BuildingType type;
     public Item producedItem;
-    public static Item buildingCost;
+    public static ArrayList<Item> buildingCost;
     public Building(String textureName,Point position) {
         super(new ImageView(ImageManager.getImage("mapasset/"+textureName+".png",128,128)));
         align();

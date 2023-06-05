@@ -6,10 +6,14 @@ import com.skarpeta.skarpeciarzegame.inventory.WoodItem;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
+import java.util.ArrayList;
+
 public class Quarry extends Building {
 
     static {
-        buildingCost = new WoodItem(1);
+        buildingCost = new ArrayList<>();
+        buildingCost.add(new WoodItem(2));
+        buildingCost.add(new StoneItem(2));
     }
 
     public Quarry(Point position) {
@@ -18,7 +22,7 @@ public class Quarry extends Building {
         this.producedItem = new StoneItem(100);
     }
 
-    public static Item getBuildingCost() {
+    public static ArrayList<Item> getBuildingCost() {
         return buildingCost;
     }
 }

@@ -108,8 +108,8 @@ public class Client implements Runnable {
         };
         if(packet.playerID == player.playerID){
 
-            Item cost = packet.buildingType.getCost();
-            player.getInventory().decreaseItemAmount(cost.getName(), cost.getAmount());
+            ArrayList<Item> cost = packet.buildingType.getCost();
+            player.getInventory().decrease(cost);
             playerBuildingList.add(building);
             Platform.runLater(() -> Catana.playerUI.renderInventory(this.player));
         }
