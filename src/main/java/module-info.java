@@ -10,6 +10,7 @@ module com.skarpeta.skarpeciarzegame {
             requires org.kordamp.bootstrapfx.core;
             requires com.almasb.fxgl.all;
     requires java.desktop;
+    requires annotations;
 
     opens com.skarpeta.skarpeciarzegame to javafx.fxml;
     exports com.skarpeta.skarpeciarzegame;

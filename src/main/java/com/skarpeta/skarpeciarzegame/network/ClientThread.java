@@ -50,9 +50,9 @@ public class ClientThread implements Runnable {
     private void addBuilding(Packet packet) {
         Building building = switch (packet.buildingType) {
             case EMPTY -> null;
-            case SAWMILL -> new Sawmill();
-            case MINESHAFT -> new Mineshaft();
-            case QUARRY -> new Quarry();
+            case SAWMILL -> new Sawmill(packet.position);
+            case MINESHAFT -> new Mineshaft(packet.position);
+            case QUARRY -> new Quarry(packet.position);
         };
         Server.worldMap.getField(packet.position).addBuilding(building);
     }

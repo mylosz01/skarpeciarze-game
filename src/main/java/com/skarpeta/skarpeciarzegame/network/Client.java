@@ -11,6 +11,7 @@ import javafx.application.Platform;
 
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class Client implements Runnable {
 
@@ -19,6 +20,7 @@ public class Client implements Runnable {
     private final ObjectInputStream inputStream;
     private WorldMap worldMap;
     public PlayerManager playerList = new PlayerManager();
+    private final List<Building> playerBuildingList = Collections.synchronizedList(new ArrayList<>());
     Player player = null;
 
     public Client() throws IOException {
@@ -81,9 +83,9 @@ public class Client implements Runnable {
             };
             Building building = switch (e.buildingType) {
                 case EMPTY -> null;
-                case QUARRY -> new Quarry();
-                case MINESHAFT -> new Mineshaft();
-                case SAWMILL -> new Sawmill();
+                case QUARRY -> new Quarry(packet.position);
+                case MINESHAFT -> new Mineshaft(packet.position);
+                case SAWMILL -> new Sawmill(packet.position);
             };
             worldMap.getField(e.point).addResource(resource);
             worldMap.getField(e.point).addBuilding(building);
@@ -97,14 +99,20 @@ public class Client implements Runnable {
     private void placeBuilding(Packet packet) {
         Building building = switch (packet.buildingType) {
             case EMPTY -> null;
-            case SAWMILL -> new Sawmill();
-            case MINESHAFT -> new Mineshaft();
-            case QUARRY -> new Quarry();
+            case SAWMILL -> new Sawmill(packet.position);
+            case MINESHAFT -> new Mineshaft(packet.position);
+            case QUARRY -> new Quarry(packet.position);
         };
+        if(packet.playerID == player.playerID){
+            playerBuildingList.add(building);
+        }
         Platform.runLater(() -> worldMap.getField(packet.position).addBuilding(building));
     }
 
     private void destroyBuilding(Packet packet) {
+        if(packet.playerID == player.playerID){
+            playerBuildingList.remove(worldMap.getField(packet.position).building);
+        }
         Platform.runLater(() -> worldMap.getField(packet.position).destroyBuilding());
     }
 
@@ -151,6 +159,7 @@ public class Client implements Runnable {
 
         System.out.println("#CLIENT# Start listening...");
         try {
+            new Thread(this::buildingThread).start();
             while (true) {
                 receiveData();
             }
@@ -158,6 +167,18 @@ public class Client implements Runnable {
             System.out.println("#CLIENT# Lost connection. "+e.getMessage());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void buildingThread(){
+        while (true){
+            try {
+                Thread.sleep(1000);
+                playerBuildingList.forEach((value) -> player.getInventory().increaseItemAmount(value.item.getName(),value.item.getAmount()));
+                Platform.runLater(() -> Catana.playerUI.renderInventory(player));
+            }catch (InterruptedException e) {
+                System.out.println("Err");
+            }
         }
     }
 
