@@ -89,9 +89,15 @@ public class PlayerUI extends VBox {
         collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.position));
 
-        HBox quarryBox = createBuildingButton(BuildingType.QUARRY, "button/quarryButton.png");
-        HBox mineshaftBox = createBuildingButton(BuildingType.MINESHAFT, "button/mineshaftButton.png");
-        HBox sawmillBox = createBuildingButton(BuildingType.SAWMILL, "button/sawmillButton.png");
+
+        quarryBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
+        HBox quarryBox = createBuildingButton(BuildingType.QUARRY, "button/quarryButton.png",quarryBtn);
+
+        mineshaftBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
+        HBox mineshaftBox = createBuildingButton(BuildingType.MINESHAFT, "button/mineshaftButton.png",mineshaftBtn);
+
+        sawmillBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
+        HBox sawmillBox = createBuildingButton(BuildingType.SAWMILL, "button/sawmillButton.png",sawmillBtn);
 
         fieldActionPane = new VBox();
         fieldActionPane.setAlignment(Pos.CENTER);
@@ -109,9 +115,8 @@ public class PlayerUI extends VBox {
         return buttonCategoriesPane;
     }
 
-    private HBox createBuildingButton(BuildingType buildingType, String buttonImage) {
+    private HBox createBuildingButton(BuildingType buildingType, String buttonImage, MenuButton buildingBtn) {
         HBox buildingBox = new HBox();
-        MenuButton buildingBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
         buildingBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, buildingType));
         buildingBox.getChildren().addAll(buildingBtn, new ImageView(ImageManager.getImage(buttonImage, 64, 64)));
         buildingBox.setAlignment(Pos.CENTER);
