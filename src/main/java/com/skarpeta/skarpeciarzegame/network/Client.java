@@ -44,7 +44,10 @@ public class Client implements Runnable {
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
-        new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
+        if (player.getInventory().checkBuildStatus(buildingType)) {
+            Catana.playerUI.renderInventory(this.player);
+            new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
+        }
     }
 
     public void sendRemoveBuilding(Point fieldPosition) {
