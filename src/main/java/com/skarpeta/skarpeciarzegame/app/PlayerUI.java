@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 
 import java.util.Map;
 
@@ -115,11 +116,13 @@ public class PlayerUI extends VBox {
     private Pane createInventoryPane() {
         Pane eqPlayer = new Pane();
         VBox inventoryLayout = new VBox();
+        inventoryLayout.setSpacing(spacing*0.5);
         playerItemsTable = new VBox();
         playerItemsTable.setSpacing(spacing*0.5);
         playerItemsTable.setPadding(new Insets(spacing));
         playerItemsTable.setAlignment(Pos.CENTER);
         eqPlayer.getChildren().add(playerItemsTable);
+
 
         boatButton = new PlusButton("item/boatItem.png",BoatItem.getCost(),"Used to swim through water once. Can hold only "+Inventory.MAX_BOAT_HOLD+".");
         boatButton.setOnMouseClicked(e -> {
@@ -131,11 +134,16 @@ public class PlayerUI extends VBox {
             Catana.getClientThread().getPlayer().getInventory().craftCatana();
             renderInventory(Catana.getClientThread().getPlayer());
         });
-
         HBox craftButtons = new HBox(boatButton,catanaButton);
+
         inventoryLayout.getChildren().addAll(eqPlayer,craftButtons);
         eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        craftButtons.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
 
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(eqPlayer.widthProperty());
+        clip.heightProperty().bind(eqPlayer.heightProperty());
+        eqPlayer.setClip(clip);
         return inventoryLayout;
     }
 
