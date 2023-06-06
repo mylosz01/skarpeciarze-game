@@ -18,6 +18,7 @@ public class Inventory {
         this.equipment.put("Stone",new StoneItem(0));
         this.equipment.put("Wood",new WoodItem(0));
         this.equipment.put("Boat",new BoatItem(0));
+        this.equipment.put("Catana",new CatanaItem(0));
     }
 
     public boolean hasEnoughMaterials(ArrayList<Item> cost) {
@@ -28,27 +29,16 @@ public class Inventory {
         return true;
     }
 
-    public CraftingStatus checkAmount(int goldAmount, int stoneAmount, int woodAmount){
-        if(equipment.get("Gold").lesserThan(goldAmount)){
-            return CraftingStatus.NOT_ENOUGH_GOLD;
-        }
-        if(equipment.get("Stone").lesserThan(stoneAmount)){
-            return CraftingStatus.NOT_ENOUGH_STONE;
-        }
-        if(equipment.get("Wood").lesserThan(woodAmount)){
-            return CraftingStatus.NOT_ENOUGH_WOOD;
-        }
-        equipment.get("Gold").decreaseAmount(goldAmount);
-        equipment.get("Stone").decreaseAmount(stoneAmount);
-        equipment.get("Wood").decreaseAmount(woodAmount);
-        return CraftingStatus.DONE;
-    }
-
     public void craftBoat(){
         if(hasEnoughMaterials(BoatItem.getCost()) && getAmount("Boat") < MAX_BOAT_HOLD){
             equipment.get("Boat").increaseAmount(1);
             decrease(BoatItem.getCost());
-            System.out.println("done");
+        }
+    }
+    public void craftCatana() {
+        if(hasEnoughMaterials(CatanaItem.getCost()) && getAmount("Catana") < MAX_BOAT_HOLD){
+            equipment.get("Catana").increaseAmount(1);
+            decrease(CatanaItem.getCost());
         }
     }
 
@@ -56,9 +46,6 @@ public class Inventory {
         return equipment.get(itemName).getAmount();
     }
 
-    public CraftingStatus build(int goldAmount, int stoneAmount, int woodAmount){
-        return checkAmount(goldAmount,stoneAmount,woodAmount);
-    }
 
     public HashMap<String, Item> getEquipment() {
         return equipment;
@@ -77,4 +64,6 @@ public class Inventory {
             decreaseItemAmount(item.getName(),item.getAmount());
         }
     }
+
+
 }

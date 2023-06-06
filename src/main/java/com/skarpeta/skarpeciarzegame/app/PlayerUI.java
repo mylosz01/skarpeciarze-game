@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame.app;
 
+import com.skarpeta.skarpeciarzegame.inventory.CatanaItem;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Player;
@@ -13,7 +14,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 
 import java.util.Map;
 
@@ -30,6 +30,7 @@ public class PlayerUI extends VBox {
     PlusButton mineshaftButton;
     PlusButton sawmillButton;
     PlusButton boatButton;
+    PlusButton catanaButton;
 
     VBox playerItemsTable;
     VBox buildActionPane;
@@ -119,13 +120,20 @@ public class PlayerUI extends VBox {
         playerItemsTable.setPadding(new Insets(spacing));
         playerItemsTable.setAlignment(Pos.CENTER);
         eqPlayer.getChildren().add(playerItemsTable);
+
         boatButton = new PlusButton("item/boatItem.png",BoatItem.getCost(),"Used to swim through water once. Can hold only "+Inventory.MAX_BOAT_HOLD+".");
         boatButton.setOnMouseClicked(e -> {
             Catana.getClientThread().getPlayer().getInventory().craftBoat();
             renderInventory(Catana.getClientThread().getPlayer());
         });
+        catanaButton= new PlusButton("item/catanaItem.png", CatanaItem.getCost(),"Victory!");
+        catanaButton.setOnMouseClicked(e -> {
+            Catana.getClientThread().getPlayer().getInventory().craftCatana();
+            renderInventory(Catana.getClientThread().getPlayer());
+        });
 
-        inventoryLayout.getChildren().addAll(eqPlayer,boatButton);
+        HBox craftButtons = new HBox(boatButton,catanaButton);
+        inventoryLayout.getChildren().addAll(eqPlayer,craftButtons);
         eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
 
         return inventoryLayout;
@@ -144,7 +152,7 @@ public class PlayerUI extends VBox {
             mineshaftButton.setEnabled(field.terrain == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.MINESHAFT.getCost()));
 
             boatButton.setEnabled(inventory.hasEnoughMaterials(BoatItem.getCost()) && inventory.getAmount("Boat") < Inventory.MAX_BOAT_HOLD);
-            //catanaButton
+            catanaButton.setEnabled(inventory.hasEnoughMaterials(CatanaItem.getCost()));
         });
     }
 

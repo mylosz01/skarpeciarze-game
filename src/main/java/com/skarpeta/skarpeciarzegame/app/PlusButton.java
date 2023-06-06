@@ -19,13 +19,16 @@ import java.util.ArrayList;
 public class PlusButton extends Group {
     private MenuButton button;
     private Label tooltipLabel;
+    private Label nameLabel;
     private ArrayList<Item> tooltipList;
     Label costText = new Label("\nPRICE:");
     public PlusButton(String texturePath, ArrayList<Item> tooltipList, String tooltipMessage) {
         this.tooltipList = tooltipList;
         this.tooltipLabel = new Label(tooltipMessage);
+        this.nameLabel = new Label(texturePath); //todo nazwa przedmiotu zamiast path
         tooltipLabel.setFont(FontManager.getSmallFont());
         costText.setFont(FontManager.getBigFont());
+        nameLabel.setFont(FontManager.getBigFont());
         HBox box = createBuildingButton(texturePath);
         getChildren().add(box);
     }
@@ -49,7 +52,7 @@ public class PlusButton extends Group {
             label.setFont(FontManager.getBigFont());
             tooltipItems.getChildren().addAll(e, label);
         });
-        tooltipContent.getChildren().addAll(tooltipLabel,costText,tooltipItems);
+        tooltipContent.getChildren().addAll(nameLabel,tooltipLabel,costText,tooltipItems);
         costTooltip.setGraphic(tooltipContent);
         costTooltip.setShowDelay(new Duration(250));
         return costTooltip;
