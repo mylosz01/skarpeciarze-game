@@ -90,10 +90,10 @@ public class Field extends Group {
      *  Nieparzyste rzędy przesuwane są o połowe wysokości w dół
      */
     public void move(Point p) {
-        double x = p.x * hexagon.width * 0.75;
-        double y = p.y * hexagon.height;
+        double x = p.x * hexagon.getWidth() * 0.75;
+        double y = p.y * hexagon.getHeight();
         if(p.x%2 == 1)
-            y += hexagon.height * 0.5;
+            y += hexagon.getHeight() * 0.5;
         relocate(x, y);
     }
 
