@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame.inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /** Klasa reprezentująca ekwipunek gracza
  *
@@ -10,10 +11,10 @@ import java.util.HashMap;
 public class Inventory {
 
     public static final int MAX_BOAT_HOLD = 1;
-    public HashMap<ItemType, Item> equipment;
+    public LinkedHashMap<ItemType, Item> equipment;
 
     public Inventory(){
-        this.equipment = new HashMap<>();
+        this.equipment = new LinkedHashMap <>();
         this.equipment.put(ItemType.GOLD,new GoldItem(0));
         this.equipment.put(ItemType.STONE,new StoneItem(0));
         this.equipment.put(ItemType.WOOD,new WoodItem(0));
