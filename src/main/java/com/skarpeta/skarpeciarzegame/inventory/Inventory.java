@@ -1,8 +1,5 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,6 +9,7 @@ import java.util.HashMap;
 
 public class Inventory {
 
+    public static final int MAX_BOAT_HOLD = 1;
     public HashMap<String, Item> equipment;
 
     public Inventory(){
@@ -19,11 +17,11 @@ public class Inventory {
         this.equipment.put("Gold",new GoldItem(0));
         this.equipment.put("Stone",new StoneItem(0));
         this.equipment.put("Wood",new WoodItem(0));
-        this.equipment.put("Boat",new BoatItem());
+        this.equipment.put("Boat",new BoatItem(0));
     }
 
-    public boolean hasEnoughMaterials(BuildingType buildingType) {
-        for (Item item : buildingType.getCost()) {
+    public boolean hasEnoughMaterials(ArrayList<Item> cost) {
+        for (Item item : cost) {
             if (item.getAmount() > equipment.get(item.getName()).getAmount())
                 return false;
         }
@@ -46,13 +44,12 @@ public class Inventory {
         return CraftingStatus.DONE;
     }
 
-    public CraftingStatus craftBoat(int goldAmount, int stoneAmount, int woodAmount){
-        CraftingStatus craftingStatus = checkAmount(goldAmount,stoneAmount,woodAmount);
-        if(craftingStatus!=CraftingStatus.DONE){
-            return craftingStatus;
+    public void craftBoat(){
+        if(hasEnoughMaterials(BoatItem.getCost()) && getAmount("Boat") < MAX_BOAT_HOLD){
+            equipment.get("Boat").increaseAmount(1);
+            decrease(BoatItem.getCost());
+            System.out.println("done");
         }
-        equipment.get("Boat").craftBoat();
-        return CraftingStatus.DONE;
     }
 
     public int getAmount(String itemName){

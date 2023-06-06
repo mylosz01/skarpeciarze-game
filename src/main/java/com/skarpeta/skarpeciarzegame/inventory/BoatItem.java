@@ -1,26 +1,20 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
+import java.util.ArrayList;
+
 /** Item służący do pływania po wodzie.
  *  Craftowany przez gracza.
  */
-public class BoatItem extends Item {
-    BoatItem(){
-        super(0,"boatItem","Boat");
+public class BoatItem extends Item{
+    public static ArrayList<Item> buildingCost = new ArrayList<>();
+    static{
+        buildingCost.add(new WoodItem(5));
     }
-    @Override
-    public boolean boatExists(){
-        return getAmount() == 1;
-    }
-    @Override
-    public void craftBoat(){
-        if(boatExists()){
-            return;
-        }
-        setAmount(1);
-    }
-    @Override
-    public void decreaseAmount(int number){
-        return;
+    BoatItem(int amount){
+        super(amount,"boatItem","Boat");
     }
 
+    public static ArrayList<Item> getCost() {
+        return buildingCost;
+    }
 }

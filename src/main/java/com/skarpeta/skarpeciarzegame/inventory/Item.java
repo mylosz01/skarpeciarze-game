@@ -40,19 +40,11 @@ public abstract class Item extends Asset {
         decreaseAmount(-number);
     }
 
-    public void craftBoat(){
-        return;
-    }
-
     public boolean lesserThan(int amount){
         return this.amount<amount;
     }
 
     public String toString(){
         return getName() + " - " + amount;
-    }
-
-    public boolean boatExists(){
-        return false;
     }
 }

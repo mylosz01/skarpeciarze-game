@@ -50,7 +50,7 @@ public class Client implements Runnable {
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
-        if (!worldMap.getField(fieldPosition).hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType)) {
+        if (!worldMap.getField(fieldPosition).hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType.getCost())) {
             new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
         }
     }
@@ -78,7 +78,7 @@ public class Client implements Runnable {
             case DISCONNECT -> playerLeft(packet);
         }
         if (Catana.playerUI!=null)
-            Catana.playerUI.updateButtonUI();
+            Catana.playerUI.updateButtons();
     }
 
     private void initMap(Packet packet) {
