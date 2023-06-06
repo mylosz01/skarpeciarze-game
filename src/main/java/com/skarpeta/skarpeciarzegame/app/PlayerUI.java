@@ -85,13 +85,13 @@ public class PlayerUI extends VBox {
         collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.position));
 
-        sawmillButton = new PlusButton("button/sawmillButton.png",BuildingType.SAWMILL.getCost(),"Can be placed on Grass. Generates Wood.");
+        sawmillButton = new PlusButton("button/sawmillButton.png",BuildingType.SAWMILL);
         sawmillButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.SAWMILL));
 
-        quarryButton = new PlusButton("button/quarryButton.png",BuildingType.QUARRY.getCost(),"Can be placed on Stone. Generates Stone.");
+        quarryButton = new PlusButton("button/quarryButton.png",BuildingType.QUARRY);
         quarryButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.QUARRY));
 
-        mineshaftButton = new PlusButton("button/mineshaftButton.png",BuildingType.MINESHAFT.getCost(),"Can be placed on Stone. Generates Gold.");
+        mineshaftButton = new PlusButton("button/mineshaftButton.png",BuildingType.MINESHAFT);
         mineshaftButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.MINESHAFT));
 
         fieldActionPane = new VBox();
@@ -121,12 +121,12 @@ public class PlayerUI extends VBox {
         eqPlayer.getChildren().add(playerItemsTable);
 
 
-        boatButton = new PlusButton("item/boatItem.png",BoatItem.getCost(),"Used to swim through water once. Can hold only "+Inventory.MAX_BOAT_HOLD+".");
+        boatButton = new PlusButton("item/boatItem.png",ItemType.BOAT);
         boatButton.setOnMouseClicked(e -> {
             Catana.getClientThread().getPlayer().getInventory().craft(ItemType.BOAT);
             renderInventory(Catana.getClientThread().getPlayer());
         });
-        catanaButton= new PlusButton("item/catanaItem.png", CatanaItem.getCost(),"Victory!");
+        catanaButton= new PlusButton("item/catanaItem.png", ItemType.CATANA);
         catanaButton.setOnMouseClicked(e -> {
             Catana.getClientThread().getPlayer().getInventory().craft(ItemType.CATANA);
             renderInventory(Catana.getClientThread().getPlayer());

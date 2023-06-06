@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame.app;
 
+import com.skarpeta.skarpeciarzegame.buildings.Craftable;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.FontManager;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
@@ -18,14 +19,17 @@ import java.util.ArrayList;
 
 public class PlusButton extends Group {
     private MenuButton button;
-    private Label tooltipLabel;
-    private Label nameLabel;
-    private ArrayList<Item> tooltipList;
+    private final Label tooltipLabel;
+    private final Label nameLabel;
+    private final ArrayList<Item> tooltipList;
     Label costText = new Label("\nPRICE:");
-    public PlusButton(String texturePath, ArrayList<Item> tooltipList, String tooltipMessage) {
+    public PlusButton(String texturePath, Craftable type) {
+        this(texturePath, type.getDescription(), type.getCost(), type.toString());
+    }
+    public PlusButton(String texturePath, String description, ArrayList<Item> tooltipList, String name){
         this.tooltipList = tooltipList;
-        this.tooltipLabel = new Label(tooltipMessage);
-        this.nameLabel = new Label(texturePath); //todo nazwa przedmiotu zamiast path
+        this.tooltipLabel = new Label(description);
+        this.nameLabel = new Label(name);
         tooltipLabel.setFont(FontManager.getSmallFont());
         costText.setFont(FontManager.getBigFont());
         nameLabel.setFont(FontManager.getBigFont());
