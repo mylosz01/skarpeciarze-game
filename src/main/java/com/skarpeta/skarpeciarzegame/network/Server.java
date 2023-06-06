@@ -42,8 +42,8 @@ public class Server implements Runnable {
     public void connectClients() {
         int playerID = 1;
         System.out.println(" ============ SERVER OPEN AT PORT " + portNumber + " ============");
-        while (true) {
-            try {
+        try {
+            while (true) {
                 Socket playerSocket = serverSocket.accept();
                 System.out.println("Player" + playerID + " joined the game");
                 Point playerPos = worldMap.placePlayer();
@@ -53,17 +53,15 @@ public class Server implements Runnable {
                 //inicjalizacja mapy
                 new Packet(PacketType.INIT_MAP, mapSize, seed, fieldInfo).sendTo(newClient.getOutputStream());
                 new Packet(PacketType.INIT_PLAYER, playerID, playerPos).sendTo(newClient.getOutputStream());
-                for (Map.Entry<Integer, ClientThread> entry : clientList.entrySet()) {
-                    ClientThread clientThread = entry.getValue();
+                for (ClientThread clientThread : clientList.values()) {
                     new Packet(PacketType.NEW_PLAYER, clientThread.playerID, clientThread.position).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
                     new Packet(PacketType.NEW_PLAYER, playerID, playerPos).sendTo(clientThread.getOutputStream());//wysylanie nowego gracza do starych graczy
                 }
                 clientList.put(playerID++, newClient);
                 new Thread(newClient).start();
-
-            } catch (IOException e) {
-                System.out.println("Player failed to join. " + e.getMessage());
             }
+        } catch (IOException e) {
+            System.out.println("Server closed. " + e.getMessage());
         }
     }
 
@@ -81,12 +79,20 @@ public class Server implements Runnable {
     }
 
     public static void sendToAllClients(Packet packet) {
-        for (Map.Entry<Integer, ClientThread> entry : clientList.entrySet()) {
-            packet.sendTo(entry.getValue().getOutputStream());
+        for (ClientThread clientThread : clientList.values()) {
+            packet.sendTo(clientThread.getOutputStream());
         }
     }
 
-    public void stop() { //todo STOP SERVER
+    public void stopServer() {
+        try {
+            for (ClientThread clientThread : clientList.values()) {
+                clientThread.closeConnection();
+            }
+            serverSocket.close();
+        } catch (IOException e) {
+            System.out.println("Error occurred while stopping the server: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {

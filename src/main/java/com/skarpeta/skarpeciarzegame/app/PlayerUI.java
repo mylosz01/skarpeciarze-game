@@ -186,5 +186,4 @@ public class PlayerUI extends VBox {
         }
         updateButtonUI();
     }
-
 }

@@ -79,8 +79,11 @@ public class Launcher extends Application {
                     throw new IllegalArgumentException("Invalid map size.");
 
                 System.out.println("Booting server on port " + portNumber+"...");
-                new Thread(new Server(portNumber,mapSize,seed)).start();
-                new Catana("127.0.0.1", portNumber).start(new Stage());
+                Server server = new Server(portNumber,mapSize,seed);
+                new Thread(server).start();
+                Catana catana = new Catana("127.0.0.1", portNumber);
+                catana.start(new Stage());
+                catana.katana.setOnCloseRequest(e -> server.stopServer());
                 serverMenu.close();
                 window.close();
             } catch (IllegalArgumentException e) {
