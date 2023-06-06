@@ -12,7 +12,6 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 
 import java.io.IOException;
-import java.util.Random;
 
 public class Launcher extends Application {
 
@@ -73,10 +72,12 @@ public class Launcher extends Application {
             try {
                 int mapSize = Integer.parseInt(serverMenu.getMapSizeField().getText());
                 int portNumber = Integer.parseInt(serverMenu.getPortField().getText());
-                int seed = serverMenu.isSeedRandom() ? new Random().nextInt() : Integer.parseInt(serverMenu.getSeedField().getText());
+                int seed = Integer.parseInt(serverMenu.getSeedField().getText());
 
                 if(mapSize <= 0)
-                    throw new IllegalArgumentException("Invalid map size.");
+                    throw new IllegalArgumentException("Map size cannot be less than 1");
+                else if(mapSize > 128)
+                    throw new IllegalArgumentException("Map size cannot be higher than 128");
 
                 System.out.println("Booting server on port " + portNumber+"...");
                 Server server = new Server(portNumber,mapSize,seed);

@@ -10,6 +10,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.Random;
+
 public class ServerMenu extends Stage {
     private Button launchButton;
     private TextField mapSizeField;
@@ -75,8 +77,7 @@ public class ServerMenu extends Stage {
     }
 
     private void setRandomSeed(boolean b) {
-        String text = b ? "randomized" : "";
-        seedField.setText(text);
+        seedField.setText(b ? Integer.toString(new Random().nextInt(99999)) : "");
         seedField.setDisable(b);
         randomSeedCheckbox.setSelected(b);
     }

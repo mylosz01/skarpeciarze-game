@@ -21,20 +21,20 @@ public class JoinMenu extends Stage {
     public TextField getPortField() {return portField;}
 
     public JoinMenu() {
-        setTitle("IP and Port Menu");
+        setTitle("Join server");
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10));
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        Label ipLabel = new Label("IP Address:");
+        Label ipLabel = new Label("IP:");
         ipField = new TextField();
         ipField.setText("127.0.0.1");
         gridPane.add(ipLabel, 0, 0);
         gridPane.add(ipField, 1, 0);
 
-        Label portLabel = new Label("Port Number:");
+        Label portLabel = new Label("Port:");
         portField = new TextField();
         portField.setText("5555");
         gridPane.add(portLabel, 0, 1);
