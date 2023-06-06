@@ -83,7 +83,7 @@ public class Launcher extends Application {
                 new Thread(server).start();
                 Catana catana = new Catana("127.0.0.1", portNumber);
                 catana.start(new Stage());
-                catana.katana.setOnCloseRequest(e -> server.stopServer());
+                catana.katana.setOnCloseRequest(e -> new ClosingGamePopup(server,Catana.clientThread).start(new Stage()));
                 serverMenu.close();
                 window.close();
             } catch (IllegalArgumentException e) {

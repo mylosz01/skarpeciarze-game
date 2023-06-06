@@ -35,8 +35,15 @@ public class Server implements Runnable {
         serverAccept.setDaemon(true);
         serverAccept.start();
 
+        Thread commandHandler = new Thread(this::commandHandler);
+        commandHandler.setDaemon(true);
+        commandHandler.start();
+    }
+
+    private void commandHandler() {
         Scanner scan = new Scanner(System.in);
-        while (scan.nextLine().equalsIgnoreCase("q")) ;
+        while (scan.nextLine().charAt(0) != 'q');
+        stopServer();
     }
 
     public void connectClients() {
@@ -86,6 +93,7 @@ public class Server implements Runnable {
 
     public void stopServer() {
         try {
+            System.out.println("CLOSING SERVER");
             for (ClientThread clientThread : clientList.values()) {
                 clientThread.closeConnection();
             }

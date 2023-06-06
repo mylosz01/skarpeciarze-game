@@ -31,12 +31,18 @@ public class Client implements Runnable {
             InputStream in = clientSocket.getInputStream();
             inputStream = new ObjectInputStream(in);
 
-            Catana.katana.setOnCloseRequest(e -> new Packet(PacketType.DISCONNECT).sendTo(outputStream));
+            Catana.katana.setOnCloseRequest(e -> leaveGame());
 
             receiveData();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void leaveGame() {
+        Packet packet = new Packet(PacketType.DISCONNECT,player.playerID);
+        packet.sendTo(outputStream);
+        playerLeft(packet);
     }
 
     public static void makeMove(int playerID, Point newPosition) {
@@ -147,7 +153,9 @@ public class Client implements Runnable {
 
         System.out.println("#CLIENT# Start listening...");
         try {
-            new Thread(this::buildingThread).start();
+            Thread buildingThread = new Thread(this::buildingThread);
+            buildingThread.setDaemon(true);
+            buildingThread.start();
             while (true) {
                 receiveData();
             }

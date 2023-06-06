@@ -36,7 +36,7 @@ public class Catana extends Application {
     public static Stage katana;
 
     public static PlayerUI playerUI;
-    private static Client clientThread;
+    public static Client clientThread;
     Timeline timeline;
 
     public Catana() {}

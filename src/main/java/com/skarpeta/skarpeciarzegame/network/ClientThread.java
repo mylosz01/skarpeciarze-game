@@ -42,7 +42,7 @@ public class ClientThread implements Runnable {
         } finally {
             Server.clientList.remove(playerID);
             Server.sendToAllClients(new Packet(PacketType.DISCONNECT,playerID));
-            closeConnection();
+            //closeConnection();
         }
     }
 
