@@ -42,8 +42,12 @@ public class Server implements Runnable {
 
     private void commandHandler() {
         Scanner scan = new Scanner(System.in);
-        while (scan.nextLine().charAt(0) != 'q');
-        stopServer();
+        while (true) {
+            switch (scan.nextLine()) {
+                case "seed" -> System.out.println(worldMap.getSeed());
+                case "q","quit","exit","end","stop" -> stopServer();
+            }
+        }
     }
 
     public void connectClients() {
