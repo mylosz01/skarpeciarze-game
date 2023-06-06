@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame.network;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
+import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
@@ -90,7 +91,18 @@ public class Client implements Runnable {
     }
 
     private void movePlayer(Packet packet) {
-        playerList.getPlayer(packet.playerID).moveTo(worldMap.getField(packet.position));
+        Player packetPlayer = playerList.getPlayer(packet.playerID);
+        packetPlayer.moveTo(worldMap.getField(packet.position));
+        if (packetPlayer.playerField.terrain == TerrainType.WATER)
+            packetPlayer.getOnBoat();
+        else if (packetPlayer.isOnBoat()) {
+            packetPlayer.getOffBoat();
+
+            if(packet.playerID == player.playerID){
+                player.getInventory().decreaseItemAmount("Boat", 1);
+                Platform.runLater(() -> Catana.playerUI.renderInventory(packetPlayer));
+            }
+        }
     }
 
     private void placeBuilding(Packet packet) {

@@ -10,6 +10,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
@@ -22,13 +23,18 @@ import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
  */
 public class Player extends Asset {
 
+    private ImageView boat;
     private final Inventory inventory;
     int playerID;
     public Field playerField;
+    private boolean isOnBoat = false;
 
     Player(Field field, int playerID){
         super(new ImageView(ImageManager.getImage("player/player" +
                 playerID % new File("src/main/resources/images/player").list().length+".png",128,128)));
+        boat = new ImageView(ImageManager.getImage("boatEntity.png",128,128));
+        boat.setFitWidth(FIELD_WIDTH * 0.5);
+        boat.setFitHeight(FIELD_WIDTH * 0.5);
         this.playerID = playerID;
         this.inventory = new Inventory();
         this.playerField = field;
@@ -82,5 +88,23 @@ public class Player extends Asset {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public boolean isOnBoat() {
+        return isOnBoat;
+    }
+
+    public void getOnBoat() {
+        if(!isOnBoat()){
+            isOnBoat = true;
+            Platform.runLater(()->getChildren().add(boat));
+        }
+    }
+
+    public void getOffBoat() {
+        if(isOnBoat()) {
+            isOnBoat = false;
+            Platform.runLater(() -> getChildren().remove(boat));
+        }
     }
 }
