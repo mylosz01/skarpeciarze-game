@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame.app;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Player;
+import com.skarpeta.skarpeciarzegame.tools.FontManager;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
@@ -19,8 +20,6 @@ import java.util.Map;
 import static com.skarpeta.skarpeciarzegame.app.Catana.UI_WIDTH;
 
 public class PlayerUI extends VBox {
-    public static Font bigFont = Font.loadFont(PlayerUI.class.getResourceAsStream("/joystix.otf"), 20);
-    public static Font smallFont = Font.loadFont(PlayerUI.class.getResourceAsStream("/joystix.otf"), 14);
 
     HBox buttonCategoriesPane;
     VBox fieldActionPane;
@@ -158,11 +157,11 @@ public class PlayerUI extends VBox {
             Item item = entry.getValue();
 
             Label idLabel = new Label(item.getName());
-            idLabel.setFont(bigFont);
+            idLabel.setFont(FontManager.getBigFont());
             idLabel.setMinWidth(70);
 
             Label amountLabel = new Label(String.valueOf(item.getAmount()));
-            amountLabel.setFont(bigFont);
+            amountLabel.setFont(FontManager.getBigFont());
             amountLabel.setMinWidth(40);
 
             HBox rowItem = new HBox(item, idLabel, amountLabel);

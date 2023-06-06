@@ -1,6 +1,7 @@
 package com.skarpeta.skarpeciarzegame.app;
 
 import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.tools.FontManager;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -13,8 +14,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 
-import static com.skarpeta.skarpeciarzegame.app.PlayerUI.bigFont;
-import static com.skarpeta.skarpeciarzegame.app.PlayerUI.smallFont;
+
 
 public class PlusButton extends Group {
     private MenuButton button;
@@ -24,8 +24,8 @@ public class PlusButton extends Group {
     public PlusButton(String texturePath, ArrayList<Item> tooltipList, String tooltipMessage) {
         this.tooltipList = tooltipList;
         this.tooltipLabel = new Label(tooltipMessage);
-        tooltipLabel.setFont(smallFont);
-        costText.setFont(bigFont);
+        tooltipLabel.setFont(FontManager.getSmallFont());
+        costText.setFont(FontManager.getBigFont());
         HBox box = createBuildingButton(texturePath);
         getChildren().add(box);
     }
@@ -46,7 +46,7 @@ public class PlusButton extends Group {
         VBox tooltipContent = new VBox();
         tooltipList.forEach(e -> {
             Label label = new Label(Integer.toString(e.getAmount()));
-            label.setFont(bigFont);
+            label.setFont(FontManager.getBigFont());
             tooltipItems.getChildren().addAll(e, label);
         });
         tooltipContent.getChildren().addAll(tooltipLabel,costText,tooltipItems);
