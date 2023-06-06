@@ -3,7 +3,6 @@ package com.skarpeta.skarpeciarzegame.app;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.network.Player;
-import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
@@ -11,27 +10,24 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 
 import java.util.Map;
 
 import static com.skarpeta.skarpeciarzegame.app.Catana.UI_WIDTH;
 
 public class PlayerUI extends VBox {
-    Font customFont = Font.loadFont(getClass().getResourceAsStream("/ARCADECLASSIC.TTF"), 28);
+    public static Font customFont = Font.loadFont(PlayerUI.class.getResourceAsStream("/ARCADECLASSIC.TTF"), 28);
 
     HBox buttonCategoriesPane;
     VBox fieldActionPane;
     MenuButton destroyButton;
     MenuButton collectButton;
 
-    MenuButton quarryBtn;
-    MenuButton mineshaftBtn;
-    MenuButton sawmillBtn;
+    PlusButton quarryBtn;
+    PlusButton mineshaftBtn;
+    PlusButton sawmillBtn;
 
     VBox playerItemsTable;
     VBox buildActionPane;
@@ -90,15 +86,9 @@ public class PlayerUI extends VBox {
         collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.position));
 
-
-        quarryBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
-        HBox quarryBox = createBuildingButton(BuildingType.QUARRY, "button/quarryButton.png",quarryBtn);
-
-        mineshaftBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
-        HBox mineshaftBox = createBuildingButton(BuildingType.MINESHAFT, "button/mineshaftButton.png",mineshaftBtn);
-
-        sawmillBtn = new MenuButton("plusButton", "plusButtonHover", 56, 56);
-        HBox sawmillBox = createBuildingButton(BuildingType.SAWMILL, "button/sawmillButton.png",sawmillBtn);
+        sawmillBtn = new PlusButton("sawmillButton",BuildingType.SAWMILL);
+        quarryBtn = new PlusButton("quarryButton",BuildingType.QUARRY);
+        mineshaftBtn = new PlusButton("mineshaftButton",BuildingType.MINESHAFT);
 
         fieldActionPane = new VBox();
         fieldActionPane.setAlignment(Pos.CENTER);
@@ -110,32 +100,11 @@ public class PlayerUI extends VBox {
         buildActionPane.setAlignment(Pos.CENTER);
         buildActionPane.setSpacing(0);
         buildActionPane.setMinWidth(150);
-        buildActionPane.getChildren().addAll(quarryBox, mineshaftBox, sawmillBox);
+        buildActionPane.getChildren().addAll(sawmillBtn,quarryBtn,mineshaftBtn);
 
         buttonCategoriesPane.getChildren().addAll(fieldActionPane, buildActionPane);
         return buttonCategoriesPane;
     }
-
-    private HBox createBuildingButton(BuildingType buildingType, String buttonImage, MenuButton buildingBtn) {
-        HBox buildingBox = new HBox();
-        buildingBtn.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, buildingType));
-        buildingBox.getChildren().addAll(buildingBtn, new ImageView(ImageManager.getImage(buttonImage, 64, 64)));
-        buildingBox.setAlignment(Pos.CENTER);
-
-        Tooltip costTooltip = new Tooltip();
-        HBox buildingCost = new HBox();
-        buildingType.getCost().forEach(e -> {
-            Label label = new Label(Integer.toString(e.getAmount()));
-            label.setFont(customFont);
-            buildingCost.getChildren().addAll(e, label);
-        });
-        costTooltip.setGraphic(buildingCost);
-        costTooltip.setShowDelay(new Duration(250));
-        Tooltip.install(buildingBox, costTooltip);
-
-        return buildingBox;
-    }
-
 
     private Pane createEqPlayerPane() {
         Pane eqPlayer = new Pane();
