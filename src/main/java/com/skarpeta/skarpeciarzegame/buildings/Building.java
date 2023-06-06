@@ -2,7 +2,6 @@ package com.skarpeta.skarpeciarzegame.buildings;
 
 import com.skarpeta.skarpeciarzegame.Asset;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import javafx.scene.image.ImageView;
 

@@ -1,8 +1,9 @@
 package com.skarpeta.skarpeciarzegame.network;
 
 import com.skarpeta.skarpeciarzegame.inventory.Item;
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
+import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
+import com.skarpeta.skarpeciarzegame.inventory.ItemType;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
@@ -99,7 +100,7 @@ public class Client implements Runnable {
             packetPlayer.getOffBoat();
 
             if(packet.playerID == player.playerID){
-                player.getInventory().decreaseItemAmount("Boat", 1);
+                player.getInventory().decreaseItemAmount(ItemType.BOAT, 1);
                 Platform.runLater(() -> Catana.playerUI.renderInventory(packetPlayer));
             }
         }
@@ -182,7 +183,7 @@ public class Client implements Runnable {
         while (true){
             try {
                 Thread.sleep(1000);
-                playerBuildingList.forEach((value) -> player.getInventory().increaseItemAmount(value.producedItem.getName(),value.producedItem.getAmount()));
+                playerBuildingList.forEach((value) -> player.getInventory().increaseItemAmount(value.producedItem.getType(),value.producedItem.getAmount()));
                 Platform.runLater(() -> Catana.playerUI.renderInventory(player));
             }catch (InterruptedException e) {
                 System.out.println("Err");

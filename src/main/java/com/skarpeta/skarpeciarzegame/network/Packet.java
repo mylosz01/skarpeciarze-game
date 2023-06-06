@@ -1,6 +1,6 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
+import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import java.io.*;
 import java.util.List;

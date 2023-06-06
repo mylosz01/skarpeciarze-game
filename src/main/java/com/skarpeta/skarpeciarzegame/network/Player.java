@@ -1,6 +1,7 @@
 package com.skarpeta.skarpeciarzegame.network;
 
 import com.skarpeta.skarpeciarzegame.Asset;
+import com.skarpeta.skarpeciarzegame.inventory.ItemType;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
@@ -59,7 +60,7 @@ public class Player extends Asset {
            int itemAmount =  playerField.resource.getItem().getAmount();
            System.out.println("Zebrano: " + playerField.resource.item.getName() + " " + itemAmount);
 
-           inventory.increaseItemAmount(playerField.resource.item.getName(),itemAmount);
+           inventory.increaseItemAmount(playerField.resource.item.getType(),itemAmount);
            this.playerField.destroyResource();
         }
     }
@@ -79,7 +80,7 @@ public class Player extends Asset {
      *  oraz próba wejścia na niesąsiadujące pole
      */
     public boolean isValidMovePlayer(Field destination) throws InvalidMoveException {
-        if(destination.terrain.equals(TerrainType.WATER) && inventory.getAmount("Boat") == 0)
+        if(destination.terrain.equals(TerrainType.WATER) && inventory.getAmount(ItemType.BOAT) == 0)
             throw new InvalidMoveException("nie posiadasz lodki!!!");
         if(!destination.position.isTouchingHexagonal(this.playerField.position))
             throw new InvalidMoveException("to pole jest poza zasiegiem");

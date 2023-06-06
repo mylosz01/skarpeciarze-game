@@ -4,7 +4,6 @@ import com.skarpeta.skarpeciarzegame.inventory.GoldItem;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.inventory.StoneItem;
 import com.skarpeta.skarpeciarzegame.inventory.WoodItem;
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
 import java.util.ArrayList;
 

@@ -12,6 +12,7 @@ public class CatanaItem extends Item{
     }
     CatanaItem(int amount){
         super(amount,"catanaItem","Catana");
+        this.type = ItemType.CATANA;
     }
 
     public static ArrayList<Item> getCost() {

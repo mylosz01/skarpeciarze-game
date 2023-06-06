@@ -12,6 +12,7 @@ public class BoatItem extends Item{
     }
     BoatItem(int amount){
         super(amount,"boatItem","Boat");
+        this.type = ItemType.BOAT;
     }
 
     public static ArrayList<Item> getCost() {

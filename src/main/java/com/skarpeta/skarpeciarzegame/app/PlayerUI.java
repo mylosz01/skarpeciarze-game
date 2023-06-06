@@ -1,14 +1,11 @@
 package com.skarpeta.skarpeciarzegame.app;
 
-import com.skarpeta.skarpeciarzegame.inventory.CatanaItem;
-import com.skarpeta.skarpeciarzegame.inventory.Inventory;
-import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.inventory.*;
 import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.tools.FontManager;
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
+import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
-import com.skarpeta.skarpeciarzegame.inventory.BoatItem;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -126,12 +123,12 @@ public class PlayerUI extends VBox {
 
         boatButton = new PlusButton("item/boatItem.png",BoatItem.getCost(),"Used to swim through water once. Can hold only "+Inventory.MAX_BOAT_HOLD+".");
         boatButton.setOnMouseClicked(e -> {
-            Catana.getClientThread().getPlayer().getInventory().craftBoat();
+            Catana.getClientThread().getPlayer().getInventory().craft(ItemType.BOAT);
             renderInventory(Catana.getClientThread().getPlayer());
         });
         catanaButton= new PlusButton("item/catanaItem.png", CatanaItem.getCost(),"Victory!");
         catanaButton.setOnMouseClicked(e -> {
-            Catana.getClientThread().getPlayer().getInventory().craftCatana();
+            Catana.getClientThread().getPlayer().getInventory().craft(ItemType.CATANA);
             renderInventory(Catana.getClientThread().getPlayer());
         });
         HBox craftButtons = new HBox(boatButton,catanaButton);
@@ -159,7 +156,7 @@ public class PlayerUI extends VBox {
             quarryButton.setEnabled(field.terrain == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.QUARRY.getCost()));
             mineshaftButton.setEnabled(field.terrain == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.MINESHAFT.getCost()));
 
-            boatButton.setEnabled(inventory.hasEnoughMaterials(BoatItem.getCost()) && inventory.getAmount("Boat") < Inventory.MAX_BOAT_HOLD);
+            boatButton.setEnabled(inventory.hasEnoughMaterials(BoatItem.getCost()) && inventory.getAmount(ItemType.BOAT) < Inventory.MAX_BOAT_HOLD);
             catanaButton.setEnabled(inventory.hasEnoughMaterials(CatanaItem.getCost()));
         });
     }
@@ -169,7 +166,7 @@ public class PlayerUI extends VBox {
 
         playerItemsTable.getChildren().clear();
 
-        for (Map.Entry<String, Item> entry : player.getInventory().equipment.entrySet()) {
+        for (Map.Entry<ItemType, Item> entry : player.getInventory().equipment.entrySet()) {
             Item item = entry.getValue();
 
             Label idLabel = new Label(item.getName());
