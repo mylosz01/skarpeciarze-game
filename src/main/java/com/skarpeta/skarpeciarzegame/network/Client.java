@@ -5,7 +5,6 @@ import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
-import com.skarpeta.skarpeciarzegame.resources.*;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
@@ -79,19 +78,8 @@ public class Client implements Runnable {
     private void initMap(Packet packet) {
         worldMap = new WorldMap(packet.sizeMap, packet.seedMap);
         packet.fieldInfo.forEach(e -> {
-            Resource resource = switch (e.resourceType) {
-                case EMPTY -> null;
-                case FOREST -> new ForestResource();
-                case STONE -> new StoneResource();
-            };
-            Building building = switch (e.buildingType) {
-                case EMPTY -> null;
-                case QUARRY -> new Quarry(packet.position);
-                case MINESHAFT -> new Mineshaft(packet.position);
-                case SAWMILL -> new Sawmill(packet.position);
-            };
-            worldMap.getField(e.point).addResource(resource);
-            worldMap.getField(e.point).addBuilding(building);
+            worldMap.getField(e.point).addResource(e.resourceType.newResource());
+            worldMap.getField(e.point).addBuilding(e.buildingType.newBuilding());
         });
     }
 
@@ -100,14 +88,8 @@ public class Client implements Runnable {
     }
 
     private void placeBuilding(Packet packet) {
-        Building building = switch (packet.buildingType) {
-            case EMPTY -> null;
-            case SAWMILL -> new Sawmill(packet.position);
-            case MINESHAFT -> new Mineshaft(packet.position);
-            case QUARRY -> new Quarry(packet.position);
-        };
+        Building building = packet.buildingType.newBuilding();
         if(packet.playerID == player.playerID){
-
             ArrayList<Item> cost = packet.buildingType.getCost();
             player.getInventory().decrease(cost);
             playerBuildingList.add(building);
@@ -117,9 +99,8 @@ public class Client implements Runnable {
     }
 
     private void destroyBuilding(Packet packet) {
-        if(packet.playerID == player.playerID){
-            playerBuildingList.remove(worldMap.getField(packet.position).building);
-        }
+        //usuwa budynek z listy budynkow gracza. jezeli budynek nie nalezy do tego gracza, to nie bylo go w tej lisie, wiec nic sie nie zmieni
+        playerBuildingList.remove(worldMap.getField(packet.position).building);
         Platform.runLater(() -> worldMap.getField(packet.position).destroyBuilding());
     }
 

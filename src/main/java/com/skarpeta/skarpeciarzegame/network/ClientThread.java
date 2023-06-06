@@ -1,6 +1,5 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 
 import java.net.*;
@@ -28,10 +27,10 @@ public class ClientThread implements Runnable {
             while (true) {
                 Packet packet = receiveData();
                 switch (packet.packetType) {
-                    case MOVE -> {if (packet.playerID == playerID) position = packet.position;}
+                    case MOVE -> movePlayer(packet);
+                    case BUILD -> addBuilding(packet);
                     case DESTROY_BUILDING -> Server.worldMap.getField(packet.position).destroyBuilding();
                     case DESTROY_RESOURCE -> Server.worldMap.getField(packet.position).destroyResource();
-                    case BUILD -> addBuilding(packet);
                     case DISCONNECT -> throw new IOException("Player left the game");
                 }
                 Server.sendToAllClients(packet);
@@ -47,14 +46,12 @@ public class ClientThread implements Runnable {
         }
     }
 
+    private void movePlayer(Packet packet) {
+        if (packet.playerID == playerID) position = packet.position;
+    }
+
     private void addBuilding(Packet packet) {
-        Building building = switch (packet.buildingType) {
-            case EMPTY -> null;
-            case SAWMILL -> new Sawmill(packet.position);
-            case MINESHAFT -> new Mineshaft(packet.position);
-            case QUARRY -> new Quarry(packet.position);
-        };
-        Server.worldMap.getField(packet.position).addBuilding(building);
+        Server.worldMap.getField(packet.position).addBuilding(packet.buildingType.newBuilding());
     }
 
     public Packet receiveData() throws IOException, ClassNotFoundException {

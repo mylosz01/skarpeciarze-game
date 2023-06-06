@@ -4,7 +4,6 @@ import com.skarpeta.skarpeciarzegame.inventory.GoldItem;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.inventory.StoneItem;
 import com.skarpeta.skarpeciarzegame.inventory.WoodItem;
-import com.skarpeta.skarpeciarzegame.tools.Point;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
 import java.util.ArrayList;
@@ -17,8 +16,8 @@ public class Mineshaft extends Building {
         buildingCost.add(new StoneItem(2));
     }
 
-    public Mineshaft(Point position) {
-        super("mineshaft",position);
+    public Mineshaft() {
+        super("mineshaft");
         this.type = BuildingType.MINESHAFT;
         this.producedItem = new GoldItem(1);
     }

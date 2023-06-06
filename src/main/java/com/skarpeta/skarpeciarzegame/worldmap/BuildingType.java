@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame.worldmap;
 
+import com.skarpeta.skarpeciarzegame.buildings.Building;
 import com.skarpeta.skarpeciarzegame.buildings.Mineshaft;
 import com.skarpeta.skarpeciarzegame.buildings.Quarry;
 import com.skarpeta.skarpeciarzegame.buildings.Sawmill;
@@ -19,5 +20,14 @@ public enum BuildingType {
     }
     public ArrayList<Item> getCost(){
         return cost;
+    }
+
+    public Building newBuilding() {
+        return switch(this) {
+            case EMPTY -> null;
+            case MINESHAFT -> new Mineshaft();
+            case SAWMILL -> new Sawmill();
+            case QUARRY -> new Quarry();
+        };
     }
 }

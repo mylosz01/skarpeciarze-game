@@ -3,7 +3,6 @@ package com.skarpeta.skarpeciarzegame.buildings;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.inventory.StoneItem;
 import com.skarpeta.skarpeciarzegame.inventory.WoodItem;
-import com.skarpeta.skarpeciarzegame.tools.Point;
 import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
 
 import java.util.ArrayList;
@@ -16,8 +15,8 @@ public class Quarry extends Building {
         buildingCost.add(new StoneItem(2));
     }
 
-    public Quarry(Point position) {
-        super("quarry",position);
+    public Quarry() {
+        super("quarry");
         this.type = BuildingType.QUARRY;
         this.producedItem = new StoneItem(1);
     }
