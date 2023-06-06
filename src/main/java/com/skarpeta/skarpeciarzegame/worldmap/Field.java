@@ -14,7 +14,6 @@ import javafx.scene.shape.StrokeType;
  */
 public class Field extends Group {
 
-    private final WorldMap worldMap;
     public Point position;
     public Hexagon hexagon;
     public Building building;
@@ -26,16 +25,14 @@ public class Field extends Group {
     /** Tworzy heksagonalne pole mapy worldMap, w punkcie (tablicowym) position, o terenie terrain
      *  Pozycja na ekranie jest zmieniana poprzez move()
      */
-    public Field(WorldMap worldMap, Point position, double fieldSize, TerrainType terrain, double height) {
+    public Field(Point position, double fieldSize, TerrainType terrain, double height) {
         hexagon = new Hexagon(fieldSize);
         this.height = height;
-        this.worldMap = worldMap;
         this.position = position;
         setTerrain(terrain);
         move(position);
         hexagon.setStrokeType(StrokeType.INSIDE);
         hexagon.setStrokeWidth(fieldSize * 0.05);
-        //setOnMouseClicked(this::click);
         getChildren().add(hexagon);
     }
 
@@ -50,18 +47,7 @@ public class Field extends Group {
     /** Override koloru, nie ma powrotu (debug only!!!!1)*/
     public void setColor(Color color) {
         hexagon.setFill(color);
-
     }
-
-    /** Wykrywa przyciśnięcie pola lub leżących na nim obiektów */
-    private void click(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-            System.out.println("clicked field: "+position);
-            System.out.println("mosue coords: "+getLayoutX()+", "+getLayoutY());
-            worldMap.selectField(this);
-        }
-    }
-
 
     /** Dodaje budynek do pola */
     public void addBuilding(Building building) {

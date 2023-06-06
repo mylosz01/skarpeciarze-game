@@ -44,7 +44,7 @@ public class WorldGenerator {
         double forestChannel = ((rgb >> 8) & 0xFF)/255.0;
 
         TerrainType terrain = thresholdedTerrain(heightChannel);
-        Field field = new Field(worldMap,point, FIELD_WIDTH,terrain,heightChannel);
+        Field field = new Field(point, FIELD_WIDTH,terrain,heightChannel);
 
         if(terrain == TerrainType.GRASS_LAND)
             field.darken(1-(forestChannel)-threshold[terrain.getIndex()-1]);
