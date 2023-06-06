@@ -121,12 +121,12 @@ public class PlayerUI extends VBox {
         eqPlayer.getChildren().add(playerItemsTable);
 
 
-        boatButton = new PlusButton("item/boatItem.png",ItemType.BOAT);
+        boatButton = new PlusButton("item/boat.png",ItemType.BOAT);
         boatButton.setOnMouseClicked(e -> {
             Catana.getClientThread().getPlayer().getInventory().craft(ItemType.BOAT);
             renderInventory(Catana.getClientThread().getPlayer());
         });
-        catanaButton= new PlusButton("item/catanaItem.png", ItemType.CATANA);
+        catanaButton= new PlusButton("item/catana.png", ItemType.CATANA);
         catanaButton.setOnMouseClicked(e -> {
             Catana.getClientThread().getPlayer().getInventory().craft(ItemType.CATANA);
             renderInventory(Catana.getClientThread().getPlayer());

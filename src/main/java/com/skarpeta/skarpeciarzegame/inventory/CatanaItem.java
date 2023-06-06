@@ -11,8 +11,7 @@ public class CatanaItem extends Item{
         buildingCost.add(new GoldItem(500));
     }
     CatanaItem(int amount){
-        super(amount,"catanaItem","Catana");
-        this.type = ItemType.CATANA;
+        super(amount,ItemType.CATANA);
     }
 
     public static ArrayList<Item> getCost() {

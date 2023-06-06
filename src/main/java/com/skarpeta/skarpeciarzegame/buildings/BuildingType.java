@@ -1,11 +1,11 @@
 package com.skarpeta.skarpeciarzegame.buildings;
 
-
+import com.skarpeta.skarpeciarzegame.inventory.Craftable;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 
 import java.util.ArrayList;
 
-public enum BuildingType implements Craftable{
+public enum BuildingType implements Craftable {
     EMPTY(null,""),
     MINESHAFT(Mineshaft.getBuildingCost(),"Can be placed on Stone. Generates Gold."),
     SAWMILL(Sawmill.getBuildingCost(),"Can be placed on Grass. Generates Wood."),

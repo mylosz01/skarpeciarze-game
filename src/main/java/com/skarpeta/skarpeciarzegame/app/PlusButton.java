@@ -1,6 +1,6 @@
 package com.skarpeta.skarpeciarzegame.app;
 
-import com.skarpeta.skarpeciarzegame.buildings.Craftable;
+import com.skarpeta.skarpeciarzegame.inventory.Craftable;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.FontManager;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
@@ -14,8 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-
-
 
 public class PlusButton extends Group {
     private MenuButton button;

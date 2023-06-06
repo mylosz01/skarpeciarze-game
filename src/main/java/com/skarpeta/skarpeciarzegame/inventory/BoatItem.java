@@ -11,8 +11,7 @@ public class BoatItem extends Item{
         buildingCost.add(new WoodItem(5));
     }
     BoatItem(int amount){
-        super(amount,"boatItem","Boat");
-        this.type = ItemType.BOAT;
+        super(amount,ItemType.BOAT);
     }
 
     public static ArrayList<Item> getCost() {

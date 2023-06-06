@@ -1,7 +1,5 @@
 package com.skarpeta.skarpeciarzegame.inventory;
 
-import com.skarpeta.skarpeciarzegame.buildings.Craftable;
-
 import java.util.ArrayList;
 
 public enum ItemType implements Craftable {

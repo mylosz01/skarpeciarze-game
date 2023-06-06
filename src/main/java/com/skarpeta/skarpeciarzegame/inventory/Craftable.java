@@ -1,6 +1,4 @@
-package com.skarpeta.skarpeciarzegame.buildings;
-
-import com.skarpeta.skarpeciarzegame.inventory.Item;
+package com.skarpeta.skarpeciarzegame.inventory;
 
 import java.util.ArrayList;
 

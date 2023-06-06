@@ -9,17 +9,16 @@ import javafx.scene.image.ImageView;
  * */
 public abstract class Item extends Asset {
     private Integer amount;
-    private String name;
-    ItemType type = ItemType.EMPTY;
+    ItemType type;
 
-    Item(int amount, String textureName, String name){
-        super(new ImageView(ImageManager.getImage("item/"+textureName+".png",64,64)));
+    Item(int amount, ItemType type){
+        super(new ImageView(ImageManager.getImage("item/"+type.toString()+".png",64,64)));
         this.amount = amount;
-        this.name = name;
+        this.type = type;
     }
 
     public String getName(){
-        return this.name;
+        return this.type.toString();
     }
 
     public void setAmount(int newAmount){
