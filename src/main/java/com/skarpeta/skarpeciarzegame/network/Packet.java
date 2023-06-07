@@ -14,26 +14,26 @@ public class Packet implements Serializable {
     PacketType packetType;
     public Point position;
     public int playerID;
+    public String string;
 
-    //packiet inicjalizacyjny
     public Packet(PacketType init, int mapSize, int mapSeed, List<FieldInfoPacket> fieldInfo) {
         this.packetType = init;
         this.seedMap = mapSeed;
         this.sizeMap = mapSize;
         this.fieldInfo = fieldInfo;
     }
-    //pakiet do wysylania typu budynku
-    public Packet(PacketType packetType, int playerID, BuildingType buildingType, Point fieldPosition) {
-        this.packetType = packetType;
+
+    public Packet(PacketType building, int playerID, BuildingType buildingType, Point position) {
+        this.packetType = building;
         this.playerID = playerID;
         this.buildingType = buildingType;
-        this.position = fieldPosition;
+        this.position = position;
     }
     //MOVE, DESTROY, INIT_PLAYER
-    public Packet(PacketType packetType, int playerID, Point playerPos) {
+    public Packet(PacketType packetType, int playerID, Point position) {
         this.packetType = packetType;
         this.playerID = playerID;
-        this.position = playerPos;
+        this.position = position;
     }
 
     public Packet(PacketType playerLeft, int playerID) {
@@ -41,8 +41,17 @@ public class Packet implements Serializable {
         this.playerID = playerID;
     }
 
-    public Packet(PacketType leaveServer) {
-        this.packetType = leaveServer;
+    public Packet(PacketType nickname, int playerID, String name) {
+        this.packetType = nickname;
+        this.playerID = playerID;
+        this.string = name;
+    }
+
+    public Packet(PacketType newPlayer, int playerID, Point position, String nickname) {
+        this.packetType = newPlayer;
+        this.playerID = playerID;
+        this.position = position;
+        this.string = nickname;
     }
 
     public void sendTo(ObjectOutputStream outputStream) {

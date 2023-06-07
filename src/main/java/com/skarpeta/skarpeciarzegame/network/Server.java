@@ -65,7 +65,7 @@ public class Server implements Runnable {
                 new Packet(PacketType.INIT_MAP, mapSize, seed, fieldInfo).sendTo(newClient.getOutputStream());
                 new Packet(PacketType.INIT_PLAYER, playerID, playerPos).sendTo(newClient.getOutputStream());
                 for (ClientThread clientThread : clientList.values()) {
-                    new Packet(PacketType.NEW_PLAYER, clientThread.playerID, clientThread.position).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
+                    new Packet(PacketType.NEW_PLAYER, clientThread.playerID, clientThread.position,clientThread.nickname).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
                     new Packet(PacketType.NEW_PLAYER, playerID, playerPos).sendTo(clientThread.getOutputStream());//wysylanie nowego gracza do starych graczy
                 }
                 clientList.put(playerID++, newClient);

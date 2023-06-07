@@ -11,6 +11,7 @@ public class ClientThread implements Runnable {
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
     int playerID;
+    String nickname;
     Point position;
 
     public ClientThread(int playerID, Point position, Socket clientSocket) throws IOException {
@@ -31,6 +32,7 @@ public class ClientThread implements Runnable {
                     case BUILD -> addBuilding(packet);
                     case DESTROY_BUILDING -> Server.worldMap.getField(packet.position).destroyBuilding();
                     case DESTROY_RESOURCE -> Server.worldMap.getField(packet.position).destroyResource();
+                    case NICKNAME -> setNickname(packet);
                     case DISCONNECT -> throw new IOException("Player left the game");
                 }
                 Server.sendToAllClients(packet);
@@ -44,6 +46,11 @@ public class ClientThread implements Runnable {
             Server.sendToAllClients(new Packet(PacketType.DISCONNECT,playerID));
             //closeConnection();
         }
+    }
+
+    private void setNickname(Packet packet) {
+        this.nickname = packet.string;
+        Server.sendToAllClients(new Packet(PacketType.NICKNAME,playerID,nickname));
     }
 
     private void movePlayer(Packet packet) {

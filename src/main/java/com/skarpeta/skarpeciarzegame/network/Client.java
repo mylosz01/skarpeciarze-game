@@ -78,9 +78,14 @@ public class Client implements Runnable {
             case DESTROY_BUILDING -> destroyBuilding(packet);
             case DESTROY_RESOURCE -> removeResource(packet);
             case DISCONNECT -> playerLeft(packet);
+            //case NICKNAME -> setNickname(packet); //TODO
         }
         if (Catana.playerUI!=null)
             Catana.playerUI.updateButtons();
+    }
+
+    private void setNickname(Packet packet) {
+        playerList.getPlayer(packet.playerID).setNickname(packet.string);
     }
 
     private void initMap(Packet packet) {
@@ -135,7 +140,7 @@ public class Client implements Runnable {
 
     private void initPlayer(Packet packet) {
         if (this.player == null) {
-            this.player = new Player(worldMap.getField(packet.position), packet.playerID);
+            this.player = new Player(worldMap.getField(packet.position), packet.playerID, Catana.getNickname());
             System.out.println("Joined as Player" + player.playerID);
             playerList.addPlayer(player.playerID, player);
             Platform.runLater(() -> {
@@ -144,11 +149,12 @@ public class Client implements Runnable {
                 Catana.katana.setTitle("Katana - Player" + player.playerID);
                 Catana.katana.getIcons().add(player.getTexture().getImage());
             });
+            new Packet(PacketType.NICKNAME,player.playerID,Catana.getNickname()).sendTo(outputStream);
         }
     }
 
     private void newPlayerJoined(Packet packet) {
-        Player player = new Player(worldMap.getField(packet.position), packet.playerID);
+        Player player = new Player(worldMap.getField(packet.position), packet.playerID, packet.string);
         playerList.addPlayer(packet.playerID, player);
         System.out.println("Player" + packet.playerID + " JOINED THE GAME");
         Platform.runLater(() -> Catana.renderPlayer(player));

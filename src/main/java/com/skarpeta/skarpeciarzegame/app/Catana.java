@@ -22,6 +22,7 @@ public class Catana extends Application {
     public static final double WINDOW_SIZE = 1000;
     public static final double FIELD_WIDTH = 50;
     public static final double UI_WIDTH = 300;
+    private static String nickname = "Guest";
     private double currentScale = 1.0;
     double initialPositionX = 0;
     double initialPositionY = 0;
@@ -40,6 +41,11 @@ public class Catana extends Application {
     Timeline timeline;
 
     public Catana() {}
+
+    public Catana(String ipAddress, int portNumber, String nickname) {
+        this(ipAddress,portNumber);
+        Catana.nickname = nickname;
+    }
 
     public Catana(String ipAddress, int portNumber) {
         Catana.ipAddress = ipAddress;
@@ -60,6 +66,11 @@ public class Catana extends Application {
                         .otherwise(Bindings.divide(2, Catana.gameMap.scaleYProperty()))
         );
     }
+
+    public static String getNickname() {
+        return nickname;
+    }
+
     @Override
     public void start(Stage katana) throws IOException {
         this.katana = katana;

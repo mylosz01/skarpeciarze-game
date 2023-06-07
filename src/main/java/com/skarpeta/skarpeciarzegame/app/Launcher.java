@@ -106,8 +106,9 @@ public class Launcher extends Application {
             try {
                 String ipAddress = joinMenu.getIpField().getText();
                 int portNumber = Integer.parseInt(joinMenu.getPortField().getText());
+                String nickname = joinMenu.getNicknameField().getText();
                 System.out.println("Connecting to " + ipAddress + " on port " + portNumber);
-                new Catana(ipAddress, portNumber).start(new Stage());
+                new Catana(ipAddress, portNumber, nickname).start(new Stage());
                 joinMenu.close();
                 window.close();
             } catch (IllegalArgumentException e) {

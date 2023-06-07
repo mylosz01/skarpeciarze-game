@@ -13,12 +13,14 @@ public class JoinMenu extends Stage {
     private Label exceptionLabel;
     private Button connectButton;
     private TextField ipField;
+    private TextField nicknameField;
     private TextField portField;
 
     public Label getExceptionLabel() {return exceptionLabel;}
     public Button getConnectButton() {return connectButton;}
     public TextField getIpField() {return ipField;}
     public TextField getPortField() {return portField;}
+    public TextField getNicknameField() {return nicknameField;}
 
     public JoinMenu() {
         setTitle("Join server");
@@ -40,15 +42,22 @@ public class JoinMenu extends Stage {
         gridPane.add(portLabel, 0, 1);
         gridPane.add(portField, 1, 1);
 
+        Label nicknameLabel = new Label("Nickname:");
+        nicknameField = new TextField();
+        nicknameField.setText("Guest");
+        gridPane.add(nicknameLabel, 0, 2);
+        gridPane.add(nicknameField, 1, 2);
+
         connectButton = new Button("Connect");
-        gridPane.add(connectButton, 0, 2, 2, 1);
+        gridPane.add(connectButton, 0, 3, 3, 1);
 
         exceptionLabel = new Label();
         exceptionLabel.setTextFill(Color.RED);
-        gridPane.add(exceptionLabel,0,3,2,3);
+        gridPane.add(exceptionLabel,0,4,2,4);
 
         Scene scene = new Scene(gridPane, 300, 150);
         setScene(scene);
         show();
     }
+
 }

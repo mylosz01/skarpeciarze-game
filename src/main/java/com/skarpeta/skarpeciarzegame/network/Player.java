@@ -2,6 +2,7 @@ package com.skarpeta.skarpeciarzegame.network;
 
 import com.skarpeta.skarpeciarzegame.Asset;
 import com.skarpeta.skarpeciarzegame.inventory.ItemType;
+import com.skarpeta.skarpeciarzegame.tools.FontManager;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
@@ -12,7 +13,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -29,10 +32,12 @@ public class Player extends Asset {
     int playerID;
     public Field playerField;
     private boolean isOnBoat = false;
+    private String nickname = "";
 
-    Player(Field field, int playerID){
+    Player(Field field, int playerID, String nickname){
         super(new ImageView(ImageManager.getImage("player/player" +
                 playerID % new File("src/main/resources/images/player").list().length+".png",128,128)));
+        //setNickname(nickname); //TODO
         boat = new ImageView(ImageManager.getImage("boatEntity.png",128,128));
         boat.setFitWidth(FIELD_WIDTH * 0.5);
         boat.setFitHeight(FIELD_WIDTH * 0.5);
@@ -107,5 +112,18 @@ public class Player extends Asset {
             isOnBoat = false;
             Platform.runLater(() -> getChildren().remove(boat));
         }
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+        Platform.runLater(() -> {
+            Label nickLabel = new Label(nickname);
+            nickLabel.setFont(FontManager.getSmallFont());
+            nickLabel.setTranslateY(FIELD_WIDTH * 0.45);
+            //nickLabel.getWidth()
+            nickLabel.setTextFill(Color.WHITE);
+            nickLabel.setStyle("-fx-background-color: rgba(64, 64, 64, 0.3);");
+            getChildren().add(nickLabel);
+        });
     }
 }
