@@ -78,13 +78,13 @@ public class Client implements Runnable {
             case DESTROY_BUILDING -> destroyBuilding(packet);
             case DESTROY_RESOURCE -> removeResource(packet);
             case DISCONNECT -> playerLeft(packet);
-            //case NICKNAME -> setNickname(packet); //TODO
+            case NICKNAME -> setMyNickname(packet);
         }
         if (Catana.playerUI!=null)
             Catana.playerUI.updateButtons();
     }
 
-    private void setNickname(Packet packet) {
+    private void setMyNickname(Packet packet) {
         playerList.getPlayer(packet.playerID).setNickname(packet.string);
     }
 
@@ -94,6 +94,10 @@ public class Client implements Runnable {
             worldMap.getField(e.point).addResource(e.resourceType.newResource());
             worldMap.getField(e.point).addBuilding(e.buildingType.newBuilding());
         });
+
+        Thread buildingThread = new Thread(this::buildingThread);
+        buildingThread.setDaemon(true);
+        buildingThread.start();
     }
 
     private void movePlayer(Packet packet) {
@@ -172,9 +176,6 @@ public class Client implements Runnable {
 
         System.out.println("#CLIENT# Start listening...");
         try {
-            Thread buildingThread = new Thread(this::buildingThread);
-            buildingThread.setDaemon(true);
-            buildingThread.start();
             while (true) {
                 receiveData();
             }

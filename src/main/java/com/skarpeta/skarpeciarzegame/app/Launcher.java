@@ -73,6 +73,9 @@ public class Launcher extends Application {
                 int mapSize = Integer.parseInt(serverMenu.getMapSizeField().getText());
                 int portNumber = Integer.parseInt(serverMenu.getPortField().getText());
                 int seed = Integer.parseInt(serverMenu.getSeedField().getText());
+                String nickname = serverMenu.getNicknameField().getText();
+                if(nickname.length()>6)
+                    nickname = nickname.substring(0,6);
 
                 if(mapSize <= 0)
                     throw new IllegalArgumentException("Map size cannot be less than 1");
@@ -82,7 +85,7 @@ public class Launcher extends Application {
                 System.out.println("Booting server on port " + portNumber+"...");
                 Server server = new Server(portNumber,mapSize,seed);
                 new Thread(server).start();
-                Catana catana = new Catana("127.0.0.1", portNumber);
+                Catana catana = new Catana("127.0.0.1", portNumber,nickname);
                 catana.start(new Stage());
                 catana.katana.setOnCloseRequest(e -> new ClosingGamePopup(server,Catana.clientThread).start(new Stage()));
                 serverMenu.close();
@@ -107,6 +110,9 @@ public class Launcher extends Application {
                 String ipAddress = joinMenu.getIpField().getText();
                 int portNumber = Integer.parseInt(joinMenu.getPortField().getText());
                 String nickname = joinMenu.getNicknameField().getText();
+                if(nickname.length()>6)
+                    nickname = nickname.substring(0,6);
+
                 System.out.println("Connecting to " + ipAddress + " on port " + portNumber);
                 new Catana(ipAddress, portNumber, nickname).start(new Stage());
                 joinMenu.close();

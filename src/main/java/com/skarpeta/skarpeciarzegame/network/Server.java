@@ -64,15 +64,20 @@ public class Server implements Runnable {
                 //inicjalizacja mapy
                 new Packet(PacketType.INIT_MAP, mapSize, seed, fieldInfo).sendTo(newClient.getOutputStream());
                 new Packet(PacketType.INIT_PLAYER, playerID, playerPos).sendTo(newClient.getOutputStream());
+                Packet nicknamePacket = (Packet) newClient.getInputStream().readObject();
+                newClient.nickname = nicknamePacket.string;
+
                 for (ClientThread clientThread : clientList.values()) {
                     new Packet(PacketType.NEW_PLAYER, clientThread.playerID, clientThread.position,clientThread.nickname).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
-                    new Packet(PacketType.NEW_PLAYER, playerID, playerPos).sendTo(clientThread.getOutputStream());//wysylanie nowego gracza do starych graczy
+                    new Packet(PacketType.NEW_PLAYER, playerID, playerPos, newClient.nickname).sendTo(clientThread.getOutputStream());//wysylanie nowego gracza do starych graczy
                 }
                 clientList.put(playerID++, newClient);
                 new Thread(newClient).start();
             }
         } catch (IOException e) {
             System.out.println("Server closed. " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

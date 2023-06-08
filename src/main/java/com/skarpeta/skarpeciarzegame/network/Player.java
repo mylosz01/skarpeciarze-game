@@ -1,7 +1,7 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.Asset;
 import com.skarpeta.skarpeciarzegame.inventory.ItemType;
+import com.skarpeta.skarpeciarzegame.resources.Resource;
 import com.skarpeta.skarpeciarzegame.tools.FontManager;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
@@ -13,8 +13,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -25,9 +27,10 @@ import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 
 /** Gracz posiada pole Field w którym się znajduje
  */
-public class Player extends Asset {
+public class Player extends VBox {
 
-    private ImageView boat;
+    private final ImageView texture;
+    private final ImageView boat;
     private final Inventory inventory;
     int playerID;
     public Field playerField;
@@ -35,18 +38,19 @@ public class Player extends Asset {
     private String nickname = "";
 
     Player(Field field, int playerID, String nickname){
-        super(new ImageView(ImageManager.getImage("player/player" +
-                playerID % new File("src/main/resources/images/player").list().length+".png",128,128)));
-        //setNickname(nickname); //TODO
+        super();
+        this.texture = new ImageView(ImageManager.getImage("player/player" +
+                playerID % new File("src/main/resources/images/player").list().length+".png",128,128));
         boat = new ImageView(ImageManager.getImage("boatEntity.png",128,128));
         boat.setFitWidth(FIELD_WIDTH * 0.5);
         boat.setFitHeight(FIELD_WIDTH * 0.5);
         this.playerID = playerID;
         this.inventory = new Inventory();
         this.playerField = field;
-        getTexture().setFitWidth(FIELD_WIDTH * 0.5);
-        getTexture().setFitHeight(FIELD_WIDTH * 0.5);
-        relocate(field.getLayoutX(),field.getLayoutY());
+        texture.setFitWidth(FIELD_WIDTH * 0.5);
+        texture.setFitHeight(FIELD_WIDTH * 0.5);
+        getChildren().add(texture);
+        setNickname(nickname);
         moveTo(field);
     }
 
@@ -60,24 +64,23 @@ public class Player extends Asset {
     }
 
     public void collectResource(){
-
         if(playerField.hasResource()){
-           int itemAmount =  playerField.resource.getItem().getAmount();
-           System.out.println("Zebrano: " + playerField.resource.item.getName() + " " + itemAmount);
-
-           inventory.increaseItemAmount(playerField.resource.item.getType(),itemAmount);
+           Resource resource = playerField.resource;
+           inventory.increaseItemAmount(resource.getItem().getType(),resource.getItem().getAmount());
            this.playerField.destroyResource();
         }
     }
 
     public void moveTo(Field destination){
         this.playerField = destination;
-        Timeline timeline = new Timeline();
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.2),
-                new KeyValue(layoutXProperty(), destination.getLayoutX() - getTexture().getFitWidth() * 0.5, Interpolator.EASE_OUT),
-                new KeyValue(layoutYProperty(), destination.getLayoutY(), Interpolator.EASE_OUT)
+        double width = nickname.length() * 5.8; //getWidth() replacement
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(2),
+                new KeyValue(translateXProperty(), destination.getLayoutX() - width, Interpolator.EASE_OUT),
+                new KeyValue(translateYProperty(), destination.getLayoutY(), Interpolator.EASE_OUT)
         );
+        Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(keyFrame);
+        timeline.setOnFinished(e-> System.out.println("koniec"));
         timeline.play();
     }
     /** Walidacja ruchów gracza:
@@ -119,11 +122,17 @@ public class Player extends Asset {
         Platform.runLater(() -> {
             Label nickLabel = new Label(nickname);
             nickLabel.setFont(FontManager.getSmallFont());
-            nickLabel.setTranslateY(FIELD_WIDTH * 0.45);
-            //nickLabel.getWidth()
+
             nickLabel.setTextFill(Color.WHITE);
             nickLabel.setStyle("-fx-background-color: rgba(64, 64, 64, 0.3);");
+            nickLabel.setMaxWidth(Double.MAX_VALUE);
+            setAlignment(Pos.CENTER);
             getChildren().add(nickLabel);
+            nickLabel.setLayoutY(FIELD_WIDTH * 0.45);
         });
+    }
+
+    public ImageView getTexture() {
+        return  texture;
     }
 }

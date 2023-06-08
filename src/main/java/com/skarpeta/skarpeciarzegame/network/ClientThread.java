@@ -32,7 +32,7 @@ public class ClientThread implements Runnable {
                     case BUILD -> addBuilding(packet);
                     case DESTROY_BUILDING -> Server.worldMap.getField(packet.position).destroyBuilding();
                     case DESTROY_RESOURCE -> Server.worldMap.getField(packet.position).destroyResource();
-                    case NICKNAME -> setNickname(packet);
+                    case NICKNAME -> setMyNickname(packet);
                     case DISCONNECT -> throw new IOException("Player left the game");
                 }
                 Server.sendToAllClients(packet);
@@ -48,7 +48,7 @@ public class ClientThread implements Runnable {
         }
     }
 
-    private void setNickname(Packet packet) {
+    private void setMyNickname(Packet packet) {
         this.nickname = packet.string;
         Server.sendToAllClients(new Packet(PacketType.NICKNAME,playerID,nickname));
     }
@@ -77,5 +77,9 @@ public class ClientThread implements Runnable {
 
     public ObjectOutputStream getOutputStream() {
         return outputStream;
+    }
+
+    public ObjectInput getInputStream() {
+        return inputStream;
     }
 }

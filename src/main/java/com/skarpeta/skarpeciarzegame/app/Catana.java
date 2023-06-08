@@ -54,6 +54,7 @@ public class Catana extends Application {
 
     public static void renderPlayer(Player player) {
         playersGroup.getChildren().add(player);
+
         player.scaleXProperty().bind(
                 Bindings.when(Catana.gameMap.scaleXProperty().greaterThan(2))
                         .then(1)
@@ -116,8 +117,8 @@ public class Catana extends Application {
         currentScale = 1;
         timeline = new Timeline();
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(durationInSeconds),
-                new KeyValue(gameMap.layoutXProperty(), -node.getLayoutX() + katana.getWidth() * 0.5 - UI_WIDTH * 0.5,Interpolator.EASE_BOTH),
-                new KeyValue(gameMap.layoutYProperty(), -node.getLayoutY() + katana.getHeight() * 0.5,Interpolator.EASE_BOTH),
+                new KeyValue(gameMap.layoutXProperty(), -node.getTranslateX() + katana.getWidth() * 0.5 - UI_WIDTH * 0.5,Interpolator.EASE_BOTH),
+                new KeyValue(gameMap.layoutYProperty(), -node.getTranslateY() + katana.getHeight() * 0.5,Interpolator.EASE_BOTH),
                 new KeyValue(gameMap.scaleXProperty(), currentScale,Interpolator.EASE_BOTH),
                 new KeyValue(gameMap.scaleYProperty(), currentScale,Interpolator.EASE_BOTH)
         );
