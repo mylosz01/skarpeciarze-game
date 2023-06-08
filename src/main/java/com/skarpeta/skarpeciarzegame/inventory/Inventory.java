@@ -31,9 +31,11 @@ public class Inventory {
     }
 
     public void craft(ItemType type){
-        if(hasEnoughMaterials(type.getCost()) && getAmount(type) < MAX_BOAT_HOLD){
+        if(hasEnoughMaterials(type.getCost())){
+            if(type == ItemType.BOAT  && getAmount(type) < MAX_BOAT_HOLD)
+                return;
             equipment.get(type).increaseAmount(1);
-            decrease(BoatItem.getCost());
+            decrease(type.getCost());
         }
     }
 
