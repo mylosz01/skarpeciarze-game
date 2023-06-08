@@ -11,9 +11,9 @@ public class Server implements Runnable {
 
     private final ServerSocket serverSocket;
     static Map<Integer, ClientThread> clientList;
-    private List<FieldInfoPacket> fieldInfo;
+    private List<FieldInfoPacket> fieldInfo = Collections.synchronizedList(new ArrayList<>());
     private static int portNumber = 5555;
-    private static int seed = new Random().nextInt();
+    private static int seed;
     private static int mapSize = 40;
 
     public static WorldMap worldMap;
@@ -25,7 +25,6 @@ public class Server implements Runnable {
         worldMap = new WorldMap(mapSize, seed);
         worldMap.generateResources();
         clientList = Collections.synchronizedMap(new TreeMap<>());
-        fieldInfo = packWorld();
         serverSocket = new ServerSocket(portNumber);
     }
     @Override
@@ -58,10 +57,10 @@ public class Server implements Runnable {
                 Socket playerSocket = serverSocket.accept();
                 System.out.println("Player" + playerID + " joined the game");
                 Point playerPos = worldMap.placePlayer();
-                fieldInfo = packWorld();
                 ClientThread newClient = new ClientThread(playerID, playerPos, playerSocket);
 
                 //inicjalizacja mapy
+                packWorld();
                 new Packet(PacketType.INIT_MAP, mapSize, seed, fieldInfo).sendTo(newClient.getOutputStream());
                 new Packet(PacketType.INIT_PLAYER, playerID, playerPos).sendTo(newClient.getOutputStream());
                 Packet nicknamePacket = (Packet) newClient.getInputStream().readObject();
@@ -81,17 +80,16 @@ public class Server implements Runnable {
         }
     }
 
-    private List packWorld() {
-        List list = Collections.synchronizedList(new ArrayList<>());
+    private void packWorld() {
+        fieldInfo.clear();
         worldMap.forEach(e -> {
             FieldInfoPacket info = new FieldInfoPacket(e.position);
             if (e.hasResource())
                 info.setResourceType(e.resource.type);
             if (e.hasBuilding())
                 info.setBuildingType(e.building.type);
-            list.add(info);
+            fieldInfo.add(info);
         });
-        return list;
     }
 
     public static void sendToAllClients(Packet packet) {
@@ -114,7 +112,7 @@ public class Server implements Runnable {
 
     public static void main(String[] args) {
         try {
-            new Thread(new Server(portNumber,mapSize,seed)).start();
+            new Thread(new Server(portNumber,mapSize,new Random().nextInt())).start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -4,8 +4,6 @@ import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.Resource;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
@@ -104,5 +102,10 @@ public class Field extends Group {
             getChildren().remove(resource);
             resource = null;
         }
+    }
+
+    @Override
+    public String toString() {
+        return  terrain +"["+ position+"], ";
     }
 }

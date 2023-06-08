@@ -30,8 +30,7 @@ import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
  */
 public class Player extends VBox {
 
-    private static double ANIMATION_SPEED = 0.2;
-
+    private final static double ANIMATION_SPEED = 0.2;
     private final StackPane playerSprite = new StackPane();
     private final ImageView texture;
     private final ImageView boat;
@@ -85,7 +84,6 @@ public class Player extends VBox {
         );
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(keyFrame);
-        timeline.setOnFinished(e-> System.out.println("koniec"));
         timeline.play();
     }
     /** Walidacja ruchów gracza:
