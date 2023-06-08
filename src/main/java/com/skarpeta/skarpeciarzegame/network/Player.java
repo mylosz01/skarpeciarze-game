@@ -30,6 +30,8 @@ import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
  */
 public class Player extends VBox {
 
+    private static double ANIMATION_SPEED = 0.2;
+
     private final StackPane playerSprite = new StackPane();
     private final ImageView texture;
     private final ImageView boat;
@@ -77,7 +79,7 @@ public class Player extends VBox {
     public void moveTo(Field destination){
         this.playerField = destination;
         double width = nickname.length() * 5.8; //getWidth() replacement
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(2),
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(ANIMATION_SPEED),
                 new KeyValue(translateXProperty(), destination.getLayoutX() - width, Interpolator.EASE_OUT),
                 new KeyValue(translateYProperty(), destination.getLayoutY(), Interpolator.EASE_OUT)
         );
