@@ -16,6 +16,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -29,6 +30,7 @@ import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
  */
 public class Player extends VBox {
 
+    private final StackPane playerSprite = new StackPane();
     private final ImageView texture;
     private final ImageView boat;
     private final Inventory inventory;
@@ -49,7 +51,8 @@ public class Player extends VBox {
         this.playerField = field;
         texture.setFitWidth(FIELD_WIDTH * 0.5);
         texture.setFitHeight(FIELD_WIDTH * 0.5);
-        getChildren().add(texture);
+        playerSprite.getChildren().add(texture);
+        getChildren().add(playerSprite);
         setNickname(nickname);
         moveTo(field);
     }
@@ -106,14 +109,14 @@ public class Player extends VBox {
     public void getOnBoat() {
         if(!isOnBoat()){
             isOnBoat = true;
-            Platform.runLater(()->getChildren().add(boat));
+            Platform.runLater(()->playerSprite.getChildren().add(boat));
         }
     }
 
     public void getOffBoat() {
         if(isOnBoat()) {
             isOnBoat = false;
-            Platform.runLater(() -> getChildren().remove(boat));
+            Platform.runLater(() -> playerSprite.getChildren().remove(boat));
         }
     }
 
