@@ -5,6 +5,7 @@ import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.inventory.ItemType;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
+import com.skarpeta.skarpeciarzegame.worldmap.WorldGenerator;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
@@ -90,6 +91,8 @@ public class Client implements Runnable {
 
     private void initMap(Packet packet) {
         worldMap = new WorldMap(packet.sizeMap, packet.seedMap);
+        new WorldGenerator(packet.seedMap).setBiomes(worldMap);
+
         packet.fieldInfo.forEach(e -> {
             worldMap.getField(e.point).addResource(e.resourceType.newResource());
             worldMap.getField(e.point).addBuilding(e.buildingType.newBuilding());

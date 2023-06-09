@@ -3,10 +3,12 @@ package com.skarpeta.skarpeciarzegame.worldmap;
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.resources.StoneResource;
 import com.skarpeta.skarpeciarzegame.tools.Point;
+import javafx.scene.paint.Color;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
@@ -23,7 +25,7 @@ public class WorldGenerator {
     int seed;
 
     /** Konstruktor tworzy nowy plik noise*/
-    WorldGenerator(int seed) {
+    public WorldGenerator(int seed) {
         try {
             random = new Random(seed);
             this.seed = seed;
@@ -86,5 +88,14 @@ public class WorldGenerator {
                 return TerrainType.fromIndex(index);
         }
         throw new RuntimeException("niepoprawny plik");
+    }
+    public void setBiomes(WorldMap worldMap){
+        List<Island> islands = Island.findIslands(worldMap);
+        islands.forEach(island->{
+            int r=random.nextInt(255);
+            int g=random.nextInt(255);
+            int b=random.nextInt(255);
+            island.forEach(field -> field.setColor(Color.rgb(r,g,b)));
+        });
     }
 }

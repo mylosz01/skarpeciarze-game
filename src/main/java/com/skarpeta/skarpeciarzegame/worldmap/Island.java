@@ -5,6 +5,7 @@ import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Island {
     List<Field> fields;
@@ -59,5 +60,8 @@ public class Island {
     }
     private void add(Field field){
         fields.add(field);
+    }
+    public void forEach(Consumer<Field> action) {
+        fields.forEach(action);
     }
 }
