@@ -91,7 +91,7 @@ public class Client implements Runnable {
 
     private void initMap(Packet packet) {
         worldMap = new WorldMap(packet.sizeMap, packet.seedMap);
-        new WorldGenerator(packet.seedMap).setBiomes(worldMap);
+        //new WorldGenerator(packet.seedMap).setBiomes(worldMap); kolorowanie wysp
 
         packet.fieldInfo.forEach(e -> {
             worldMap.getField(e.point).addResource(e.resourceType.newResource());

@@ -31,11 +31,12 @@ public class Inventory {
     }
 
     public void craft(ItemType type){
+        System.out.println("dsaff");
         if(hasEnoughMaterials(type.getCost())){
-            if(type == ItemType.BOAT  && getAmount(type) < MAX_BOAT_HOLD)
-                return;
-            equipment.get(type).increaseAmount(1);
-            decrease(type.getCost());
+            if(type != ItemType.BOAT || getAmount(type) < MAX_BOAT_HOLD) {
+                equipment.get(type).increaseAmount(1);
+                decrease(type.getCost());
+            }
         }
     }
 
