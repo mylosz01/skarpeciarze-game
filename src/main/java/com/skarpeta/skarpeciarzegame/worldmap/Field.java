@@ -39,7 +39,7 @@ public class Field extends Group {
         this.terrain = terrain;
         hexagon.setFill(terrain.getColor().primary);
         if(terrain != TerrainType.WATER)
-            hexagon.setStroke(terrain.getColor().darker);
+            hexagon.setStroke(terrain.getColor().midway);
     }
 
     /** Override koloru, nie ma powrotu (debug only!!!!1)*/

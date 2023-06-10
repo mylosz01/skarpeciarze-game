@@ -8,11 +8,11 @@ public class ColorShades {
     public Color primary;
     /** Kolor ciemniejszy od podstawowego - służy do tworzenia cieni */
     public Color darker;
-    /** Najjaśniejszy kolor danej palety */
-    public Color accent;
-    public ColorShades(String primary, String darker, String accent) {
+    /** Kolor pomiędzy */
+    public Color midway;
+    public ColorShades(String primary, String darker, String midway) {
         this.primary = Color.valueOf(primary);
         this.darker = Color.valueOf(darker);
-        this.accent = Color.valueOf(accent);
+        this.midway = Color.valueOf(midway);
     }
 }

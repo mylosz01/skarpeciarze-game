@@ -36,7 +36,7 @@ public class PlayerUI extends VBox {
     private final double spacing = 10;
 
     Pane inventoryPane;
-    Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(4)));
+    Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().midway,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(4)));
 
     public PlayerUI() {
         super();
@@ -134,8 +134,8 @@ public class PlayerUI extends VBox {
         HBox craftButtons = new HBox(boatButton,catanaButton);
 
         inventoryLayout.getChildren().addAll(eqPlayer,craftButtons);
-        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
-        craftButtons.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().accent, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().midway, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        craftButtons.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().midway, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(eqPlayer.widthProperty());
