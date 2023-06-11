@@ -26,7 +26,7 @@ public class WorldMap extends Group {
     public WorldMap(int size, int seed) {
         this.seed = seed;
         WorldGenerator worldGenerator = new WorldGenerator(seed);
-        fields = new ArrayList();
+        fields = new ArrayList<>();
         mapSize = size;
         for(int y = 0; y< mapSize; y++) {
             for (int x = 0; x < mapSize; x++) {

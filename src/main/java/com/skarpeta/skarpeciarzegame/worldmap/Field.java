@@ -14,12 +14,11 @@ import javafx.scene.shape.StrokeType;
 public class Field extends Group {
 
     private final Hexagon hexagon;
-    private Point position;
+    private final Point position;
+    private final double height;
     private Building building;
     private Resource resource;
     private TerrainType terrain;
-    /**do przyszlego wykorzystania, przechowuje noise channel */
-    private double height;
 
     /** Tworzy heksagonalne pole mapy worldMap, w punkcie (tablicowym) position, o terenie terrain
      *  Pozycja na ekranie jest zmieniana poprzez move()
