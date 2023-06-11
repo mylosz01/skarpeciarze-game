@@ -30,8 +30,7 @@ public class WorldMap extends Group {
         mapSize = size;
         for(int y = 0; y< mapSize; y++) {
             for (int x = 0; x < mapSize; x++) {
-                Point point = new Point(x,y);
-                Field newField = worldGenerator.generateField(this,point);
+                Field newField = worldGenerator.generateField(this,new Point(x,y));
                 newField.setOnMouseClicked((e)->click(e,newField));
                 fields.add(newField);
             }
@@ -51,10 +50,10 @@ public class WorldMap extends Group {
         fields.forEach(action);
     }
 
-    public Field getField(Point p) {
-        if(p.isNegative())
+    public Field getField(Point position) {
+        if(position.isNegative())
             throw new NoSuchElementException("pola nie moga byc na pozycji ujemnej");
-        return fields.get(p.x%mapSize + p.y*mapSize);
+        return fields.get(position.convertToOneDimention(mapSize));
     }
 
     /** Wybieranie pola przez gracza,
@@ -72,27 +71,21 @@ public class WorldMap extends Group {
 
     /** wylosowanie pola dla gracza z gwarancja drewna na wyspie*/
     public Point placePlayer() {
-        if(!hasTrees())
+        List<Island> treeIslands =  islands.stream().filter(island -> island.countTrees() != 0).toList();
+        if(treeIslands.size() == 0)
             return getRandomPosition();
-
-        Island island;
-        do {
-            island = islands.get(new Random().nextInt(islands.size()));
-        } while (island.countTrees() == 0);
-
-        return island.getFields().get(new Random().nextInt(island.getFields().size())).getPosition();
+        Random random = new Random();
+        Island randomIsland = treeIslands.get(random.nextInt(treeIslands.size()));
+        return randomIsland.getFields().get(random.nextInt(randomIsland.getFields().size())).getPosition();
     }
 
     private boolean hasTrees() {
-        return fields.stream().anyMatch(field->field.hasResource() && field.getResourceType() == ResourceType.FOREST);
+        return fields.stream().anyMatch(field -> field.hasResource() && field.getResourceType() == ResourceType.FOREST);
     }
 
     private Point getRandomPosition() {
-        Point point;
-        do {
-            point = new Point(new Random().nextInt(mapSize),new Random().nextInt(mapSize));
-        } while(getField(point).getTerrain() == TerrainType.WATER);
-        return point;
+        List<Field> fieldList = fields.stream().filter(field -> field.getTerrain() != TerrainType.WATER).toList();
+        return fieldList.get(new Random().nextInt(fieldList.size())).getPosition();
     }
 
     public int getSeed(){
@@ -101,7 +94,7 @@ public class WorldMap extends Group {
 
     public void generateResources() {
         WorldGenerator worldGenerator = new WorldGenerator(seed);
-        forEach(worldGenerator::generateResource);
+        this.forEach(worldGenerator::generateResource);
     }
 
     public int getMapSize() {

@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 /** Losowo generowane materiały do zebrania przez gracza */
 public abstract class Resource extends Asset {
 
-    public Item item;
+    protected Item item;
     protected int maxResourceRange = 100;
     ResourceType type;
 

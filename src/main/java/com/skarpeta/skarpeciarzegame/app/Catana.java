@@ -56,15 +56,15 @@ public class Catana extends Application {
         playersGroup.getChildren().add(player);
 
         player.scaleXProperty().bind(
-                Bindings.when(Catana.gameMap.scaleXProperty().greaterThan(2))
-                        .then(1)
-                        .otherwise(Bindings.divide(2, Catana.gameMap.scaleXProperty()))
+            Bindings.when(Catana.gameMap.scaleXProperty().greaterThan(2))
+                .then(1)
+                .otherwise(Bindings.divide(2, Catana.gameMap.scaleXProperty()))
         );
 
         player.scaleYProperty().bind(
-                Bindings.when(Catana.gameMap.scaleYProperty().greaterThan(2))
-                        .then(1)
-                        .otherwise(Bindings.divide(2, Catana.gameMap.scaleYProperty()))
+            Bindings.when(Catana.gameMap.scaleYProperty().greaterThan(2))
+                .then(1)
+                .otherwise(Bindings.divide(2, Catana.gameMap.scaleYProperty()))
         );
     }
 
@@ -82,7 +82,6 @@ public class Catana extends Application {
         gameMap = new Pane(worldMap,playersGroup);
         playersGroup.setMouseTransparent(true);
         setupStage();
-        panTo(clientThread.getPlayer(),0);
     }
 
     private void setupStage() {
@@ -109,17 +108,17 @@ public class Catana extends Application {
         katana.show();
     }
     /** Porusza kamera aby na srodku ekranu byl dany obiekt*/
-    private void panTo(Node node, double durationInSeconds) {
+    public void panTo(Node node, double durationInSeconds) {
         stopPan();
         if(durationInSeconds<=0)
             durationInSeconds = 0.0001;
         currentScale = 1;
         timeline = new Timeline();
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(durationInSeconds),
-                new KeyValue(gameMap.layoutXProperty(), -node.getTranslateX() + katana.getWidth() * 0.5 - UI_WIDTH * 0.5,Interpolator.EASE_BOTH),
-                new KeyValue(gameMap.layoutYProperty(), -node.getTranslateY() + katana.getHeight() * 0.5,Interpolator.EASE_BOTH),
-                new KeyValue(gameMap.scaleXProperty(), currentScale,Interpolator.EASE_BOTH),
-                new KeyValue(gameMap.scaleYProperty(), currentScale,Interpolator.EASE_BOTH)
+            new KeyValue(gameMap.layoutXProperty(), -node.getTranslateX() + katana.getWidth() * 0.5 - UI_WIDTH * 0.5,Interpolator.EASE_BOTH),
+            new KeyValue(gameMap.layoutYProperty(), -node.getTranslateY() + katana.getHeight() * 0.5,Interpolator.EASE_BOTH),
+            new KeyValue(gameMap.scaleXProperty(), currentScale,Interpolator.EASE_BOTH),
+            new KeyValue(gameMap.scaleYProperty(), currentScale,Interpolator.EASE_BOTH)
         );
 
         timeline.getKeyFrames().add(keyFrame);

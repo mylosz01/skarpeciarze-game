@@ -13,7 +13,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -77,10 +76,9 @@ public class Player extends VBox {
 
     public void moveTo(Field destination){
         this.playerField = destination;
-        double width = nickname.length() * 5.8; //getWidth() replacement
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(ANIMATION_SPEED),
-                new KeyValue(translateXProperty(), destination.getLayoutX() - width, Interpolator.EASE_OUT),
-                new KeyValue(translateYProperty(), destination.getLayoutY(), Interpolator.EASE_OUT)
+            new KeyValue(translateXProperty(), destination.getLayoutX(), Interpolator.EASE_OUT),
+            new KeyValue(translateYProperty(), destination.getLayoutY(), Interpolator.EASE_OUT)
         );
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(keyFrame);
@@ -125,13 +123,11 @@ public class Player extends VBox {
         Platform.runLater(() -> {
             Label nickLabel = new Label(nickname);
             nickLabel.setFont(FontManager.getSmallFont());
-
             nickLabel.setTextFill(Color.WHITE);
             nickLabel.setStyle("-fx-background-color: rgba(64, 64, 64, 0.3);");
-            nickLabel.setMaxWidth(Double.MAX_VALUE);
-            setAlignment(Pos.CENTER);
-            getChildren().add(nickLabel);
             nickLabel.setLayoutY(FIELD_WIDTH * 0.45);
+            this.getChildren().add(nickLabel);
+            this.setLayoutX(nickname.length() * -5.8);
         });
     }
 
