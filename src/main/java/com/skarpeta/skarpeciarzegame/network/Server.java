@@ -11,7 +11,6 @@ public class Server implements Runnable {
 
     private final ServerSocket serverSocket;
     static Map<Integer, ClientThread> clientList;
-    private List<FieldInfoPacket> fieldInfo = Collections.synchronizedList(new ArrayList<>());
     private static int portNumber = 5555;
     private static int seed;
     private static int mapSize = 40;
@@ -56,19 +55,18 @@ public class Server implements Runnable {
             while (true) {
                 Socket playerSocket = serverSocket.accept();
                 System.out.println("Player" + playerID + " joined the game");
+
                 Point playerPos = worldMap.placePlayer();
                 ClientThread newClient = new ClientThread(playerID, playerPos, playerSocket);
-
-                //inicjalizacja mapy
-                packWorld();
-                new Packet(PacketType.INIT_MAP, mapSize, seed, fieldInfo).sendTo(newClient.getOutputStream());
+                List<PackedField> packedWorld = packWorld();
+                new Packet(PacketType.INIT_MAP, mapSize, seed, packedWorld).sendTo(newClient.getOutputStream());
                 new Packet(PacketType.INIT_PLAYER, playerID, playerPos).sendTo(newClient.getOutputStream());
                 Packet nicknamePacket = (Packet) newClient.getInputStream().readObject();
-                newClient.nickname = nicknamePacket.string;
+                newClient.setNickname(nicknamePacket.string);
 
                 for (ClientThread clientThread : clientList.values()) {
-                    new Packet(PacketType.NEW_PLAYER, clientThread.playerID, clientThread.position,clientThread.nickname).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
-                    new Packet(PacketType.NEW_PLAYER, playerID, playerPos, newClient.nickname).sendTo(clientThread.getOutputStream());//wysylanie nowego gracza do starych graczy
+                    new Packet(PacketType.NEW_PLAYER, clientThread.getID(), clientThread.getPosition(),clientThread.getNickname()).sendTo(newClient.getOutputStream());//wysylanie starych graczy do nowego
+                    new Packet(PacketType.NEW_PLAYER, playerID, playerPos, newClient.getNickname()).sendTo(clientThread.getOutputStream());//wysylanie nowego gracza do starych graczy
                 }
                 clientList.put(playerID++, newClient);
                 new Thread(newClient).start();
@@ -80,14 +78,8 @@ public class Server implements Runnable {
         }
     }
 
-    private void packWorld() {
-        fieldInfo.clear();
-        worldMap.forEach(field -> {
-            FieldInfoPacket info = new FieldInfoPacket(field.getPosition());
-            info.setResourceType(field.getResourceType());
-            info.setBuildingType(field.getBuildingType());
-            fieldInfo.add(info);
-        });
+    private List<PackedField> packWorld() {
+        return new ArrayList<>(worldMap.getFields().stream().filter(field -> field.hasResource() || field.hasBuilding()).map(PackedField::new).toList());
     }
 
     public static void sendToAllClients(Packet packet) {
@@ -99,9 +91,7 @@ public class Server implements Runnable {
     public void stopServer() {
         try {
             System.out.println("CLOSING SERVER");
-            for (ClientThread clientThread : clientList.values()) {
-                clientThread.closeConnection();
-            }
+            clientList.values().forEach(ClientThread::closeConnection);
             serverSocket.close();
         } catch (IOException e) {
             System.out.println("Error occurred while stopping the server: " + e.getMessage());

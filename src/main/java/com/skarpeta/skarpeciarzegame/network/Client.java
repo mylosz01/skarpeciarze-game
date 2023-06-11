@@ -33,8 +33,6 @@ public class Client implements Runnable {
             InputStream in = clientSocket.getInputStream();
             inputStream = new ObjectInputStream(in);
 
-            Catana.katana.setOnCloseRequest(e -> leaveGame());
-
             receiveData();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -93,8 +91,8 @@ public class Client implements Runnable {
         //new WorldGenerator(packet.seedMap).setBiomes(worldMap); kolorowanie wysp
 
         packet.fieldInfo.forEach(e -> {
-            worldMap.getField(e.point).addResource(e.resourceType.newResource());
-            worldMap.getField(e.point).addBuilding(e.buildingType.newBuilding());
+            worldMap.getField(e.position).addResource(e.resourceType.newResource());
+            worldMap.getField(e.position).addBuilding(e.buildingType.newBuilding());
         });
 
         Thread buildingThread = new Thread(this::buildingThread);

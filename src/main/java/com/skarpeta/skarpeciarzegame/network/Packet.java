@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Packet implements Serializable {
 
-    List<FieldInfoPacket> fieldInfo;
+    List<PackedField> fieldInfo;
     BuildingType buildingType;
     int seedMap;
     int sizeMap;
@@ -16,7 +16,7 @@ public class Packet implements Serializable {
     public int playerID;
     public String string;
 
-    public Packet(PacketType init, int mapSize, int mapSeed, List<FieldInfoPacket> fieldInfo) {
+    public Packet(PacketType init, int mapSize, int mapSeed, List<PackedField> fieldInfo) {
         this.packetType = init;
         this.seedMap = mapSeed;
         this.sizeMap = mapSize;

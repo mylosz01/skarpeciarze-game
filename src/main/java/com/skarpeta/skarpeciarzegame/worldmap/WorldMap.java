@@ -3,7 +3,6 @@ package com.skarpeta.skarpeciarzegame.worldmap;
 import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
-import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -62,25 +61,19 @@ public class WorldMap extends Group {
     public void selectField(Field field) {
         try {
             Catana.getClientThread().getPlayer().sendMove(field);
-        } catch (InvalidMoveException e) {
+        } catch (IOException | InvalidMoveException e) {
             System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(" "+e.getMessage());
         }
     }
 
     /** wylosowanie pola dla gracza z gwarancja drewna na wyspie*/
     public Point placePlayer() {
-        List<Island> treeIslands =  islands.stream().filter(island -> island.countTrees() != 0).toList();
-        if(treeIslands.size() == 0)
+        List<Island> treeIslands = islands.stream().filter(island -> island.countTrees() > 0).toList();
+        if(treeIslands.isEmpty())
             return getRandomPosition();
         Random random = new Random();
         Island randomIsland = treeIslands.get(random.nextInt(treeIslands.size()));
         return randomIsland.getFields().get(random.nextInt(randomIsland.getFields().size())).getPosition();
-    }
-
-    private boolean hasTrees() {
-        return fields.stream().anyMatch(field -> field.hasResource() && field.getResourceType() == ResourceType.FOREST);
     }
 
     private Point getRandomPosition() {
@@ -99,5 +92,9 @@ public class WorldMap extends Group {
 
     public int getMapSize() {
         return mapSize;
+    }
+
+    public List<Field> getFields() {
+        return fields;
     }
 }

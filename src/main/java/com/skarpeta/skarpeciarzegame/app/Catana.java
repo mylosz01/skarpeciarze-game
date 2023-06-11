@@ -76,6 +76,8 @@ public class Catana extends Application {
     public void start(Stage katana) throws IOException {
         this.katana = katana;
         clientThread = new Client();
+
+        katana.setOnCloseRequest(e -> clientThread.leaveGame());
         Thread playerSend = new Thread(clientThread);
         playerSend.start();
         worldMap = clientThread.getWorldMap();

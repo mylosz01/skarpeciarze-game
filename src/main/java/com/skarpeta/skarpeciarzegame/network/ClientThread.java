@@ -7,12 +7,12 @@ import java.io.*;
 
 public class ClientThread implements Runnable {
 
+    private final int playerID;
     private final Socket clientSocket;
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
-    int playerID;
-    String nickname;
-    Point position;
+    private String nickname;
+    private Point position;
 
     public ClientThread(int playerID, Point position, Socket clientSocket) throws IOException {
         this.playerID = playerID;
@@ -81,5 +81,20 @@ public class ClientThread implements Runnable {
 
     public ObjectInput getInputStream() {
         return inputStream;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public int getID() {
+        return playerID;
+    }
+
+    public String getNickname(){
+        return nickname;
+    }
+    public Point getPosition() {
+        return position;
     }
 }
