@@ -21,19 +21,24 @@ public class WorldGenerator {
     /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
     Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
     BufferedImage noise;
-    List<Double[][]> channels;
+    Double[][] noiseChannelHeight;
+    Double[][] noiseChannelForest;
     Random random;
     int seed;
 
     /** Konstruktor tworzy nowy plik noise*/
     public WorldGenerator(int seed) {
         try {
-            random = new Random(seed);
             this.seed = seed;
+            this.random = new Random(seed);
+
             int filesAmount = new File("src/main/resources/images/noise").list().length;
             noise = ImageIO.read(new File("src/main/resources/images/noise/noiseTexture"+random.nextInt(filesAmount)+".png"));
-            channels = ChannelSplitter.splitImage(noise);
+
+            List<Double[][]> channels = ChannelSplitter.splitImage(noise);
             Collections.shuffle(channels,random);
+            noiseChannelHeight = channels.get(0);
+            noiseChannelForest = channels.get(1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -43,14 +48,11 @@ public class WorldGenerator {
      *  Ustawia teren oraz generuje losowe materialy do zbierania przez graczy
      */
     public Field generateField(WorldMap worldMap, Point point) {
-        double heightChannel = channels.get(0)[point.x][point.y];
-        double forestChannel = channels.get(1)[point.x][point.y];
-
-        TerrainType terrain = thresholdedTerrain(heightChannel);
-        Field field = new Field(point, FIELD_WIDTH,terrain,heightChannel);
+        TerrainType terrain = thresholdedTerrain(noiseChannelHeight[point.x][point.y]);
+        Field field = new Field(point, FIELD_WIDTH,terrain, noiseChannelHeight[point.x][point.y]);
 
         if(terrain == TerrainType.GRASS_LAND)
-            field.darken(1-(forestChannel)-threshold[terrain.getIndex()-1]);
+            field.darken(1-(noiseChannelForest[point.x][point.y])-threshold[terrain.getIndex()-1]);
 
         worldMap.getChildren().add(field);
         return field;
@@ -58,11 +60,9 @@ public class WorldGenerator {
 
     public void generateResource(Field field) {
 
-        double forestChannel = channels.get(1)[field.getPosition().x][field.getPosition().y];
-
         switch (field.getTerrain()) {
             case GRASS_LAND -> {
-                if (randomBoolean(forestChannel))
+                if (randomBoolean(noiseChannelForest[field.getPosition().x][field.getPosition().y]))
                     field.addResource(new ForestResource());
             }
             case MOUNTAINS -> {
