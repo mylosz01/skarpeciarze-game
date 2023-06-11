@@ -82,12 +82,10 @@ public class Server implements Runnable {
 
     private void packWorld() {
         fieldInfo.clear();
-        worldMap.forEach(e -> {
-            FieldInfoPacket info = new FieldInfoPacket(e.position);
-            if (e.hasResource())
-                info.setResourceType(e.resource.type);
-            if (e.hasBuilding())
-                info.setBuildingType(e.building.type);
+        worldMap.forEach(field -> {
+            FieldInfoPacket info = new FieldInfoPacket(field.getPosition());
+            info.setResourceType(field.getResourceType());
+            info.setBuildingType(field.getBuildingType());
             fieldInfo.add(info);
         });
     }

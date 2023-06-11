@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame.worldmap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.Resource;
 import com.skarpeta.skarpeciarzegame.tools.Point;
+import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
@@ -12,21 +13,21 @@ import javafx.scene.shape.StrokeType;
  */
 public class Field extends Group {
 
-    public Point position;
-    public Hexagon hexagon;
-    public Building building;
-    public Resource resource;
-    public TerrainType terrain;
+    private final Hexagon hexagon;
+    private Point position;
+    private Building building;
+    private Resource resource;
+    private TerrainType terrain;
     /**do przyszlego wykorzystania, przechowuje noise channel */
-    public double height;
+    private double height;
 
     /** Tworzy heksagonalne pole mapy worldMap, w punkcie (tablicowym) position, o terenie terrain
      *  Pozycja na ekranie jest zmieniana poprzez move()
      */
     public Field(Point position, double fieldSize, TerrainType terrain, double height) {
-        hexagon = new Hexagon(fieldSize);
-        this.height = height;
+        this.hexagon = new Hexagon(fieldSize);
         this.position = position;
+        this.height = height;
         setTerrain(terrain);
         move(position);
         hexagon.setStrokeType(StrokeType.INSIDE);
@@ -104,8 +105,26 @@ public class Field extends Group {
         }
     }
 
-    @Override
-    public String toString() {
-        return  terrain +"["+ position+"], ";
+    public Point getPosition() {
+        return position;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+    public ResourceType getResourceType() {
+        return hasResource() ? getResource().getType() : ResourceType.EMPTY;
+    }
+
+    public TerrainType getTerrain() {
+        return terrain;
+    }
+
+    public BuildingType getBuildingType() {
+        return hasBuilding() ? getBuilding().getType() : BuildingType.EMPTY;
     }
 }

@@ -5,7 +5,6 @@ import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.inventory.ItemType;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
-import com.skarpeta.skarpeciarzegame.worldmap.WorldGenerator;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
@@ -106,7 +105,7 @@ public class Client implements Runnable {
     private void movePlayer(Packet packet) {
         Player packetPlayer = playerList.getPlayer(packet.playerID);
         packetPlayer.moveTo(worldMap.getField(packet.position));
-        if (packetPlayer.playerField.terrain == TerrainType.WATER)
+        if (packetPlayer.playerField.getTerrain() == TerrainType.WATER)
             packetPlayer.getOnBoat();
         else if (packetPlayer.isOnBoat()) {
             packetPlayer.getOffBoat();
@@ -131,7 +130,7 @@ public class Client implements Runnable {
 
     private void destroyBuilding(Packet packet) {
         //usuwa budynek z listy budynkow gracza. jezeli budynek nie nalezy do tego gracza, to nie bylo go w tej lisie, wiec nic sie nie zmieni
-        playerBuildingList.remove(worldMap.getField(packet.position).building);
+        playerBuildingList.remove(worldMap.getField(packet.position).getBuilding());
         Platform.runLater(() -> worldMap.getField(packet.position).destroyBuilding());
     }
 

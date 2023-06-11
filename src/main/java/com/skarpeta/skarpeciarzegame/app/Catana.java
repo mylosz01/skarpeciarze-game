@@ -110,8 +110,7 @@ public class Catana extends Application {
     }
     /** Porusza kamera aby na srodku ekranu byl dany obiekt*/
     private void panTo(Node node, double durationInSeconds) {
-        if(timeline != null)
-            timeline.stop();
+        stopPan();
         if(durationInSeconds<=0)
             durationInSeconds = 0.0001;
         currentScale = 1;
@@ -150,24 +149,15 @@ public class Catana extends Application {
 
     private void handleDrag(MouseEvent event) {
         if (event.isSecondaryButtonDown()) {
-            if(timeline != null)
-                timeline.stop();
-
-            double distanceX = event.getX() - initialPositionX;
-            double distanceY = event.getY() - initialPositionY;
-
-            gameMap.setLayoutX(gameMap.getLayoutX() + distanceX);
-            gameMap.setLayoutY(gameMap.getLayoutY() + distanceY);
-
-            initialPositionX = event.getX();
-            initialPositionY = event.getY();
+            stopPan();
+            gameMap.setLayoutX(gameMap.getLayoutX() + (event.getX() - initialPositionX));
+            gameMap.setLayoutY(gameMap.getLayoutY() + (event.getY() - initialPositionY));
+            handleRightClick(event);
         }
     }
 
     private void handleScroll(ScrollEvent event) {
-        if(timeline != null)
-            timeline.stop();
-
+        stopPan();
         double zoomFactor = (event.getDeltaY() > 0) ? ZOOM_FACTOR : (1 / ZOOM_FACTOR);
         double offsetX = (event.getX() - gameMap.getWidth() / 2) * (1 - zoomFactor);
         double offsetY = (event.getY() - gameMap.getHeight() / 2) * (1 - zoomFactor);
@@ -177,6 +167,11 @@ public class Catana extends Application {
         gameMap.setLayoutX((gameMap.getLayoutX() + offsetX) * zoomFactor);
         gameMap.setLayoutY((gameMap.getLayoutY() + offsetY) * zoomFactor);
         currentScale *= zoomFactor;
+    }
+
+    private void stopPan() {
+        if(timeline != null)
+            timeline.stop();
     }
 
     public static Client getClientThread() {

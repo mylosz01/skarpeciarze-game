@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Island {
-    List<Field> fields;
-    int treesCount = 0;
-
+    private final List<Field> fields;
     public Island() {
         this.fields = new ArrayList<>();
     }
@@ -22,10 +20,9 @@ public class Island {
 
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
-                if (worldMap.getField(new Point(i,j)).terrain != TerrainType.WATER && !visited[i][j]) {
+                if (worldMap.getField(new Point(i,j)).getTerrain() != TerrainType.WATER && !visited[i][j]) {
                     Island island = new Island();
                     exploreIsland(worldMap, visited, new Point(i,j), island);
-                    island.treesCount = countTrees(island);
                     islands.add(island);
                 }
             }
@@ -37,7 +34,7 @@ public class Island {
 
         if (point.isNegative() || point.x >= worldMap.getMapSize() || point.y >= worldMap.getMapSize())
             return;
-        if (visited[point.x][point.y] || worldMap.getField(new Point(point.x,point.y)).terrain == TerrainType.WATER)
+        if (visited[point.x][point.y] || worldMap.getField(new Point(point.x,point.y)).getTerrain() == TerrainType.WATER)
             return;
 
         visited[point.x][point.y] = true;
@@ -49,12 +46,11 @@ public class Island {
         exploreIsland(worldMap, visited, point.add(new Point(0,1)), island); // Right
     }
 
-    public static int countTrees(Island island){
+    public int countTrees(){
         int treeAmount =0;
-        for (Field e : island.fields) {
-            if (e.hasResource() && e.resource.type == ResourceType.FOREST) {
+        for (Field field : fields) {
+            if (field.getResourceType() == ResourceType.FOREST)
                 treeAmount++;
-            }
         }
         return treeAmount;
     }
@@ -63,5 +59,8 @@ public class Island {
     }
     public void forEach(Consumer<Field> action) {
         fields.forEach(action);
+    }
+    public List<Field> getFields() {
+        return fields;
     }
 }

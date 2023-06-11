@@ -63,13 +63,13 @@ public class Player extends VBox {
      */
     public void sendMove(Field destination) throws InvalidMoveException, IOException {
         if(isValidMovePlayer(destination)){
-            Client.makeMove(playerID,destination.position);
+            Client.makeMove(playerID,destination.getPosition());
         }
     }
 
     public void collectResource(){
         if(playerField.hasResource()){
-           Resource resource = playerField.resource;
+           Resource resource = playerField.getResource();
            inventory.increaseItemAmount(resource.getItem().getType(),resource.getItem().getAmount());
            this.playerField.destroyResource();
         }
@@ -91,9 +91,9 @@ public class Player extends VBox {
      *  oraz próba wejścia na niesąsiadujące pole
      */
     public boolean isValidMovePlayer(Field destination) throws InvalidMoveException {
-        if(destination.terrain.equals(TerrainType.WATER) && inventory.getAmount(ItemType.BOAT) == 0)
+        if(destination.getTerrain().equals(TerrainType.WATER) && inventory.getAmount(ItemType.BOAT) == 0)
             throw new InvalidMoveException("nie posiadasz lodki!!!");
-        if(!destination.position.isTouchingHexagonal(this.playerField.position))
+        if(!destination.getPosition().isTouchingHexagonal(this.playerField.getPosition()))
             throw new InvalidMoveException("to pole jest poza zasiegiem");
         return true;
     }

@@ -81,18 +81,18 @@ public class PlayerUI extends VBox {
         buttonCategoriesPane.setMinHeight(200);
 
         destroyButton = new MenuButton("break");
-        destroyButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveBuilding(Catana.getClientThread().getPlayer().playerField.position));
+        destroyButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveBuilding(Catana.getClientThread().getPlayer().playerField.getPosition()));
         collectButton = new MenuButton("get");
-        collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.position));
+        collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.getPosition()));
 
         sawmillButton = new PlusButton("button/sawmillButton.png",BuildingType.SAWMILL);
-        sawmillButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.SAWMILL));
+        sawmillButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.SAWMILL));
 
         quarryButton = new PlusButton("button/quarryButton.png",BuildingType.QUARRY);
-        quarryButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.QUARRY));
+        quarryButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.QUARRY));
 
         mineshaftButton = new PlusButton("button/mineshaftButton.png",BuildingType.MINESHAFT);
-        mineshaftButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.position, BuildingType.MINESHAFT));
+        mineshaftButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.MINESHAFT));
 
         fieldActionPane = new VBox();
         fieldActionPane.setAlignment(Pos.CENTER);
@@ -152,9 +152,9 @@ public class PlayerUI extends VBox {
         Platform.runLater(()->{
             collectButton.setEnabled(field.hasResource());
             destroyButton.setEnabled(field.hasBuilding());
-            sawmillButton.setEnabled(field.terrain == TerrainType.GRASS_LAND && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.SAWMILL.getCost()));
-            quarryButton.setEnabled(field.terrain == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.QUARRY.getCost()));
-            mineshaftButton.setEnabled(field.terrain == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.MINESHAFT.getCost()));
+            sawmillButton.setEnabled(field.getTerrain() == TerrainType.GRASS_LAND && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.SAWMILL.getCost()));
+            quarryButton.setEnabled(field.getTerrain() == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.QUARRY.getCost()));
+            mineshaftButton.setEnabled(field.getTerrain() == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.MINESHAFT.getCost()));
 
             boatButton.setEnabled(inventory.hasEnoughMaterials(BoatItem.getCost()) && inventory.getAmount(ItemType.BOAT) < Inventory.MAX_BOAT_HOLD);
             catanaButton.setEnabled(inventory.hasEnoughMaterials(CatanaItem.getCost()));

@@ -25,4 +25,8 @@ public abstract class Building extends Asset {
     public String toString() {
         return type.name();
     }
+
+    public BuildingType getType() {
+        return type;
+    }
 }

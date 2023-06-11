@@ -57,11 +57,11 @@ public class WorldGenerator {
 
     public void generateResource(Field field) {
 
-        int rgb = noise.getRGB(field.position.x, field.position.y);
+        int rgb = noise.getRGB(field.getPosition().x, field.getPosition().y);
 
         double forestChannel = ((rgb >> 8) & 0xFF)/255.0;
 
-        switch (field.terrain) {
+        switch (field.getTerrain()) {
             case GRASS_LAND -> {
                 if (randomBoolean(forestChannel))
                     field.addResource(new ForestResource());

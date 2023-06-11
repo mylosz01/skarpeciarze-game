@@ -7,9 +7,8 @@ import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -18,7 +17,8 @@ import java.util.function.Consumer;
 /** Mapa gry, definiowana przez tablicę pól Field */
 public class WorldMap extends Group {
     /** Zbiór pól mapy */
-    private final Field[][] board;
+    private final List<Field> fields;
+    private final List<Island> islands;
     private final int mapSize;
     private final int seed;
 
@@ -26,16 +26,17 @@ public class WorldMap extends Group {
     public WorldMap(int size, int seed) {
         this.seed = seed;
         WorldGenerator worldGenerator = new WorldGenerator(seed);
-        board = new Field[size][size];
+        fields = new ArrayList();
         mapSize = size;
         for(int y = 0; y< mapSize; y++) {
             for (int x = 0; x < mapSize; x++) {
                 Point point = new Point(x,y);
                 Field newField = worldGenerator.generateField(this,point);
                 newField.setOnMouseClicked((e)->click(e,newField));
-                board[x][y] = newField;
+                fields.add(newField);
             }
         }
+        islands = Island.findIslands(this);
     }
 
 
@@ -45,25 +46,15 @@ public class WorldMap extends Group {
         }
     }
 
-    /** wyswietla jeden z noise odpowiedzialnych za generacje drzew */
-    public void debugModeTerrain()
-    {
-        this.forEach((e)->e.setColor(Color.BLACK.interpolate(Color.WHITE,e.height)));//debug);
-    }
-
     /** Wykonywanie akcji dla każdego z pola */
     public void forEach(Consumer<Field> action) {
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
-                action.accept(board[i][j]);
-            }
-        }
+        fields.forEach(action);
     }
 
     public Field getField(Point p) {
         if(p.isNegative())
             throw new NoSuchElementException("pola nie moga byc na pozycji ujemnej");
-        return board[p.x][p.y];
+        return fields.get(p.x%mapSize + p.y*mapSize);
     }
 
     /** Wybieranie pola przez gracza,
@@ -77,40 +68,30 @@ public class WorldMap extends Group {
         } catch (IOException e) {
             System.out.println(" "+e.getMessage());
         }
-        //field.addBuilding(new Sawmill());
     }
 
     /** wylosowanie pola dla gracza z gwarancja drewna na wyspie*/
     public Point placePlayer() {
-        List<Island> islands = Island.findIslands(this);
-        Island randomIsland;
-
         if(!hasTrees())
             return getRandomPosition();
 
+        Island island;
         do {
-            randomIsland = islands.get(new Random().nextInt(islands.size()));
-        } while (randomIsland.treesCount == 0);
+            island = islands.get(new Random().nextInt(islands.size()));
+        } while (island.countTrees() == 0);
 
-        return randomIsland.fields.get(new Random().nextInt(randomIsland.fields.size())).position;
+        return island.getFields().get(new Random().nextInt(island.getFields().size())).getPosition();
     }
 
     private boolean hasTrees() {
-        for (int i = 0; i < mapSize; i++) {
-            for (int j = 0; j < mapSize; j++) {
-                Field field = getField(new Point(j,i));
-                if(field.hasResource() && field.resource.type == ResourceType.FOREST)
-                    return true;
-            }
-        }
-        return false;
+        return fields.stream().anyMatch(field->field.hasResource() && field.getResourceType() == ResourceType.FOREST);
     }
 
     private Point getRandomPosition() {
         Point point;
         do {
             point = new Point(new Random().nextInt(mapSize),new Random().nextInt(mapSize));
-        } while(board[point.x][point.y].terrain == TerrainType.WATER);
+        } while(getField(point).getTerrain() == TerrainType.WATER);
         return point;
     }
 
