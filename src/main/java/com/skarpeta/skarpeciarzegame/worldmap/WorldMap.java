@@ -1,15 +1,14 @@
 package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.app.Catana;
-import com.skarpeta.skarpeciarzegame.network.Player;
 import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -17,24 +16,25 @@ import java.util.function.Consumer;
 /** Mapa gry, definiowana przez tablicę pól Field */
 public class WorldMap extends Group {
     /** Zbiór pól mapy */
-    private final Field[][] board;
-    private final int BOARD_SIZE;
+    private final List<Field> fields;
+    private final List<Island> islands;
+    private final int mapSize;
     private final int seed;
 
     /** Tworzenie mapy o wymiarach size * size, generowana poprzez losowo wybrany plik noise */
     public WorldMap(int size, int seed) {
         this.seed = seed;
         WorldGenerator worldGenerator = new WorldGenerator(seed);
-        board = new Field[size][size];
-        BOARD_SIZE = size;
-        for(int y = 0; y< BOARD_SIZE; y++) {
-            for (int x = 0; x < BOARD_SIZE; x++) {
-                Point point = new Point(x,y);
-                Field newField = worldGenerator.generateField(this,point);
+        fields = new ArrayList<>();
+        mapSize = size;
+        for(int y = 0; y< mapSize; y++) {
+            for (int x = 0; x < mapSize; x++) {
+                Field newField = worldGenerator.generateField(this,new Point(x,y));
                 newField.setOnMouseClicked((e)->click(e,newField));
-                board[x][y] = newField;
+                fields.add(newField);
             }
         }
+        islands = Island.findIslands(this);
     }
 
 
@@ -44,25 +44,15 @@ public class WorldMap extends Group {
         }
     }
 
-    /** wyswietla jeden z noise odpowiedzialnych za generacje drzew */
-    public void debugModeTerrain()
-    {
-        this.forEach((e)->e.setColor(Color.BLACK.interpolate(Color.WHITE,e.height)));//debug);
-    }
-
     /** Wykonywanie akcji dla każdego z pola */
     public void forEach(Consumer<Field> action) {
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                action.accept(board[i][j]);
-            }
-        }
+        fields.forEach(action);
     }
 
-    public Field getField(Point p) {
-        if(p.isNegative())
+    public Field getField(Point position) {
+        if(position.isNegative())
             throw new NoSuchElementException("pola nie moga byc na pozycji ujemnej");
-        return board[p.x][p.y];
+        return fields.get(position.convertToOneDimention(mapSize));
     }
 
     /** Wybieranie pola przez gracza,
@@ -71,20 +61,24 @@ public class WorldMap extends Group {
     public void selectField(Field field) {
         try {
             Catana.getClientThread().getPlayer().sendMove(field);
-        } catch (InvalidMoveException e) {
+        } catch (IOException | InvalidMoveException e) {
             System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(" "+e.getMessage());
         }
-        //field.addBuilding(new Sawmill());
     }
 
-    public Point placePlayer(){
-        Point point;
-        do {
-            point = new Point(new Random().nextInt(BOARD_SIZE),new Random().nextInt(BOARD_SIZE));
-        } while(board[point.x][point.y].terrain == TerrainType.WATER);
-        return point;
+    /** wylosowanie pola dla gracza z gwarancja drewna na wyspie*/
+    public Point placePlayer() {
+        List<Island> treeIslands = islands.stream().filter(island -> island.countTrees() > 0).toList();
+        if(treeIslands.isEmpty())
+            return getRandomPosition();
+        Random random = new Random();
+        Island randomIsland = treeIslands.get(random.nextInt(treeIslands.size()));
+        return randomIsland.getFields().get(random.nextInt(randomIsland.getFields().size())).getPosition();
+    }
+
+    private Point getRandomPosition() {
+        List<Field> fieldList = fields.stream().filter(field -> field.getTerrain() != TerrainType.WATER).toList();
+        return fieldList.get(new Random().nextInt(fieldList.size())).getPosition();
     }
 
     public int getSeed(){
@@ -93,6 +87,14 @@ public class WorldMap extends Group {
 
     public void generateResources() {
         WorldGenerator worldGenerator = new WorldGenerator(seed);
-        forEach(worldGenerator::generateResource);
+        this.forEach(worldGenerator::generateResource);
+    }
+
+    public int getMapSize() {
+        return mapSize;
+    }
+
+    public List<Field> getFields() {
+        return fields;
     }
 }

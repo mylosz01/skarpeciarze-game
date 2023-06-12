@@ -1,6 +1,5 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 
 import java.net.*;
@@ -8,11 +7,12 @@ import java.io.*;
 
 public class ClientThread implements Runnable {
 
+    private final int playerID;
     private final Socket clientSocket;
     private final ObjectOutputStream outputStream;
     private final ObjectInputStream inputStream;
-    int playerID;
-    Point position;
+    private String nickname;
+    private Point position;
 
     public ClientThread(int playerID, Point position, Socket clientSocket) throws IOException {
         this.playerID = playerID;
@@ -28,10 +28,11 @@ public class ClientThread implements Runnable {
             while (true) {
                 Packet packet = receiveData();
                 switch (packet.packetType) {
-                    case MOVE -> {if (packet.playerID == playerID) position = packet.position;}
+                    case MOVE -> movePlayer(packet);
+                    case BUILD -> addBuilding(packet);
                     case DESTROY_BUILDING -> Server.worldMap.getField(packet.position).destroyBuilding();
                     case DESTROY_RESOURCE -> Server.worldMap.getField(packet.position).destroyResource();
-                    case BUILD -> addBuilding(packet);
+                    case NICKNAME -> setMyNickname(packet);
                     case DISCONNECT -> throw new IOException("Player left the game");
                 }
                 Server.sendToAllClients(packet);
@@ -43,18 +44,21 @@ public class ClientThread implements Runnable {
         } finally {
             Server.clientList.remove(playerID);
             Server.sendToAllClients(new Packet(PacketType.DISCONNECT,playerID));
-            closeConnection();
+            //closeConnection();
         }
     }
 
+    private void setMyNickname(Packet packet) {
+        this.nickname = packet.string;
+        Server.sendToAllClients(new Packet(PacketType.NICKNAME,playerID,nickname));
+    }
+
+    private void movePlayer(Packet packet) {
+        if (packet.playerID == playerID) position = packet.position;
+    }
+
     private void addBuilding(Packet packet) {
-        Building building = switch (packet.buildingType) {
-            case EMPTY -> null;
-            case SAWMILL -> new Sawmill(packet.position);
-            case MINESHAFT -> new Mineshaft(packet.position);
-            case QUARRY -> new Quarry(packet.position);
-        };
-        Server.worldMap.getField(packet.position).addBuilding(building);
+        Server.worldMap.getField(packet.position).addBuilding(packet.buildingType.newBuilding());
     }
 
     public Packet receiveData() throws IOException, ClassNotFoundException {
@@ -73,5 +77,24 @@ public class ClientThread implements Runnable {
 
     public ObjectOutputStream getOutputStream() {
         return outputStream;
+    }
+
+    public ObjectInput getInputStream() {
+        return inputStream;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public int getID() {
+        return playerID;
+    }
+
+    public String getNickname(){
+        return nickname;
+    }
+    public Point getPosition() {
+        return position;
     }
 }

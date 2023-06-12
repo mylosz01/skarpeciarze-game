@@ -5,13 +5,13 @@ import java.util.ArrayList;
 /** Item służący do pływania po wodzie.
  *  Craftowany przez gracza.
  */
-public class BoatItem extends Item{
+public class CatanaItem extends Item{
     public static ArrayList<Item> buildingCost = new ArrayList<>();
     static{
-        buildingCost.add(new WoodItem(5));
+        buildingCost.add(new GoldItem(500));
     }
-    BoatItem(int amount){
-        super(amount,ItemType.BOAT);
+    CatanaItem(int amount){
+        super(amount,ItemType.CATANA);
     }
 
     public static ArrayList<Item> getCost() {

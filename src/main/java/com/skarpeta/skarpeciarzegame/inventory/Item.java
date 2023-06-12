@@ -9,16 +9,16 @@ import javafx.scene.image.ImageView;
  * */
 public abstract class Item extends Asset {
     private Integer amount;
-    private String name;
+    ItemType type;
 
-    Item(int amount, String textureName, String name){
-        super(new ImageView(ImageManager.getImage("item/"+textureName+".png",64,64)));
+    Item(int amount, ItemType type){
+        super(new ImageView(ImageManager.getImage("item/"+type.toString()+".png",64,64)));
         this.amount = amount;
-        this.name = name;
+        this.type = type;
     }
 
     public String getName(){
-        return this.name;
+        return this.type.toString();
     }
 
     public void setAmount(int newAmount){
@@ -40,19 +40,11 @@ public abstract class Item extends Asset {
         decreaseAmount(-number);
     }
 
-    public void craftBoat(){
-        return;
-    }
-
-    public boolean lesserThan(int amount){
-        return this.amount<amount;
-    }
-
     public String toString(){
-        return Integer.toString(amount);
+        return getName() + " - " + amount;
     }
 
-    public boolean boatExists(){
-        return false;
+    public ItemType getType() {
+        return type;
     }
 }

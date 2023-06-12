@@ -12,7 +12,6 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 
 import java.io.IOException;
-import java.util.Random;
 
 public class Launcher extends Application {
 
@@ -73,14 +72,22 @@ public class Launcher extends Application {
             try {
                 int mapSize = Integer.parseInt(serverMenu.getMapSizeField().getText());
                 int portNumber = Integer.parseInt(serverMenu.getPortField().getText());
-                int seed = serverMenu.isSeedRandom() ? new Random().nextInt() : Integer.parseInt(serverMenu.getSeedField().getText());
+                int seed = Integer.parseInt(serverMenu.getSeedField().getText());
+                String nickname = serverMenu.getNicknameField().getText();
+                if(nickname.length()>6)
+                    nickname = nickname.substring(0,6);
 
                 if(mapSize <= 0)
-                    throw new IllegalArgumentException("Invalid map size.");
+                    throw new IllegalArgumentException("Map size cannot be less than 1");
+                else if(mapSize > 128)
+                    throw new IllegalArgumentException("Map size cannot be higher than 128");
 
                 System.out.println("Booting server on port " + portNumber+"...");
-                new Thread(new Server(portNumber,mapSize,seed)).start();
-                new Catana("127.0.0.1", portNumber).start(new Stage());
+                Server server = new Server(portNumber,mapSize,seed);
+                new Thread(server).start();
+                Catana catana = new Catana("127.0.0.1", portNumber,nickname);
+                catana.start(new Stage());
+                catana.katana.setOnCloseRequest(e -> new ClosingGamePopup(server,Catana.clientThread).start(new Stage()));
                 serverMenu.close();
                 window.close();
             } catch (IllegalArgumentException e) {
@@ -102,8 +109,12 @@ public class Launcher extends Application {
             try {
                 String ipAddress = joinMenu.getIpField().getText();
                 int portNumber = Integer.parseInt(joinMenu.getPortField().getText());
+                String nickname = joinMenu.getNicknameField().getText();
+                if(nickname.length()>6)
+                    nickname = nickname.substring(0,6);
+
                 System.out.println("Connecting to " + ipAddress + " on port " + portNumber);
-                new Catana(ipAddress, portNumber).start(new Stage());
+                new Catana(ipAddress, portNumber, nickname).start(new Stage());
                 joinMenu.close();
                 window.close();
             } catch (IllegalArgumentException e) {

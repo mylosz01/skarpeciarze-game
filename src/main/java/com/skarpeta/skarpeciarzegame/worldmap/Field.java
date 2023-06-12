@@ -3,9 +3,8 @@ package com.skarpeta.skarpeciarzegame.worldmap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.resources.Resource;
 import com.skarpeta.skarpeciarzegame.tools.Point;
+import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import javafx.scene.Group;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 
@@ -14,28 +13,24 @@ import javafx.scene.shape.StrokeType;
  */
 public class Field extends Group {
 
-    private final WorldMap worldMap;
-    public Point position;
-    public Hexagon hexagon;
-    public Building building;
-    public Resource resource;
-    public TerrainType terrain;
-    /**do przyszlego wykorzystania, przechowuje noise channel */
-    public double height;
+    private final Hexagon hexagon;
+    private final Point position;
+    private final double height;
+    private Building building;
+    private Resource resource;
+    private TerrainType terrain;
 
     /** Tworzy heksagonalne pole mapy worldMap, w punkcie (tablicowym) position, o terenie terrain
      *  Pozycja na ekranie jest zmieniana poprzez move()
      */
-    public Field(WorldMap worldMap, Point position, double fieldSize, TerrainType terrain, double height) {
-        hexagon = new Hexagon(fieldSize);
-        this.height = height;
-        this.worldMap = worldMap;
+    public Field(Point position, double fieldSize, TerrainType terrain, double height) {
+        this.hexagon = new Hexagon(fieldSize);
         this.position = position;
+        this.height = height;
         setTerrain(terrain);
         move(position);
         hexagon.setStrokeType(StrokeType.INSIDE);
         hexagon.setStrokeWidth(fieldSize * 0.05);
-        //setOnMouseClicked(this::click);
         getChildren().add(hexagon);
     }
 
@@ -44,24 +39,13 @@ public class Field extends Group {
         this.terrain = terrain;
         hexagon.setFill(terrain.getColor().primary);
         if(terrain != TerrainType.WATER)
-            hexagon.setStroke(terrain.getColor().darker);
+            hexagon.setStroke(terrain.getColor().midway);
     }
 
     /** Override koloru, nie ma powrotu (debug only!!!!1)*/
     public void setColor(Color color) {
         hexagon.setFill(color);
-
     }
-
-    /** Wykrywa przyciśnięcie pola lub leżących na nim obiektów */
-    private void click(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-            System.out.println("clicked field: "+position);
-            System.out.println("mosue coords: "+getLayoutX()+", "+getLayoutY());
-            worldMap.selectField(this);
-        }
-    }
-
 
     /** Dodaje budynek do pola */
     public void addBuilding(Building building) {
@@ -90,10 +74,10 @@ public class Field extends Group {
      *  Nieparzyste rzędy przesuwane są o połowe wysokości w dół
      */
     public void move(Point p) {
-        double x = p.x * hexagon.width * 0.75;
-        double y = p.y * hexagon.height;
+        double x = p.x * hexagon.getWidth() * 0.75;
+        double y = p.y * hexagon.getHeight();
         if(p.x%2 == 1)
-            y += hexagon.height * 0.5;
+            y += hexagon.getHeight() * 0.5;
         relocate(x, y);
     }
 
@@ -118,5 +102,28 @@ public class Field extends Group {
             getChildren().remove(resource);
             resource = null;
         }
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+    public ResourceType getResourceType() {
+        return hasResource() ? getResource().getType() : ResourceType.EMPTY;
+    }
+
+    public TerrainType getTerrain() {
+        return terrain;
+    }
+
+    public BuildingType getBuildingType() {
+        return hasBuilding() ? getBuilding().getType() : BuildingType.EMPTY;
     }
 }

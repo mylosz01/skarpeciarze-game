@@ -8,5 +8,6 @@ public enum PacketType {
     INIT_PLAYER,
     BUILD,
     DESTROY_BUILDING,
+    NICKNAME,
     DESTROY_RESOURCE
 }

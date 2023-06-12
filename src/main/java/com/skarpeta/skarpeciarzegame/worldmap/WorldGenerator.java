@@ -2,11 +2,14 @@ package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.resources.StoneResource;
+import com.skarpeta.skarpeciarzegame.tools.ChannelSplitter;
 import com.skarpeta.skarpeciarzegame.tools.Point;
-
+import javafx.scene.paint.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
@@ -18,17 +21,24 @@ public class WorldGenerator {
     /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
     Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
     BufferedImage noise;
+    Double[][] noiseChannelHeight;
+    Double[][] noiseChannelForest;
     Random random;
-
     int seed;
 
     /** Konstruktor tworzy nowy plik noise*/
-    WorldGenerator(int seed) {
+    public WorldGenerator(int seed) {
         try {
-            random = new Random(seed);
             this.seed = seed;
-            int randomNoiseFile = random.nextInt(new File("src/main/resources/images/noise").list().length);
-            noise = ImageIO.read(new File("src/main/resources/images/noise/noiseTexture"+randomNoiseFile+".png"));
+            this.random = new Random(seed);
+
+            int filesAmount = new File("src/main/resources/images/noise").list().length;
+            noise = ImageIO.read(new File("src/main/resources/images/noise/noiseTexture"+random.nextInt(filesAmount)+".png"));
+
+            List<Double[][]> channels = ChannelSplitter.splitImage(noise);
+            Collections.shuffle(channels,random);
+            noiseChannelHeight = channels.get(0);
+            noiseChannelForest = channels.get(1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -38,16 +48,11 @@ public class WorldGenerator {
      *  Ustawia teren oraz generuje losowe materialy do zbierania przez graczy
      */
     public Field generateField(WorldMap worldMap, Point point) {
-
-        int rgb = noise.getRGB(point.x, point.y);
-        double heightChannel = ((rgb >> 16) & 0xFF)/255.0;
-        double forestChannel = ((rgb >> 8) & 0xFF)/255.0;
-
-        TerrainType terrain = thresholdedTerrain(heightChannel);
-        Field field = new Field(worldMap,point, FIELD_WIDTH,terrain,heightChannel);
+        TerrainType terrain = thresholdedTerrain(noiseChannelHeight[point.x][point.y]);
+        Field field = new Field(point, FIELD_WIDTH,terrain, noiseChannelHeight[point.x][point.y]);
 
         if(terrain == TerrainType.GRASS_LAND)
-            field.darken(1-(forestChannel)-threshold[terrain.getIndex()-1]);
+            field.darken(1-(noiseChannelForest[point.x][point.y])-threshold[terrain.getIndex()-1]);
 
         worldMap.getChildren().add(field);
         return field;
@@ -55,13 +60,9 @@ public class WorldGenerator {
 
     public void generateResource(Field field) {
 
-        int rgb = noise.getRGB(field.position.x, field.position.y);
-
-        double forestChannel = ((rgb >> 8) & 0xFF)/255.0;
-
-        switch (field.terrain) {
+        switch (field.getTerrain()) {
             case GRASS_LAND -> {
-                if (randomBoolean(forestChannel))
+                if (randomBoolean(noiseChannelForest[field.getPosition().x][field.getPosition().y]))
                     field.addResource(new ForestResource());
             }
             case MOUNTAINS -> {
@@ -86,5 +87,12 @@ public class WorldGenerator {
                 return TerrainType.fromIndex(index);
         }
         throw new RuntimeException("niepoprawny plik");
+    }
+    public void setBiomes(WorldMap worldMap){
+        List<Island> islands = Island.findIslands(worldMap);
+        islands.forEach(island->{
+            Integer[] rgb = new Integer[]{random.nextInt(255),random.nextInt(255),random.nextInt(255)};
+            island.forEach(field -> field.setColor(Color.rgb(rgb[0],rgb[1],rgb[2])));
+        });
     }
 }

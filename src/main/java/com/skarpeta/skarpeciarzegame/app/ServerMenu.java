@@ -2,19 +2,19 @@ package com.skarpeta.skarpeciarzegame.app;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.Random;
+
 public class ServerMenu extends Stage {
-    private Button launchButton;
-    private TextField mapSizeField;
-    private TextField portField;
-    private TextField seedField;
+    private final Button launchButton;
+    private final TextField mapSizeField;
+    private final TextField portField;
+    private final TextField seedField;
+    private final TextField nicknameField;
 
     private final Label exceptionLabel;
     private final CheckBox randomSeedCheckbox;
@@ -24,6 +24,7 @@ public class ServerMenu extends Stage {
     public Button getLaunchButton() {return launchButton;}
     public TextField getMapSizeField() {return mapSizeField;}
     public TextField getPortField() {return portField;}
+    public TextField getNicknameField() {return nicknameField;}
 
     public ServerMenu() {
         setTitle("Server config");
@@ -58,12 +59,19 @@ public class ServerMenu extends Stage {
         gridPane.add(portLabel, 0, 2);
         gridPane.add(portField, 1, 2);
 
+        Label nicknameLabel = new Label("Nickname:");
+        nicknameField = new TextField();
+        nicknameField.setText("Host");
+        nicknameField.setMaxWidth(80);
+        gridPane.add(nicknameLabel, 0, 3);
+        gridPane.add(nicknameField, 1, 3);
+
         launchButton = new Button("Launch server");
-        gridPane.add(launchButton, 2,2);
+        gridPane.add(launchButton, 2,3);
 
         exceptionLabel = new Label();
         exceptionLabel.setTextFill(Color.RED);
-        gridPane.add(exceptionLabel,0,3,3,3);
+        gridPane.add(exceptionLabel,0,4,3,4);
 
         Scene scene = new Scene(gridPane, 300, 150);
         setScene(scene);
@@ -75,11 +83,11 @@ public class ServerMenu extends Stage {
     }
 
     private void setRandomSeed(boolean b) {
-        String text = b ? "randomized" : "";
-        seedField.setText(text);
+        seedField.setText(b ? Integer.toString(new Random().nextInt(99999)) : "");
         seedField.setDisable(b);
         randomSeedCheckbox.setSelected(b);
     }
+
     public boolean isSeedRandom(){
         return randomSeedCheckbox.isSelected();
     }

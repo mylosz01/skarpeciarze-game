@@ -13,42 +13,51 @@ public class JoinMenu extends Stage {
     private Label exceptionLabel;
     private Button connectButton;
     private TextField ipField;
+    private TextField nicknameField;
     private TextField portField;
 
     public Label getExceptionLabel() {return exceptionLabel;}
     public Button getConnectButton() {return connectButton;}
     public TextField getIpField() {return ipField;}
     public TextField getPortField() {return portField;}
+    public TextField getNicknameField() {return nicknameField;}
 
     public JoinMenu() {
-        setTitle("IP and Port Menu");
+        setTitle("Join server");
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10));
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        Label ipLabel = new Label("IP Address:");
+        Label ipLabel = new Label("IP:");
         ipField = new TextField();
         ipField.setText("127.0.0.1");
         gridPane.add(ipLabel, 0, 0);
         gridPane.add(ipField, 1, 0);
 
-        Label portLabel = new Label("Port Number:");
+        Label portLabel = new Label("Port:");
         portField = new TextField();
         portField.setText("5555");
         gridPane.add(portLabel, 0, 1);
         gridPane.add(portField, 1, 1);
 
+        Label nicknameLabel = new Label("Nickname:");
+        nicknameField = new TextField();
+        nicknameField.setText("Guest");
+        gridPane.add(nicknameLabel, 0, 2);
+        gridPane.add(nicknameField, 1, 2);
+
         connectButton = new Button("Connect");
-        gridPane.add(connectButton, 0, 2, 2, 1);
+        gridPane.add(connectButton, 0, 3, 3, 1);
 
         exceptionLabel = new Label();
         exceptionLabel.setTextFill(Color.RED);
-        gridPane.add(exceptionLabel,0,3,2,3);
+        gridPane.add(exceptionLabel,0,4,2,4);
 
         Scene scene = new Scene(gridPane, 300, 150);
         setScene(scene);
         show();
     }
+
 }

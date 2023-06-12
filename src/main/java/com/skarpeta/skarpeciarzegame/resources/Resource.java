@@ -8,9 +8,9 @@ import javafx.scene.image.ImageView;
 /** Losowo generowane materiały do zebrania przez gracza */
 public abstract class Resource extends Asset {
 
-    public Item item;
+    protected Item item;
     protected int maxResourceRange = 100;
-    public ResourceType type;
+    ResourceType type;
 
     public Resource(String textureName) {
         super(new ImageView(ImageManager.getImage("mapasset/"+textureName+".png",128,128)));
@@ -24,5 +24,9 @@ public abstract class Resource extends Asset {
     /** align() służy materiałom do przyjęcia pozycji w lewym dolnym rogu pola Field w którym się znajduje*/
     private void align() {
         super.align(-16.2,16);
+    }
+
+    public ResourceType getType() {
+        return type;
     }
 }

@@ -1,10 +1,12 @@
 package com.skarpeta.skarpeciarzegame.network;
 
-import com.skarpeta.skarpeciarzegame.worldmap.BuildingType;
+import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
+import com.skarpeta.skarpeciarzegame.inventory.ItemType;
+import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
-import com.skarpeta.skarpeciarzegame.resources.*;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
@@ -31,12 +33,16 @@ public class Client implements Runnable {
             InputStream in = clientSocket.getInputStream();
             inputStream = new ObjectInputStream(in);
 
-            Catana.katana.setOnCloseRequest(e -> new Packet(PacketType.DISCONNECT).sendTo(outputStream));
-
             receiveData();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void leaveGame() {
+        Packet packet = new Packet(PacketType.DISCONNECT,player.playerID);
+        packet.sendTo(outputStream);
+        playerLeft(packet);
     }
 
     public static void makeMove(int playerID, Point newPosition) {
@@ -44,8 +50,7 @@ public class Client implements Runnable {
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
-        if (player.getInventory().checkBuildStatus(buildingType)) {
-            Catana.playerUI.renderInventory(this.player);
+        if (!worldMap.getField(fieldPosition).hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType.getCost())) {
             new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
         }
     }
@@ -71,51 +76,59 @@ public class Client implements Runnable {
             case DESTROY_BUILDING -> destroyBuilding(packet);
             case DESTROY_RESOURCE -> removeResource(packet);
             case DISCONNECT -> playerLeft(packet);
+            case NICKNAME -> setMyNickname(packet);
         }
         if (Catana.playerUI!=null)
-            Catana.playerUI.updateButtonUI();
+            Catana.playerUI.updateButtons();
+    }
+
+    private void setMyNickname(Packet packet) {
+        playerList.getPlayer(packet.playerID).setNickname(packet.string);
     }
 
     private void initMap(Packet packet) {
         worldMap = new WorldMap(packet.sizeMap, packet.seedMap);
+        //new WorldGenerator(packet.seedMap).setBiomes(worldMap); kolorowanie wysp
+
         packet.fieldInfo.forEach(e -> {
-            Resource resource = switch (e.resourceType) {
-                case EMPTY -> null;
-                case FOREST -> new ForestResource();
-                case STONE -> new StoneResource();
-            };
-            Building building = switch (e.buildingType) {
-                case EMPTY -> null;
-                case QUARRY -> new Quarry(packet.position);
-                case MINESHAFT -> new Mineshaft(packet.position);
-                case SAWMILL -> new Sawmill(packet.position);
-            };
-            worldMap.getField(e.point).addResource(resource);
-            worldMap.getField(e.point).addBuilding(building);
+            worldMap.getField(e.position).addResource(e.resourceType.newResource());
+            worldMap.getField(e.position).addBuilding(e.buildingType.newBuilding());
         });
+
+        Thread buildingThread = new Thread(this::buildingThread);
+        buildingThread.setDaemon(true);
+        buildingThread.start();
     }
 
     private void movePlayer(Packet packet) {
-        playerList.getPlayer(packet.playerID).moveTo(worldMap.getField(packet.position));
+        Player packetPlayer = playerList.getPlayer(packet.playerID);
+        packetPlayer.moveTo(worldMap.getField(packet.position));
+        if (packetPlayer.playerField.getTerrain() == TerrainType.WATER)
+            packetPlayer.getOnBoat();
+        else if (packetPlayer.isOnBoat()) {
+            packetPlayer.getOffBoat();
+
+            if(packet.playerID == player.playerID){
+                player.getInventory().decreaseItemAmount(ItemType.BOAT, 1);
+                Platform.runLater(() -> Catana.playerUI.renderInventory(packetPlayer));
+            }
+        }
     }
 
     private void placeBuilding(Packet packet) {
-        Building building = switch (packet.buildingType) {
-            case EMPTY -> null;
-            case SAWMILL -> new Sawmill(packet.position);
-            case MINESHAFT -> new Mineshaft(packet.position);
-            case QUARRY -> new Quarry(packet.position);
-        };
+        Building building = packet.buildingType.newBuilding();
         if(packet.playerID == player.playerID){
+            ArrayList<Item> cost = packet.buildingType.getCost();
+            player.getInventory().decrease(cost);
             playerBuildingList.add(building);
+            Platform.runLater(() -> Catana.playerUI.renderInventory(this.player));
         }
         Platform.runLater(() -> worldMap.getField(packet.position).addBuilding(building));
     }
 
     private void destroyBuilding(Packet packet) {
-        if(packet.playerID == player.playerID){
-            playerBuildingList.remove(worldMap.getField(packet.position).building);
-        }
+        //usuwa budynek z listy budynkow gracza. jezeli budynek nie nalezy do tego gracza, to nie bylo go w tej lisie, wiec nic sie nie zmieni
+        playerBuildingList.remove(worldMap.getField(packet.position).getBuilding());
         Platform.runLater(() -> worldMap.getField(packet.position).destroyBuilding());
     }
 
@@ -131,7 +144,7 @@ public class Client implements Runnable {
 
     private void initPlayer(Packet packet) {
         if (this.player == null) {
-            this.player = new Player(worldMap.getField(packet.position), packet.playerID);
+            this.player = new Player(worldMap.getField(packet.position), packet.playerID, Catana.getNickname());
             System.out.println("Joined as Player" + player.playerID);
             playerList.addPlayer(player.playerID, player);
             Platform.runLater(() -> {
@@ -140,11 +153,12 @@ public class Client implements Runnable {
                 Catana.katana.setTitle("Katana - Player" + player.playerID);
                 Catana.katana.getIcons().add(player.getTexture().getImage());
             });
+            new Packet(PacketType.NICKNAME,player.playerID,Catana.getNickname()).sendTo(outputStream);
         }
     }
 
     private void newPlayerJoined(Packet packet) {
-        Player player = new Player(worldMap.getField(packet.position), packet.playerID);
+        Player player = new Player(worldMap.getField(packet.position), packet.playerID, packet.string);
         playerList.addPlayer(packet.playerID, player);
         System.out.println("Player" + packet.playerID + " JOINED THE GAME");
         Platform.runLater(() -> Catana.renderPlayer(player));
@@ -162,7 +176,6 @@ public class Client implements Runnable {
 
         System.out.println("#CLIENT# Start listening...");
         try {
-            new Thread(this::buildingThread).start();
             while (true) {
                 receiveData();
             }
@@ -177,7 +190,7 @@ public class Client implements Runnable {
         while (true){
             try {
                 Thread.sleep(1000);
-                playerBuildingList.forEach((value) -> player.getInventory().increaseItemAmount(value.item.getName(),value.item.getAmount()));
+                playerBuildingList.forEach((value) -> player.getInventory().increaseItemAmount(value.producedItem.getType(),value.producedItem.getAmount()));
                 Platform.runLater(() -> Catana.playerUI.renderInventory(player));
             }catch (InterruptedException e) {
                 System.out.println("Err");

@@ -22,6 +22,7 @@ public class Catana extends Application {
     public static final double WINDOW_SIZE = 1000;
     public static final double FIELD_WIDTH = 50;
     public static final double UI_WIDTH = 300;
+    private static String nickname = "Guest";
     private double currentScale = 1.0;
     double initialPositionX = 0;
     double initialPositionY = 0;
@@ -36,10 +37,15 @@ public class Catana extends Application {
     public static Stage katana;
 
     public static PlayerUI playerUI;
-    private static Client clientThread;
+    public static Client clientThread;
     Timeline timeline;
 
     public Catana() {}
+
+    public Catana(String ipAddress, int portNumber, String nickname) {
+        this(ipAddress,portNumber);
+        Catana.nickname = nickname;
+    }
 
     public Catana(String ipAddress, int portNumber) {
         Catana.ipAddress = ipAddress;
@@ -48,29 +54,36 @@ public class Catana extends Application {
 
     public static void renderPlayer(Player player) {
         playersGroup.getChildren().add(player);
+
         player.scaleXProperty().bind(
-                Bindings.when(Catana.gameMap.scaleXProperty().greaterThan(2))
-                        .then(1)
-                        .otherwise(Bindings.divide(2, Catana.gameMap.scaleXProperty()))
+            Bindings.when(Catana.gameMap.scaleXProperty().greaterThan(2))
+                .then(1)
+                .otherwise(Bindings.divide(2, Catana.gameMap.scaleXProperty()))
         );
 
         player.scaleYProperty().bind(
-                Bindings.when(Catana.gameMap.scaleYProperty().greaterThan(2))
-                        .then(1)
-                        .otherwise(Bindings.divide(2, Catana.gameMap.scaleYProperty()))
+            Bindings.when(Catana.gameMap.scaleYProperty().greaterThan(2))
+                .then(1)
+                .otherwise(Bindings.divide(2, Catana.gameMap.scaleYProperty()))
         );
     }
+
+    public static String getNickname() {
+        return nickname;
+    }
+
     @Override
     public void start(Stage katana) throws IOException {
         this.katana = katana;
         clientThread = new Client();
+
+        katana.setOnCloseRequest(e -> clientThread.leaveGame());
         Thread playerSend = new Thread(clientThread);
         playerSend.start();
         worldMap = clientThread.getWorldMap();
         gameMap = new Pane(worldMap,playersGroup);
         playersGroup.setMouseTransparent(true);
         setupStage();
-        panTo(clientThread.getPlayer(),0);
     }
 
     private void setupStage() {
@@ -97,18 +110,17 @@ public class Catana extends Application {
         katana.show();
     }
     /** Porusza kamera aby na srodku ekranu byl dany obiekt*/
-    private void panTo(Node node, double durationInSeconds) {
-        if(timeline != null)
-            timeline.stop();
+    public void panTo(Node node, double durationInSeconds) {
+        stopPan();
         if(durationInSeconds<=0)
             durationInSeconds = 0.0001;
         currentScale = 1;
         timeline = new Timeline();
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(durationInSeconds),
-                new KeyValue(gameMap.layoutXProperty(), -node.getLayoutX() + katana.getWidth() * 0.5 - UI_WIDTH * 0.5,Interpolator.EASE_BOTH),
-                new KeyValue(gameMap.layoutYProperty(), -node.getLayoutY() + katana.getHeight() * 0.5,Interpolator.EASE_BOTH),
-                new KeyValue(gameMap.scaleXProperty(), currentScale,Interpolator.EASE_BOTH),
-                new KeyValue(gameMap.scaleYProperty(), currentScale,Interpolator.EASE_BOTH)
+            new KeyValue(gameMap.layoutXProperty(), -node.getTranslateX() + katana.getWidth() * 0.5 - UI_WIDTH * 0.5,Interpolator.EASE_BOTH),
+            new KeyValue(gameMap.layoutYProperty(), -node.getTranslateY() + katana.getHeight() * 0.5,Interpolator.EASE_BOTH),
+            new KeyValue(gameMap.scaleXProperty(), currentScale,Interpolator.EASE_BOTH),
+            new KeyValue(gameMap.scaleYProperty(), currentScale,Interpolator.EASE_BOTH)
         );
 
         timeline.getKeyFrames().add(keyFrame);
@@ -138,24 +150,15 @@ public class Catana extends Application {
 
     private void handleDrag(MouseEvent event) {
         if (event.isSecondaryButtonDown()) {
-            if(timeline != null)
-                timeline.stop();
-
-            double distanceX = event.getX() - initialPositionX;
-            double distanceY = event.getY() - initialPositionY;
-
-            gameMap.setLayoutX(gameMap.getLayoutX() + distanceX);
-            gameMap.setLayoutY(gameMap.getLayoutY() + distanceY);
-
-            initialPositionX = event.getX();
-            initialPositionY = event.getY();
+            stopPan();
+            gameMap.setLayoutX(gameMap.getLayoutX() + (event.getX() - initialPositionX));
+            gameMap.setLayoutY(gameMap.getLayoutY() + (event.getY() - initialPositionY));
+            handleRightClick(event);
         }
     }
 
     private void handleScroll(ScrollEvent event) {
-        if(timeline != null)
-            timeline.stop();
-
+        stopPan();
         double zoomFactor = (event.getDeltaY() > 0) ? ZOOM_FACTOR : (1 / ZOOM_FACTOR);
         double offsetX = (event.getX() - gameMap.getWidth() / 2) * (1 - zoomFactor);
         double offsetY = (event.getY() - gameMap.getHeight() / 2) * (1 - zoomFactor);
@@ -165,6 +168,11 @@ public class Catana extends Application {
         gameMap.setLayoutX((gameMap.getLayoutX() + offsetX) * zoomFactor);
         gameMap.setLayoutY((gameMap.getLayoutY() + offsetY) * zoomFactor);
         currentScale *= zoomFactor;
+    }
+
+    private void stopPan() {
+        if(timeline != null)
+            timeline.stop();
     }
 
     public static Client getClientThread() {

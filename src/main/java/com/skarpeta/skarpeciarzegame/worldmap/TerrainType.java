@@ -7,9 +7,9 @@ import com.skarpeta.skarpeciarzegame.tools.ColorShades;
  */
 public enum TerrainType {
     WATER(0, new ColorShades("#488BD4", "#3C67D3", "#68ABF4")),
-    DESERT(1,new ColorShades("#FFCF8E", "#E7B36F", "#FFE2A3")),
-    GRASS_LAND(2, new ColorShades("#28c074", "#10908E", "#48e094")),
-    MOUNTAINS(3, new ColorShades("#928FB8", "#5B537D", "#B2AFD8"));
+    DESERT(1,new ColorShades("#FFCF8E", "#E7B36F", "#E7B36F")),
+    GRASS_LAND(2, new ColorShades("#28c074", "#10908E", "#19a383")),
+    MOUNTAINS(3, new ColorShades("#928FB8", "#5B537D", "#7c75a3"));
 
     private final ColorShades color;
 
