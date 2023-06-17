@@ -40,7 +40,7 @@ public class Player extends VBox {
     int playerID;
     public Field playerField;
     private boolean isOnBoat = false;
-    private String nickname = "";
+    public String nickname = "";
 
     Player(Field field, int playerID, String nickname){
         super();

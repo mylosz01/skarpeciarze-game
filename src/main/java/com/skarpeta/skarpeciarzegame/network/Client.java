@@ -178,6 +178,7 @@ public class Client implements Runnable {
                 Catana.playerUI.renderInventory(player);
                 Catana.katana.setTitle("Katana - Player" + player.playerID);
                 Catana.katana.getIcons().add(player.getTexture().getImage());
+                Catana.playerUI.updatePlayerList(playerList.getPlayers());
             });
             new Packet(PacketType.NICKNAME,player.playerID,Catana.getNickname()).sendTo(outputStream);
         }
@@ -187,14 +188,20 @@ public class Client implements Runnable {
         Player player = new Player(worldMap.getField(packet.position), packet.playerID, packet.string);
         playerList.addPlayer(packet.playerID, player);
         System.out.println("Player" + packet.playerID + " JOINED THE GAME");
-        Platform.runLater(() -> Catana.renderPlayer(player));
+        Platform.runLater(() -> {
+            Catana.renderPlayer(player);
+            Catana.playerUI.updatePlayerList(playerList.getPlayers());
+        });
     }
 
     private void playerLeft(Packet packet) {
         Player player = playerList.getPlayer(packet.playerID);
         playerList.removePlayer(packet.playerID);
         System.out.println("Player" + packet.playerID + " LEFT THE GAME");
-        Platform.runLater(() -> Catana.playersGroup.getChildren().remove(player));
+        Platform.runLater(() -> {
+            Catana.playersGroup.getChildren().remove(player);
+            Catana.playerUI.updatePlayerList(playerList.getPlayers());
+        });
     }
 
     @Override

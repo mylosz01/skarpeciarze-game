@@ -10,17 +10,20 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 
 import java.util.Map;
 
+import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 import static com.skarpeta.skarpeciarzegame.app.Catana.UI_WIDTH;
 
 public class PlayerUI extends VBox {
 
     HBox buttonCategoriesPane;
     VBox fieldActionPane;
+    VBox playerList;
     MenuButton destroyButton;
     MenuButton collectButton;
 
@@ -53,7 +56,7 @@ public class PlayerUI extends VBox {
         buttonLayout.setSpacing(spacing);
 
         //lista graczy (prawy panel)
-        Pane leaderboardPane = new Pane(); //todo createLeaderBoardPane();
+        Pane leaderboardPane = createLeaderBoardPane();
         leaderboardPane.setBorder(insideBorder);
 
         //inventory (lewy panel)
@@ -73,6 +76,36 @@ public class PlayerUI extends VBox {
         updateButtons();
     }
 
+    private Pane createLeaderBoardPane(){
+
+        playerList = new VBox();
+        Label pl1 = new Label(Catana.getClientThread().player.nickname);
+        pl1.setAlignment(Pos.CENTER);
+        pl1.setFont(FontManager.getSmallFont());
+        playerList.getChildren().add(pl1);
+
+        return playerList;
+    }
+
+    public void updatePlayerList(Map <Integer,Player> list){
+        playerList.getChildren().clear();
+
+        for (Map.Entry<Integer, Player> entry : list.entrySet()) {
+
+            Label playerNick = new Label(entry.getValue().nickname);
+            playerNick.setFont(FontManager.getSmallFont());
+            playerNick.setMinWidth(40);
+
+            ImageView picture = new ImageView(entry.getValue().getTexture().getImage());
+            picture.setFitWidth(64);
+            picture.setFitHeight(64);
+
+            HBox rowItem = new HBox(picture,playerNick);
+            rowItem.setAlignment(Pos.CENTER);
+            rowItem.setSpacing(15);
+            playerList.getChildren().add(rowItem);
+        }
+    }
 
     private HBox createButtonLayout(){ //gorny panel z przyciskami
         buttonCategoriesPane = new HBox();
