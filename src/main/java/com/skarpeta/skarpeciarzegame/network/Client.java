@@ -49,7 +49,7 @@ public class Client implements Runnable {
     }
 
     public void moveUseKey(KeyEvent event){
-        System.out.println(" #### " + event.getCode());
+        //System.out.println(" #### " + event.getCode());
         try {
             switch (event.getCode()) {
                 case W -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x,player.playerField.getPosition().y - 1)));
@@ -58,6 +58,12 @@ public class Client implements Runnable {
                 case E -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x + 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y - 1 : player.playerField.getPosition().y)));
                 case A -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x - 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y : player.playerField.getPosition().y + 1)));
                 case D -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x + 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y : player.playerField.getPosition().y + 1)));
+                case Z -> sendRemoveResource(player.playerField.getPosition());
+                case X -> sendRemoveBuilding(player.playerField.getPosition());
+                case DIGIT1 -> sendBuildBuilding(player.playerField.getPosition(),BuildingType.SAWMILL);
+                case DIGIT2 -> sendBuildBuilding(player.playerField.getPosition(),BuildingType.QUARRY);
+                case DIGIT3 -> sendBuildBuilding(player.playerField.getPosition(),BuildingType.MINESHAFT);
+                case F -> player.getInventory().craft(ItemType.BOAT);
             }
         }catch (IOException | InvalidMoveException e) {
             System.out.println(e.getMessage());
