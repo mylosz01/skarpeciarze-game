@@ -76,21 +76,10 @@ public class Client implements Runnable {
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
-        if(worldMap.getField(fieldPosition).getTerrain() == TerrainType.WATER || worldMap.getField(fieldPosition).getTerrain() == TerrainType.DESERT){
-            return;
-        }
-        else{
-            if(buildingType == BuildingType.QUARRY || buildingType == BuildingType.MINESHAFT){
-                if(worldMap.getField(fieldPosition).getTerrain() != TerrainType.MOUNTAINS)
-                    return;
-            }
-            else{
-                if(worldMap.getField(fieldPosition).getTerrain() != TerrainType.GRASS_LAND)
-                    return;
-            }
-        }
 
-        if (!worldMap.getField(fieldPosition).hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType.getCost())) {
+       Field field = worldMap.getField(fieldPosition);
+
+        if (field.getTerrain() == buildingType.placableTerrain() && !field.hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType.getCost())) {
             new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
         }
     }

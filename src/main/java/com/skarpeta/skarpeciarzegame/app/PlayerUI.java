@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.Map;
 
 import static com.skarpeta.skarpeciarzegame.app.Catana.UI_WIDTH;
+import static com.skarpeta.skarpeciarzegame.buildings.BuildingType.*;
 
 public class PlayerUI extends VBox {
 
@@ -115,13 +116,13 @@ public class PlayerUI extends VBox {
         collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.getPosition()));
 
-        sawmillButton = new PlusButton("button/sawmillButton.png",BuildingType.SAWMILL);
-        sawmillButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.SAWMILL));
+        sawmillButton = new PlusButton("button/sawmillButton.png", SAWMILL);
+        sawmillButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), SAWMILL));
 
-        quarryButton = new PlusButton("button/quarryButton.png",BuildingType.QUARRY);
+        quarryButton = new PlusButton("button/quarryButton.png",QUARRY);
         quarryButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.QUARRY));
 
-        mineshaftButton = new PlusButton("button/mineshaftButton.png",BuildingType.MINESHAFT);
+        mineshaftButton = new PlusButton("button/mineshaftButton.png",MINESHAFT);
         mineshaftButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.MINESHAFT));
 
         fieldActionPane = new VBox();
@@ -180,11 +181,11 @@ public class PlayerUI extends VBox {
         Field field = Catana.getClientThread().getPlayer().playerField;
         Inventory inventory = Catana.getClientThread().getPlayer().getInventory();
         Platform.runLater(()->{
+            mineshaftButton.setEnabled(field.getTerrain() == MINESHAFT.placableTerrain() && !field.hasBuilding() && inventory.hasEnoughMaterials(MINESHAFT.getCost()));
+            sawmillButton.setEnabled(field.getTerrain() == SAWMILL.placableTerrain() && !field.hasBuilding() && inventory.hasEnoughMaterials(SAWMILL.getCost()));
+            quarryButton.setEnabled(field.getTerrain() == QUARRY.placableTerrain() && !field.hasBuilding() && inventory.hasEnoughMaterials(QUARRY.getCost()));
             collectButton.setEnabled(field.hasResource());
             destroyButton.setEnabled(field.hasBuilding());
-            sawmillButton.setEnabled(field.getTerrain() == TerrainType.GRASS_LAND && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.SAWMILL.getCost()));
-            quarryButton.setEnabled(field.getTerrain() == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.QUARRY.getCost()));
-            mineshaftButton.setEnabled(field.getTerrain() == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.MINESHAFT.getCost()));
 
             boatButton.setEnabled(inventory.hasEnoughMaterials(BoatItem.getCost()) && inventory.getAmount(ItemType.BOAT) < Inventory.MAX_BOAT_HOLD);
             catanaButton.setEnabled(inventory.hasEnoughMaterials(CatanaItem.getCost()));
