@@ -16,7 +16,6 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.Map;
 
-import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 import static com.skarpeta.skarpeciarzegame.app.Catana.UI_WIDTH;
 
 public class PlayerUI extends VBox {
@@ -79,11 +78,9 @@ public class PlayerUI extends VBox {
     private Pane createLeaderBoardPane(){
 
         playerList = new VBox();
-        Label pl1 = new Label(Catana.getClientThread().player.nickname);
-        pl1.setAlignment(Pos.CENTER);
-        pl1.setFont(FontManager.getSmallFont());
-        playerList.getChildren().add(pl1);
-
+        playerList.setSpacing(spacing*0.5);
+        playerList.setPadding(new Insets(spacing));
+        playerList.setAlignment(Pos.TOP_CENTER);
         return playerList;
     }
 
@@ -93,7 +90,7 @@ public class PlayerUI extends VBox {
         for (Map.Entry<Integer, Player> entry : list.entrySet()) {
 
             Label playerNick = new Label(entry.getValue().nickname);
-            playerNick.setFont(FontManager.getSmallFont());
+            playerNick.setFont(FontManager.getBigFont());
             playerNick.setMinWidth(40);
 
             ImageView picture = new ImageView(entry.getValue().getTexture().getImage());
