@@ -21,7 +21,7 @@ import java.io.IOException;
 public class Catana extends Application {
     public static final double WINDOW_SIZE = 1000;
     public static final double FIELD_WIDTH = 50;
-    public static final double UI_WIDTH = 300;
+    public static final double UI_WIDTH = 450;
     private static String nickname = "Guest";
     private double currentScale = 1.0;
     double initialPositionX = 0;
@@ -90,13 +90,8 @@ public class Catana extends Application {
         playerUI = new PlayerUI(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
-        MenuButton recenterButton = new MenuButton("center","centerHover",64,64);
-        recenterButton.setOnMouseClicked(e -> panTo(clientThread.getPlayer(),1));
-        AnchorPane.setBottomAnchor(recenterButton,0.0);
-        AnchorPane.setRightAnchor(recenterButton,UI_WIDTH*1.1);
-
         AnchorPane gameLayout = new AnchorPane();
-        gameLayout.getChildren().addAll(gamePane,playerUI,recenterButton);
+        gameLayout.getChildren().addAll(gamePane,playerUI);
 
         Scene scene = new Scene(gameLayout);
         scene.setOnScroll(this::handleScroll);
@@ -132,7 +127,7 @@ public class Catana extends Application {
     }
 
     private Pane createGamePane() { //lewy panel okna (gra)
-        Pane gamePane = new Pane();
+        AnchorPane gamePane = new AnchorPane();
         gamePane.setBackground(new Background(new BackgroundFill(TerrainType.WATER.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
 
         AnchorPane.setTopAnchor(gamePane,0.0);
@@ -140,7 +135,12 @@ public class Catana extends Application {
         AnchorPane.setBottomAnchor(gamePane,0.0);
         AnchorPane.setRightAnchor(gamePane,UI_WIDTH);
 
-        gamePane.getChildren().add(gameMap);
+        MenuButton recenterButton = new MenuButton("center","centerHover",64,64);
+        AnchorPane.setBottomAnchor(recenterButton,0.0);
+        AnchorPane.setRightAnchor(recenterButton,FIELD_WIDTH * 0.4);
+        recenterButton.setOnMouseClicked(e -> panTo(clientThread.getPlayer(),1));
+
+        gamePane.getChildren().addAll(gameMap,recenterButton);
         return gamePane;
     }
 
