@@ -4,12 +4,15 @@ import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.inventory.ItemType;
+import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
+import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
+import javafx.scene.input.KeyEvent;
 
 import java.net.*;
 import java.io.*;
@@ -23,7 +26,7 @@ public class Client implements Runnable {
     private WorldMap worldMap;
     public PlayerManager playerList = new PlayerManager();
     private final List<Building> playerBuildingList = Collections.synchronizedList(new ArrayList<>());
-    Player player = null;
+    public Player player = null;
 
     public Client() throws IOException {
         try {
@@ -44,6 +47,23 @@ public class Client implements Runnable {
         packet.sendTo(outputStream);
         playerLeft(packet);
     }
+
+    public void moveUseKey(KeyEvent event){
+        System.out.println(" #### " + event.getCode());
+        try {
+            switch (event.getCode()) {
+                case W -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x,player.playerField.getPosition().y - 1)));
+                case S -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x,player.playerField.getPosition().y + 1)));
+                case Q -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x - 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y - 1 : player.playerField.getPosition().y)));
+                case E -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x + 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y - 1 : player.playerField.getPosition().y)));
+                case A -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x - 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y : player.playerField.getPosition().y + 1)));
+                case D -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x + 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y : player.playerField.getPosition().y + 1)));
+            }
+        }catch (IOException | InvalidMoveException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     public static void makeMove(int playerID, Point newPosition) {
         new Packet(PacketType.MOVE, playerID, newPosition).sendTo(outputStream);

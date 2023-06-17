@@ -104,6 +104,9 @@ public class Catana extends Application {
         scene.setOnMousePressed(this::handleRightClick);
         scene.setCursor(new ImageCursor(ImageManager.getImage("cursor.png", 16, 16), 6, 0));
 
+        //poruszanie gracza za pomoca strzalek
+        scene.setOnKeyPressed(e-> clientThread.moveUseKey(e));
+
         katana.setScene(scene);
         katana.setWidth(WINDOW_SIZE);
         katana.setHeight(700);

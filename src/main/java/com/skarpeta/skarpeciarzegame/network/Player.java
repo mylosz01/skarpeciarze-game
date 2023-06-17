@@ -3,6 +3,7 @@ package com.skarpeta.skarpeciarzegame.network;
 import com.skarpeta.skarpeciarzegame.inventory.ItemType;
 import com.skarpeta.skarpeciarzegame.resources.Resource;
 import com.skarpeta.skarpeciarzegame.tools.FontManager;
+import com.skarpeta.skarpeciarzegame.tools.Point;
 import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.inventory.Inventory;
@@ -15,6 +16,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,6 +24,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.EventListener;
 
 import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 
