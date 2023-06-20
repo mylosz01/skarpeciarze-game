@@ -106,9 +106,14 @@ public class Client implements Runnable {
             case DESTROY_RESOURCE -> removeResource(packet);
             case DISCONNECT -> playerLeft(packet);
             case NICKNAME -> setMyNickname(packet);
+            case SPAWN_RESOURCE -> spawnResource(packet);
         }
         if (Catana.playerUI!=null)
             Catana.playerUI.updateButtons();
+    }
+
+    private void spawnResource(Packet packet) {
+        Platform.runLater(() -> worldMap.getField(packet.position).addResource(packet.resourceType.newResource()));
     }
 
     private void setMyNickname(Packet packet) {

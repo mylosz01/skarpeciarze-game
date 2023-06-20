@@ -77,8 +77,12 @@ public class WorldMap extends Group {
         return randomIsland.getFields().get(random.nextInt(randomIsland.getFields().size())).getPosition();
     }
 
-    private Point getRandomPosition() {
+    public Point getRandomPosition() {
         List<Field> fieldList = fields.stream().filter(field -> field.getTerrain() != TerrainType.WATER).toList();
+        return fieldList.get(new Random().nextInt(fieldList.size())).getPosition();
+    }
+    public Point getRandomPosition(TerrainType terrain) {
+        List<Field> fieldList = fields.stream().filter(field -> field.getTerrain() == terrain).toList();
         return fieldList.get(new Random().nextInt(fieldList.size())).getPosition();
     }
 

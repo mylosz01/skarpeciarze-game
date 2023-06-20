@@ -5,11 +5,14 @@ import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.tools.ImageManager;
 import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import javafx.scene.image.ImageView;
+
+import java.util.Random;
+
 /** Losowo generowane materiały do zebrania przez gracza */
 public abstract class Resource extends Asset {
 
     protected Item item;
-    protected int maxResourceRange = 100;
+    protected Integer[] rangeAmount = new Integer[]{5,10};
     ResourceType type;
 
     public Resource(String textureName) {
@@ -24,6 +27,11 @@ public abstract class Resource extends Asset {
     /** align() służy materiałom do przyjęcia pozycji w lewym dolnym rogu pola Field w którym się znajduje*/
     private void align() {
         super.align(-16.2,16);
+    }
+
+
+    public int generateAmount() {
+        return new Random().nextInt(rangeAmount[1] - rangeAmount[0]) + rangeAmount[0];
     }
 
     public ResourceType getType() {

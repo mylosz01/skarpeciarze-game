@@ -2,6 +2,8 @@ package com.skarpeta.skarpeciarzegame.network;
 
 import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.tools.Point;
+import com.skarpeta.skarpeciarzegame.tools.ResourceType;
+
 import java.io.*;
 import java.util.List;
 
@@ -9,11 +11,12 @@ public class Packet implements Serializable {
 
     List<PackedField> fieldInfo;
     BuildingType buildingType;
-    int seedMap;
-    int sizeMap;
     PacketType packetType;
-    public Point position;
+    ResourceType resourceType;
+    int sizeMap;
+    int seedMap;
     public int playerID;
+    public Point position;
     public String string;
 
     public Packet(PacketType init, int mapSize, int mapSeed, List<PackedField> fieldInfo) {
@@ -52,6 +55,12 @@ public class Packet implements Serializable {
         this.playerID = playerID;
         this.position = position;
         this.string = nickname;
+    }
+
+    public Packet(PacketType spawnResource, ResourceType resource, Point position) {
+        this.packetType = spawnResource;
+        this.resourceType = resource;
+        this.position = position;
     }
 
     public void sendTo(ObjectOutputStream outputStream) {

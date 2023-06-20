@@ -9,7 +9,7 @@ public class ForestResource extends Resource {
 
     public ForestResource() {
         super("forest" + new Random().nextInt(2));
-        this.item = new WoodItem(new Random().nextInt(maxResourceRange));
+        this.item = new WoodItem(generateAmount());
         this.type = ResourceType.FOREST;
     }
 }

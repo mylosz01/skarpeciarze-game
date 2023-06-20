@@ -9,5 +9,5 @@ public enum PacketType {
     BUILD,
     DESTROY_BUILDING,
     NICKNAME,
-    DESTROY_RESOURCE
+    SPAWN_RESOURCE, DESTROY_RESOURCE
 }
