@@ -19,4 +19,8 @@ public class PlayerManager {
     public void removePlayer(int playerID) {
         players.remove(playerID);
     }
+
+    public Map<Integer,Player> getPlayers(){
+        return players;
+    }
 }
