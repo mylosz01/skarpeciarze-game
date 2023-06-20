@@ -1,9 +1,11 @@
 package com.skarpeta.skarpeciarzegame.app;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -27,7 +29,9 @@ public class ServerMenu extends Stage {
     public TextField getNicknameField() {return nicknameField;}
 
     public ServerMenu() {
+        StackPane root = new StackPane();
         setTitle("Server config");
+        setHeight(300);
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10));
@@ -72,8 +76,10 @@ public class ServerMenu extends Stage {
         exceptionLabel = new Label();
         exceptionLabel.setTextFill(Color.RED);
         gridPane.add(exceptionLabel,0,4,3,4);
+        root.getChildren().add(gridPane);
+        gridPane.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(gridPane, 300, 150);
+        Scene scene = new Scene(root, 300, 150);
         setScene(scene);
         show();
     }

@@ -1,20 +1,22 @@
 package com.skarpeta.skarpeciarzegame.app;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class JoinMenu extends Stage {
-    private Label exceptionLabel;
-    private Button connectButton;
-    private TextField ipField;
-    private TextField nicknameField;
-    private TextField portField;
+    private final Label exceptionLabel;
+    private final Button connectButton;
+    private final TextField ipField;
+    private final TextField nicknameField;
+    private final TextField portField;
 
     public Label getExceptionLabel() {return exceptionLabel;}
     public Button getConnectButton() {return connectButton;}
@@ -23,7 +25,9 @@ public class JoinMenu extends Stage {
     public TextField getNicknameField() {return nicknameField;}
 
     public JoinMenu() {
+        StackPane root = new StackPane();
         setTitle("Join server");
+        setHeight(300);
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10));
@@ -54,8 +58,10 @@ public class JoinMenu extends Stage {
         exceptionLabel = new Label();
         exceptionLabel.setTextFill(Color.RED);
         gridPane.add(exceptionLabel,0,4,2,4);
+        root.getChildren().add(gridPane);
+        gridPane.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(gridPane, 300, 150);
+        Scene scene = new Scene(root, 300, 150);
         setScene(scene);
         show();
     }
