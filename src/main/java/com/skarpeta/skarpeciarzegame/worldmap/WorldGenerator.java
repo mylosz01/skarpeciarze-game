@@ -8,9 +8,8 @@ import javafx.scene.paint.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.skarpeta.skarpeciarzegame.app.Catana.FIELD_WIDTH;
 
@@ -82,12 +81,13 @@ public class WorldGenerator {
 
     /** Zwraca teren przypisany danej wysokości (wysokości definiowane poprzez threshold[]) */
     private TerrainType thresholdedTerrain(double value) {
-        for (int index = 0; index < threshold.length; index++) {
-            if (value <= threshold[index])
-                return TerrainType.fromIndex(index);
-        }
-        throw new RuntimeException("niepoprawny plik");
+        return TerrainType.fromIndex(
+                IntStream.range(0, threshold.length)
+                .filter(index -> (value <= threshold[index]))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Invalid terrain")));
     }
+
     public void setBiomes(WorldMap worldMap){
         List<Island> islands = Island.findIslands(worldMap);
         islands.forEach(island->{

@@ -6,6 +6,7 @@ import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
