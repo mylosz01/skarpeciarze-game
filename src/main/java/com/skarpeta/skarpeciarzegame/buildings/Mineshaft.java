@@ -16,8 +16,7 @@ public class Mineshaft extends Building {
     }
 
     public Mineshaft() {
-        super("mineshaft");
-        this.type = BuildingType.MINESHAFT;
+        super(BuildingType.MINESHAFT);
         this.producedItem = new GoldItem(1);
     }
 

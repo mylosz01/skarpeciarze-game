@@ -9,11 +9,12 @@ import java.util.ArrayList;
 
 /** Building definiuje budynki budowane przez graczy */
 public abstract class Building extends Asset {
-    public BuildingType type;
+    private final BuildingType type;
     public Item producedItem;
     public static ArrayList<Item> buildingCost;
-    public Building(String textureName) {
-        super(new ImageView(ImageManager.getImage("mapasset/"+textureName+".png",128,128)));
+    public Building(BuildingType type) {
+        super(new ImageView(ImageManager.getImage("mapasset/"+type.name().toLowerCase()+".png",128,128)));
+        this.type = type;
         align();
     }
     /** align() służy budynkom do przyjęcia pozycji w prawym górnym rogu pola Field w którym się znajduje*/

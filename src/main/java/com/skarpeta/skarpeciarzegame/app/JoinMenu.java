@@ -65,5 +65,4 @@ public class JoinMenu extends Stage {
         setScene(scene);
         show();
     }
-
 }

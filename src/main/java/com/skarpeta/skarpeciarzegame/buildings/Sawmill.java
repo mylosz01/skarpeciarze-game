@@ -13,8 +13,7 @@ public class Sawmill extends Building {
     }
 
     public Sawmill() {
-        super("sawmill");
-        this.type = BuildingType.SAWMILL;
+        super(BuildingType.SAWMILL);
         this.producedItem = new WoodItem(1);
     }
 

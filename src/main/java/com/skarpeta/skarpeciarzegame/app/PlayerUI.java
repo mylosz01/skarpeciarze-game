@@ -21,20 +21,17 @@ import static com.skarpeta.skarpeciarzegame.buildings.BuildingType.*;
 
 public class PlayerUI extends VBox {
 
-    HBox buttonCategoriesPane;
-    VBox fieldActionPane;
-    VBox playerList;
-    MenuButton destroyButton;
-    MenuButton collectButton;
+    private VBox playerList;
+    private MenuButton destroyButton;
+    private MenuButton collectButton;
 
-    PlusButton quarryButton;
-    PlusButton mineshaftButton;
-    PlusButton sawmillButton;
-    PlusButton boatButton;
-    PlusButton catanaButton;
+    private PlusButton quarryButton;
+    private PlusButton mineshaftButton;
+    private PlusButton sawmillButton;
+    private PlusButton boatButton;
+    private PlusButton catanaButton;
 
-    VBox playerItemsTable;
-    VBox buildActionPane;
+    private VBox playerItemsTable;
 
     private final double spacing = 4;
 
@@ -105,7 +102,7 @@ public class PlayerUI extends VBox {
     }
 
     private HBox createButtonLayout(){ //gorny panel z przyciskami
-        buttonCategoriesPane = new HBox();
+        HBox buttonCategoriesPane = new HBox();
         buttonCategoriesPane.setBorder(insideBorder);
         buttonCategoriesPane.setAlignment(Pos.CENTER);
         buttonCategoriesPane.setMinHeight(200);
@@ -125,13 +122,13 @@ public class PlayerUI extends VBox {
         mineshaftButton = new PlusButton("button/mineshaftButton.png",MINESHAFT);
         mineshaftButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.MINESHAFT));
 
-        fieldActionPane = new VBox();
+        VBox fieldActionPane = new VBox();
         fieldActionPane.setAlignment(Pos.CENTER);
         fieldActionPane.setSpacing(0);
         fieldActionPane.setMinWidth(150);
         fieldActionPane.getChildren().addAll(collectButton, destroyButton);
 
-        buildActionPane = new VBox();
+        VBox buildActionPane = new VBox();
         buildActionPane.setAlignment(Pos.CENTER);
         buildActionPane.setSpacing(0);
         buildActionPane.setMinWidth(150);

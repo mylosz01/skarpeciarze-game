@@ -6,10 +6,9 @@ import java.util.ArrayList;
  *  Craftowany przez gracza.
  */
 public class BoatItem extends Item{
-    public static ArrayList<Item> buildingCost = new ArrayList<>();
-    static{
-        buildingCost.add(new WoodItem(5));
-    }
+    private static final ArrayList<Item> buildingCost = new ArrayList<>();
+    static{ buildingCost.add(new WoodItem(5)); }
+
     BoatItem(int amount){
         super(amount,ItemType.BOAT);
     }

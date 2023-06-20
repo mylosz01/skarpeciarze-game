@@ -21,11 +21,6 @@ public enum ItemType implements Craftable {
         return cost;
     }
 
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
     public String getDescription() {
         return description;
     }

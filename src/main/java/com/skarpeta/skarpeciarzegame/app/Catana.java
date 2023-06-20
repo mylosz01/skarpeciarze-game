@@ -24,8 +24,8 @@ public class Catana extends Application {
     public static final double UI_WIDTH = 450;
     private static String nickname = "Guest";
     private double currentScale = 1.0;
-    double initialPositionX = 0;
-    double initialPositionY = 0;
+    private double initialPositionX = 0;
+    private double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
     public static String ipAddress;
@@ -38,7 +38,7 @@ public class Catana extends Application {
 
     public static PlayerUI playerUI;
     public static Client clientThread;
-    Timeline timeline;
+    private Timeline timeline;
 
     public Catana() {}
 

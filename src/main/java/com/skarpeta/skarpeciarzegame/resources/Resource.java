@@ -15,8 +15,9 @@ public abstract class Resource extends Asset {
     protected Integer[] rangeAmount = new Integer[]{5,10};
     ResourceType type;
 
-    public Resource(String textureName) {
+    public Resource(ResourceType type, String textureName) {
         super(new ImageView(ImageManager.getImage("mapasset/"+textureName+".png",128,128)));
+        this.type = type;
         align();
     }
 

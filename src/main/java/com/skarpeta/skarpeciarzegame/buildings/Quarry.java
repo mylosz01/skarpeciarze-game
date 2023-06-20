@@ -15,8 +15,7 @@ public class Quarry extends Building {
     }
 
     public Quarry() {
-        super("quarry");
-        this.type = BuildingType.QUARRY;
+        super(BuildingType.QUARRY);
         this.producedItem = new StoneItem(1);
     }
 
