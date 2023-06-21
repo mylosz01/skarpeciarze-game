@@ -6,6 +6,7 @@ import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,11 @@ public class WorldMap extends Group {
     public Field getField(Point position) {
         if(position.isNegative())
             throw new NoSuchElementException("pola nie moga byc na pozycji ujemnej");
-        return fields.get(position.convertToOneDimention(mapSize));
+
+        int index = position.convertToOneDimention(mapSize);
+        if(index > mapSize*mapSize)
+            throw new NoSuchElementException("Znajdujesz się na granicy mapy");
+        return fields.get(index);
     }
 
     /** Wybieranie pola przez gracza,
@@ -76,8 +81,12 @@ public class WorldMap extends Group {
         return randomIsland.getFields().get(random.nextInt(randomIsland.getFields().size())).getPosition();
     }
 
-    private Point getRandomPosition() {
+    public Point getRandomPosition() {
         List<Field> fieldList = fields.stream().filter(field -> field.getTerrain() != TerrainType.WATER).toList();
+        return fieldList.get(new Random().nextInt(fieldList.size())).getPosition();
+    }
+    public Point getRandomPosition(TerrainType terrain) {
+        List<Field> fieldList = fields.stream().filter(field -> field.getTerrain() == terrain).toList();
         return fieldList.get(new Random().nextInt(fieldList.size())).getPosition();
     }
 

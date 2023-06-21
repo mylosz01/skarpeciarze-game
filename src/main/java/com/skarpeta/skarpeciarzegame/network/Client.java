@@ -4,12 +4,15 @@ import com.skarpeta.skarpeciarzegame.inventory.Item;
 import com.skarpeta.skarpeciarzegame.buildings.BuildingType;
 import com.skarpeta.skarpeciarzegame.app.Catana;
 import com.skarpeta.skarpeciarzegame.inventory.ItemType;
+import com.skarpeta.skarpeciarzegame.tools.InvalidMoveException;
+import com.skarpeta.skarpeciarzegame.worldmap.Field;
 import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.buildings.*;
 import com.skarpeta.skarpeciarzegame.tools.PlayerManager;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.application.Platform;
+import javafx.scene.input.KeyEvent;
 
 import java.net.*;
 import java.io.*;
@@ -23,7 +26,7 @@ public class Client implements Runnable {
     private WorldMap worldMap;
     public PlayerManager playerList = new PlayerManager();
     private final List<Building> playerBuildingList = Collections.synchronizedList(new ArrayList<>());
-    Player player = null;
+    public Player player = null;
 
     public Client() throws IOException {
         try {
@@ -45,12 +48,38 @@ public class Client implements Runnable {
         playerLeft(packet);
     }
 
+    public void moveUseKey(KeyEvent event){
+        //System.out.println(" #### " + event.getCode());
+        try {
+            switch (event.getCode()) {
+                case W -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x,player.playerField.getPosition().y - 1)));
+                case S -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x,player.playerField.getPosition().y + 1)));
+                case Q -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x - 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y - 1 : player.playerField.getPosition().y)));
+                case E -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x + 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y - 1 : player.playerField.getPosition().y)));
+                case A -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x - 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y : player.playerField.getPosition().y + 1)));
+                case D -> player.sendMove(worldMap.getField(new Point(player.playerField.getPosition().x + 1, player.playerField.getPosition().x % 2 == 0 ? player.playerField.getPosition().y : player.playerField.getPosition().y + 1)));
+                case Z -> sendRemoveResource(player.playerField.getPosition());
+                case X -> sendRemoveBuilding(player.playerField.getPosition());
+                case DIGIT1 -> sendBuildBuilding(player.playerField.getPosition(),BuildingType.SAWMILL);
+                case DIGIT2 -> sendBuildBuilding(player.playerField.getPosition(),BuildingType.QUARRY);
+                case DIGIT3 -> sendBuildBuilding(player.playerField.getPosition(),BuildingType.MINESHAFT);
+                case F -> player.getInventory().craft(ItemType.BOAT);
+            }
+        }catch (IOException | InvalidMoveException | NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
     public static void makeMove(int playerID, Point newPosition) {
         new Packet(PacketType.MOVE, playerID, newPosition).sendTo(outputStream);
     }
 
     public void sendBuildBuilding(Point fieldPosition, BuildingType buildingType) {
-        if (!worldMap.getField(fieldPosition).hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType.getCost())) {
+
+       Field field = worldMap.getField(fieldPosition);
+
+        if (field.getTerrain() == buildingType.placableTerrain() && !field.hasBuilding() && player.getInventory().hasEnoughMaterials(buildingType.getCost())) {
             new Packet(PacketType.BUILD, player.playerID, buildingType, fieldPosition).sendTo(outputStream);
         }
     }
@@ -77,9 +106,14 @@ public class Client implements Runnable {
             case DESTROY_RESOURCE -> removeResource(packet);
             case DISCONNECT -> playerLeft(packet);
             case NICKNAME -> setMyNickname(packet);
+            case SPAWN_RESOURCE -> spawnResource(packet);
         }
         if (Catana.playerUI!=null)
             Catana.playerUI.updateButtons();
+    }
+
+    private void spawnResource(Packet packet) {
+        Platform.runLater(() -> worldMap.getField(packet.position).addResource(packet.resourceType.newResource()));
     }
 
     private void setMyNickname(Packet packet) {
@@ -152,6 +186,7 @@ public class Client implements Runnable {
                 Catana.playerUI.renderInventory(player);
                 Catana.katana.setTitle("Katana - Player" + player.playerID);
                 Catana.katana.getIcons().add(player.getTexture().getImage());
+                Catana.playerUI.updatePlayerList(playerList.getPlayers());
             });
             new Packet(PacketType.NICKNAME,player.playerID,Catana.getNickname()).sendTo(outputStream);
         }
@@ -161,14 +196,20 @@ public class Client implements Runnable {
         Player player = new Player(worldMap.getField(packet.position), packet.playerID, packet.string);
         playerList.addPlayer(packet.playerID, player);
         System.out.println("Player" + packet.playerID + " JOINED THE GAME");
-        Platform.runLater(() -> Catana.renderPlayer(player));
+        Platform.runLater(() -> {
+            Catana.renderPlayer(player);
+            Catana.playerUI.updatePlayerList(playerList.getPlayers());
+        });
     }
 
     private void playerLeft(Packet packet) {
         Player player = playerList.getPlayer(packet.playerID);
         playerList.removePlayer(packet.playerID);
         System.out.println("Player" + packet.playerID + " LEFT THE GAME");
-        Platform.runLater(() -> Catana.playersGroup.getChildren().remove(player));
+        Platform.runLater(() -> {
+            Catana.playersGroup.getChildren().remove(player);
+            Catana.playerUI.updatePlayerList(playerList.getPlayers());
+        });
     }
 
     @Override

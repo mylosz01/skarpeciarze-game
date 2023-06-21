@@ -2,18 +2,21 @@ package com.skarpeta.skarpeciarzegame.buildings;
 
 import com.skarpeta.skarpeciarzegame.inventory.Craftable;
 import com.skarpeta.skarpeciarzegame.inventory.Item;
+import com.skarpeta.skarpeciarzegame.worldmap.TerrainType;
 
 import java.util.ArrayList;
 
 public enum BuildingType implements Craftable {
-    EMPTY(null,""),
-    MINESHAFT(Mineshaft.getBuildingCost(),"Can be placed on Stone. Generates Gold."),
-    SAWMILL(Sawmill.getBuildingCost(),"Can be placed on Grass. Generates Wood."),
-    QUARRY(Quarry.getBuildingCost(),"Can be placed on Stone. Generates Stone.");
+    EMPTY(TerrainType.WATER,null,""),
+    MINESHAFT(TerrainType.MOUNTAINS,Mineshaft.getBuildingCost(),"Can be placed on Stone. Generates Gold."),
+    SAWMILL(TerrainType.GRASS_LAND,Sawmill.getBuildingCost(),"Can be placed on Grass. Generates Wood."),
+    QUARRY(TerrainType.MOUNTAINS,Quarry.getBuildingCost(),"Can be placed on Stone. Generates Stone.");
     private final ArrayList<Item> cost;
-    public final String description;
+    private final String description;
+    private final TerrainType terrain;
 
-    BuildingType(ArrayList<Item> cost, String description) {
+    BuildingType(TerrainType terrain, ArrayList<Item> cost, String description) {
+        this.terrain = terrain;
         this.cost = cost;
         this.description = description;
     }
@@ -38,5 +41,8 @@ public enum BuildingType implements Craftable {
 
     public String getDescription() {
         return description;
+    }
+    public TerrainType placableTerrain(){
+        return terrain;
     }
 }

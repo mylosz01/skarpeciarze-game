@@ -8,8 +8,7 @@ import java.util.Random;
 public class ForestResource extends Resource {
 
     public ForestResource() {
-        super("forest" + new Random().nextInt(2));
-        this.item = new WoodItem(new Random().nextInt(maxResourceRange));
-        this.type = ResourceType.FOREST;
+        super(ResourceType.FOREST, "forest" + new Random().nextInt(2));
+        this.item = new WoodItem(generateAmount());
     }
 }

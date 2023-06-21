@@ -12,7 +12,7 @@ public abstract class Item extends Asset {
     ItemType type;
 
     Item(int amount, ItemType type){
-        super(new ImageView(ImageManager.getImage("item/"+type.toString()+".png",64,64)));
+        super(new ImageView(ImageManager.getImage("item/"+type.name().toLowerCase()+".png",64,64)));
         this.amount = amount;
         this.type = type;
     }

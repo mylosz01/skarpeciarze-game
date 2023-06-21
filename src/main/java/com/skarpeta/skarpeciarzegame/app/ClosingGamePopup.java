@@ -1,6 +1,5 @@
 package com.skarpeta.skarpeciarzegame.app;
 
-import com.skarpeta.skarpeciarzegame.network.Client;
 import com.skarpeta.skarpeciarzegame.network.Server;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -10,12 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ClosingGamePopup extends Application {
-    Server server;
-    Client clientThread;
+    private final Server server;
 
-    public ClosingGamePopup(Server server, Client clientThread) {
+    public ClosingGamePopup(Server server) {
         this.server = server;
-        this.clientThread = clientThread;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.skarpeta.skarpeciarzegame.network;
 
+import com.skarpeta.skarpeciarzegame.tools.ResourceType;
 import com.skarpeta.skarpeciarzegame.worldmap.WorldMap;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 
@@ -9,6 +10,8 @@ import java.util.*;
 
 public class Server implements Runnable {
 
+    private static final Double RESOURCE_SPAWN_DELAY = 2.5;
+    private static final Double CHANCE_FOR_STONE_SPAWN = 0.2;
     private final ServerSocket serverSocket;
     static Map<Integer, ClientThread> clientList;
     private static int portNumber = 5555;
@@ -36,6 +39,29 @@ public class Server implements Runnable {
         Thread commandHandler = new Thread(this::commandHandler);
         commandHandler.setDaemon(true);
         commandHandler.start();
+
+        Thread resourceSpawning = new Thread(this::spawnResources);
+        resourceSpawning.setDaemon(true);
+        resourceSpawning.start();
+    }
+
+    private void spawnResources() {
+        try {
+            Random random = new Random(seed);
+            while (true){
+
+                Thread.sleep((long) (RESOURCE_SPAWN_DELAY * 1000));
+
+                ResourceType resourceType = random.nextInt((int) (1.0 / CHANCE_FOR_STONE_SPAWN - 1)) == 0 ? ResourceType.STONE : ResourceType.FOREST;
+                Point randomPosition = worldMap.getRandomPosition(resourceType.getTerrain());
+                worldMap.getField(randomPosition).addResource(resourceType.newResource());
+
+                Packet spawnResource = new Packet(PacketType.SPAWN_RESOURCE, resourceType, randomPosition);
+                sendToAllClients(spawnResource);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void commandHandler() {

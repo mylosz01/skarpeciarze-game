@@ -10,39 +10,38 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 
 import java.util.Map;
 
 import static com.skarpeta.skarpeciarzegame.app.Catana.UI_WIDTH;
+import static com.skarpeta.skarpeciarzegame.buildings.BuildingType.*;
 
 public class PlayerUI extends VBox {
 
-    HBox buttonCategoriesPane;
-    VBox fieldActionPane;
-    MenuButton destroyButton;
-    MenuButton collectButton;
+    private VBox playerList;
+    private MenuButton destroyButton;
+    private MenuButton collectButton;
 
-    PlusButton quarryButton;
-    PlusButton mineshaftButton;
-    PlusButton sawmillButton;
-    PlusButton boatButton;
-    PlusButton catanaButton;
+    private PlusButton quarryButton;
+    private PlusButton mineshaftButton;
+    private PlusButton sawmillButton;
+    private PlusButton boatButton;
+    private PlusButton catanaButton;
 
-    VBox playerItemsTable;
-    VBox buildActionPane;
+    private VBox playerItemsTable;
 
-    private final double spacing = 10;
+    private final double spacing = 4;
 
     Pane inventoryPane;
-    Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().midway,BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(4)));
+    Border insideBorder = new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().midway,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4)));
 
     public PlayerUI() {
         super();
 
         setBackground(new Background(new BackgroundFill(TerrainType.MOUNTAINS.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
-        setSpacing(spacing);
 
         setAlignment(Pos.CENTER);
         setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().darker,BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4))));
@@ -50,57 +49,86 @@ public class PlayerUI extends VBox {
 
         //ruchy gracza (gorny panel)
         HBox buttonLayout = createButtonLayout();
-        buttonLayout.setSpacing(spacing);
 
         //lista graczy (prawy panel)
-        Pane leaderboardPane = new Pane(); //todo createLeaderBoardPane();
-        leaderboardPane.setBorder(insideBorder);
+        VBox playerListPane = createPlayerList();
 
         //inventory (lewy panel)
         inventoryPane = createInventoryPane();
 
         //dolna czesc UI
-        HBox InventoryAndLeaderboard = new HBox();
-        InventoryAndLeaderboard.setSpacing(spacing);
-        InventoryAndLeaderboard.setPrefHeight(1000);
-        InventoryAndLeaderboard.getChildren().addAll(inventoryPane,leaderboardPane);
+        HBox InventoryAndPlayerList = new HBox();
+        InventoryAndPlayerList.setPrefHeight(1500); // ciekawe
+        InventoryAndPlayerList.getChildren().addAll(inventoryPane,playerListPane);
 
         AnchorPane.setTopAnchor(this,0.0);
         AnchorPane.setRightAnchor(this,0.0);
         AnchorPane.setBottomAnchor(this,0.0);
 
-        getChildren().addAll(buttonLayout,InventoryAndLeaderboard);
+        getChildren().addAll(buttonLayout, InventoryAndPlayerList);
         updateButtons();
     }
 
+    private VBox createPlayerList(){
+
+        playerList = new VBox();
+        playerList.setSpacing(spacing*0.5);
+        playerList.setPadding(new Insets(spacing));
+        playerList.setAlignment(Pos.TOP_CENTER);
+        playerList.setMaxHeight(200);
+        playerList.setPrefWidth(200);
+        playerList.setBorder(insideBorder);
+        return playerList;
+    }
+
+    public void updatePlayerList(Map <Integer,Player> list){
+        playerList.getChildren().clear();
+
+        for (Map.Entry<Integer, Player> entry : list.entrySet()) {
+
+            Label playerNick = new Label(entry.getValue().nickname);
+            playerNick.setFont(FontManager.getBigFont());
+            playerNick.setMinWidth(40);
+
+            ImageView picture = new ImageView(entry.getValue().getTexture().getImage());
+            picture.setFitWidth(64);
+            picture.setFitHeight(64);
+
+            HBox rowItem = new HBox(picture,playerNick);
+            rowItem.setAlignment(Pos.CENTER_LEFT);
+            rowItem.setSpacing(15);
+            playerList.getChildren().add(rowItem);
+        }
+    }
 
     private HBox createButtonLayout(){ //gorny panel z przyciskami
-        buttonCategoriesPane = new HBox();
+        HBox buttonCategoriesPane = new HBox();
         buttonCategoriesPane.setBorder(insideBorder);
         buttonCategoriesPane.setAlignment(Pos.CENTER);
         buttonCategoriesPane.setMinHeight(200);
+        buttonCategoriesPane.setSpacing(spacing);
 
         destroyButton = new MenuButton("break");
         destroyButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveBuilding(Catana.getClientThread().getPlayer().playerField.getPosition()));
         collectButton = new MenuButton("get");
         collectButton.setOnMouseClicked(e -> Catana.getClientThread().sendRemoveResource(Catana.getClientThread().getPlayer().playerField.getPosition()));
 
-        sawmillButton = new PlusButton("button/sawmillButton.png",BuildingType.SAWMILL);
-        sawmillButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.SAWMILL));
+        sawmillButton = new PlusButton("button/sawmillButton.png", SAWMILL);
+        sawmillButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), SAWMILL));
 
-        quarryButton = new PlusButton("button/quarryButton.png",BuildingType.QUARRY);
+        quarryButton = new PlusButton("button/quarryButton.png",QUARRY);
         quarryButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.QUARRY));
 
-        mineshaftButton = new PlusButton("button/mineshaftButton.png",BuildingType.MINESHAFT);
+        mineshaftButton = new PlusButton("button/mineshaftButton.png",MINESHAFT);
         mineshaftButton.setOnMouseClicked(e -> Catana.getClientThread().sendBuildBuilding(Catana.getClientThread().getPlayer().playerField.getPosition(), BuildingType.MINESHAFT));
 
-        fieldActionPane = new VBox();
+        VBox fieldActionPane = new VBox();
         fieldActionPane.setAlignment(Pos.CENTER);
         fieldActionPane.setSpacing(0);
         fieldActionPane.setMinWidth(150);
         fieldActionPane.getChildren().addAll(collectButton, destroyButton);
 
-        buildActionPane = new VBox();
+        VBox buildActionPane = new VBox();
         buildActionPane.setAlignment(Pos.CENTER);
         buildActionPane.setSpacing(0);
         buildActionPane.setMinWidth(150);
@@ -113,9 +141,8 @@ public class PlayerUI extends VBox {
     private Pane createInventoryPane() {
         Pane eqPlayer = new Pane();
         VBox inventoryLayout = new VBox();
-        inventoryLayout.setSpacing(spacing*0.5);
         playerItemsTable = new VBox();
-        playerItemsTable.setSpacing(spacing*0.5);
+        playerItemsTable.setSpacing(spacing);
         playerItemsTable.setPadding(new Insets(spacing));
         playerItemsTable.setAlignment(Pos.CENTER);
         eqPlayer.getChildren().add(playerItemsTable);
@@ -134,8 +161,8 @@ public class PlayerUI extends VBox {
         HBox craftButtons = new HBox(boatButton,catanaButton);
 
         inventoryLayout.getChildren().addAll(eqPlayer,craftButtons);
-        eqPlayer.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().midway, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
-        craftButtons.setBorder(new Border(new BorderStroke(TerrainType.MOUNTAINS.getColor().midway, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(5))));
+        eqPlayer.setBorder(insideBorder);
+        craftButtons.setBorder(insideBorder);
 
         Rectangle clip = new Rectangle();
         clip.widthProperty().bind(eqPlayer.widthProperty());
@@ -150,11 +177,11 @@ public class PlayerUI extends VBox {
         Field field = Catana.getClientThread().getPlayer().playerField;
         Inventory inventory = Catana.getClientThread().getPlayer().getInventory();
         Platform.runLater(()->{
+            mineshaftButton.setEnabled(field.getTerrain() == MINESHAFT.placableTerrain() && !field.hasBuilding() && inventory.hasEnoughMaterials(MINESHAFT.getCost()));
+            sawmillButton.setEnabled(field.getTerrain() == SAWMILL.placableTerrain() && !field.hasBuilding() && inventory.hasEnoughMaterials(SAWMILL.getCost()));
+            quarryButton.setEnabled(field.getTerrain() == QUARRY.placableTerrain() && !field.hasBuilding() && inventory.hasEnoughMaterials(QUARRY.getCost()));
             collectButton.setEnabled(field.hasResource());
             destroyButton.setEnabled(field.hasBuilding());
-            sawmillButton.setEnabled(field.getTerrain() == TerrainType.GRASS_LAND && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.SAWMILL.getCost()));
-            quarryButton.setEnabled(field.getTerrain() == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.QUARRY.getCost()));
-            mineshaftButton.setEnabled(field.getTerrain() == TerrainType.MOUNTAINS && !field.hasBuilding() && inventory.hasEnoughMaterials(BuildingType.MINESHAFT.getCost()));
 
             boatButton.setEnabled(inventory.hasEnoughMaterials(BoatItem.getCost()) && inventory.getAmount(ItemType.BOAT) < Inventory.MAX_BOAT_HOLD);
             catanaButton.setEnabled(inventory.hasEnoughMaterials(CatanaItem.getCost()));

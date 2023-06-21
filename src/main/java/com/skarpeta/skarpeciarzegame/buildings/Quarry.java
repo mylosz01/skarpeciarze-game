@@ -10,13 +10,12 @@ public class Quarry extends Building {
 
     static {
         buildingCost = new ArrayList<>();
-        buildingCost.add(new WoodItem(2));
-        buildingCost.add(new StoneItem(2));
+        buildingCost.add(new WoodItem(100));
+        buildingCost.add(new StoneItem(40));
     }
 
     public Quarry() {
-        super("quarry");
-        this.type = BuildingType.QUARRY;
+        super(BuildingType.QUARRY);
         this.producedItem = new StoneItem(1);
     }
 

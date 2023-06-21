@@ -21,11 +21,11 @@ import java.io.IOException;
 public class Catana extends Application {
     public static final double WINDOW_SIZE = 1000;
     public static final double FIELD_WIDTH = 50;
-    public static final double UI_WIDTH = 300;
+    public static final double UI_WIDTH = 450;
     private static String nickname = "Guest";
     private double currentScale = 1.0;
-    double initialPositionX = 0;
-    double initialPositionY = 0;
+    private double initialPositionX = 0;
+    private double initialPositionY = 0;
     private static final double ZOOM_FACTOR = 1.1;
 
     public static String ipAddress;
@@ -38,7 +38,7 @@ public class Catana extends Application {
 
     public static PlayerUI playerUI;
     public static Client clientThread;
-    Timeline timeline;
+    private Timeline timeline;
 
     public Catana() {}
 
@@ -90,19 +90,17 @@ public class Catana extends Application {
         playerUI = new PlayerUI(); //okienko z ui itp po prawej
         Pane gamePane = createGamePane();//okienko gry po lewej
 
-        MenuButton recenterButton = new MenuButton("center","centerHover",64,64);
-        recenterButton.setOnMouseClicked(e -> panTo(clientThread.getPlayer(),1));
-        AnchorPane.setBottomAnchor(recenterButton,0.0);
-        AnchorPane.setRightAnchor(recenterButton,UI_WIDTH*1.1);
-
         AnchorPane gameLayout = new AnchorPane();
-        gameLayout.getChildren().addAll(gamePane,playerUI,recenterButton);
+        gameLayout.getChildren().addAll(gamePane,playerUI);
 
         Scene scene = new Scene(gameLayout);
         scene.setOnScroll(this::handleScroll);
         scene.setOnMouseDragged(this::handleDrag);
         scene.setOnMousePressed(this::handleRightClick);
         scene.setCursor(new ImageCursor(ImageManager.getImage("cursor.png", 16, 16), 6, 0));
+
+        //poruszanie gracza za pomoca strzalek
+        scene.setOnKeyPressed(e-> clientThread.moveUseKey(e));
 
         katana.setScene(scene);
         katana.setWidth(WINDOW_SIZE);
@@ -129,7 +127,7 @@ public class Catana extends Application {
     }
 
     private Pane createGamePane() { //lewy panel okna (gra)
-        Pane gamePane = new Pane();
+        AnchorPane gamePane = new AnchorPane();
         gamePane.setBackground(new Background(new BackgroundFill(TerrainType.WATER.getColor().primary,CornerRadii.EMPTY, Insets.EMPTY)));
 
         AnchorPane.setTopAnchor(gamePane,0.0);
@@ -137,7 +135,12 @@ public class Catana extends Application {
         AnchorPane.setBottomAnchor(gamePane,0.0);
         AnchorPane.setRightAnchor(gamePane,UI_WIDTH);
 
-        gamePane.getChildren().add(gameMap);
+        MenuButton recenterButton = new MenuButton("center","centerHover",64,64);
+        AnchorPane.setBottomAnchor(recenterButton,0.0);
+        AnchorPane.setRightAnchor(recenterButton,FIELD_WIDTH * 0.4);
+        recenterButton.setOnMouseClicked(e -> panTo(clientThread.getPlayer(),1));
+
+        gamePane.getChildren().addAll(gameMap,recenterButton);
         return gamePane;
     }
 
