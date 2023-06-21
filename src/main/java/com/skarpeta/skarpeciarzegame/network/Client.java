@@ -65,7 +65,7 @@ public class Client implements Runnable {
                 case DIGIT3 -> sendBuildBuilding(player.playerField.getPosition(),BuildingType.MINESHAFT);
                 case F -> player.getInventory().craft(ItemType.BOAT);
             }
-        }catch (IOException | InvalidMoveException e) {
+        }catch (IOException | InvalidMoveException | NoSuchElementException e) {
             System.out.println(e.getMessage());
         }
     }

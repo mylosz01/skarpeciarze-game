@@ -53,7 +53,11 @@ public class WorldMap extends Group {
     public Field getField(Point position) {
         if(position.isNegative())
             throw new NoSuchElementException("pola nie moga byc na pozycji ujemnej");
-        return fields.get(position.convertToOneDimention(mapSize));
+
+        int index = position.convertToOneDimention(mapSize);
+        if(index > mapSize*mapSize)
+            throw new NoSuchElementException("Znajdujesz się na granicy mapy");
+        return fields.get(index);
     }
 
     /** Wybieranie pola przez gracza,
