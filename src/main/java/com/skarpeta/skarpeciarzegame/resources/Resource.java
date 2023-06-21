@@ -12,7 +12,7 @@ import java.util.Random;
 public abstract class Resource extends Asset {
 
     protected Item item;
-    protected Integer[] rangeAmount = new Integer[]{5,10};
+    protected Integer[] rangeAmount = new Integer[]{10,20};
     ResourceType type;
 
     public Resource(ResourceType type, String textureName) {

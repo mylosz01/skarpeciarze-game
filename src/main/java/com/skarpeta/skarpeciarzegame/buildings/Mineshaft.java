@@ -11,8 +11,8 @@ public class Mineshaft extends Building {
 
     static {
         buildingCost = new ArrayList<>();
-        buildingCost.add(new WoodItem(2));
-        buildingCost.add(new StoneItem(2));
+        buildingCost.add(new WoodItem(200));
+        buildingCost.add(new StoneItem(100));
     }
 
     public Mineshaft() {
