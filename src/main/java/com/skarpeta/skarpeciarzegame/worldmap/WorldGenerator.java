@@ -2,10 +2,10 @@ package com.skarpeta.skarpeciarzegame.worldmap;
 
 import com.skarpeta.skarpeciarzegame.resources.ForestResource;
 import com.skarpeta.skarpeciarzegame.resources.StoneResource;
-import com.skarpeta.skarpeciarzegame.tools.ChannelSplitter;
+import com.skarpeta.skarpeciarzegame.tools.PerlinNoise;
 import com.skarpeta.skarpeciarzegame.tools.Point;
 import javafx.scene.paint.Color;
-import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -18,26 +18,18 @@ import javax.imageio.ImageIO;
 public class WorldGenerator {
 
     /** Poszczególne wartości definiują stopień wysokości mapy dla kolejnych typów terenu TerrainType */
-    Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
-    BufferedImage noise;
-    Double[][] noiseChannelHeight;
-    Double[][] noiseChannelForest;
-    Random random;
-    int seed;
+    private final Double[] threshold = new Double[]{0.5, 0.55, 0.65, 1.0};
+    private final PerlinNoise noise;
+    private final Random random;
 
     /** Konstruktor tworzy nowy plik noise*/
     public WorldGenerator(int seed) {
         try {
-            this.seed = seed;
             this.random = new Random(seed);
+            int fileCount = new File("src/main/resources/images/noise").list().length;
+            this.noise = new PerlinNoise(ImageIO.read(new File("src/main/resources/images/noise/noiseTexture" + random.nextInt(fileCount) + ".png")));
+            noise.shuffleChannels(random);
 
-            int filesAmount = new File("src/main/resources/images/noise").list().length;
-            noise = ImageIO.read(new File("src/main/resources/images/noise/noiseTexture"+random.nextInt(filesAmount)+".png"));
-
-            List<Double[][]> channels = ChannelSplitter.splitImage(noise);
-            Collections.shuffle(channels,random);
-            noiseChannelHeight = channels.get(0);
-            noiseChannelForest = channels.get(1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -47,11 +39,11 @@ public class WorldGenerator {
      *  Ustawia teren oraz generuje losowe materialy do zbierania przez graczy
      */
     public Field generateField(WorldMap worldMap, Point point) {
-        TerrainType terrain = thresholdedTerrain(noiseChannelHeight[point.x][point.y]);
-        Field field = new Field(point, FIELD_WIDTH,terrain, noiseChannelHeight[point.x][point.y]);
+        TerrainType terrain = thresholdedTerrain(noise.getRed(point));
+        Field field = new Field(point, FIELD_WIDTH,terrain, noise.getRed(point));
 
         if(terrain == TerrainType.GRASS_LAND)
-            field.darken(1-(noiseChannelForest[point.x][point.y])-threshold[terrain.getIndex()-1]);
+            field.darken(1-(noise.getGreen(point))-threshold[terrain.getIndex()-1]);
 
         worldMap.getChildren().add(field);
         return field;
@@ -61,7 +53,7 @@ public class WorldGenerator {
 
         switch (field.getTerrain()) {
             case GRASS_LAND -> {
-                if (randomBoolean(noiseChannelForest[field.getPosition().x][field.getPosition().y]))
+                if (randomBoolean(noise.getGreen(field.getPosition())))
                     field.addResource(new ForestResource());
             }
             case MOUNTAINS -> {

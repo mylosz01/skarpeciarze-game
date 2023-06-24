@@ -2,14 +2,20 @@ package com.skarpeta.skarpeciarzegame.tools;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 
-public class ChannelSplitter {
+public class PerlinNoise {
     /** Zwraca liste trzech tablic wypełnionych wartościami double w zakresie 0-1, elementy listy odpowiadające kolejno kanałom RGB */
-    public static List<Double[][]> splitImage(BufferedImage image) {
+
+    private final List<Double[][]> channels;
+    private final BufferedImage image;
+    public PerlinNoise(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
+        this.image = image;
 
         Double[][] redChannel = new Double[width][height];
         Double[][] greenChannel = new Double[width][height];
@@ -28,10 +34,24 @@ public class ChannelSplitter {
                 blueChannel[i][j] = normalizedBlue;
             }
         }
-        List<Double[][]> channels = new ArrayList<>();
+        channels = new ArrayList<>();
         channels.add(redChannel);
         channels.add(greenChannel);
         channels.add(blueChannel);
-        return channels;
+    }
+
+
+    public BufferedImage getImage() {
+        return image;
+    }
+    public Double getRed(Point point){
+        return channels.get(0)[point.x][point.y];
+    }
+    public Double getGreen(Point point){
+        return channels.get(1)[point.x][point.y];
+    }
+
+    public void shuffleChannels(Random random) {
+        Collections.shuffle(channels,random);
     }
 }
